@@ -1,6 +1,5 @@
 ﻿using ReactiveUI;
 using System;
-
 using Avalonia;
 using Avalonia.Styling;
 

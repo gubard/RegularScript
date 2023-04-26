@@ -15,5 +15,6 @@
 
     <Grid RowDefinitions="Auto,*">
       <views:MainHeaderView/>
+      <views:ScriptsView Grid.Row="1"/>
     </Grid>
 </UserControl>
