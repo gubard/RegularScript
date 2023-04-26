@@ -15,6 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RegularScript\RegularScript.csproj" />
+    <ProjectReference Include="..\RegularScript.Ui\RegularScript.Ui.csproj" />
   </ItemGroup>
 </Project>

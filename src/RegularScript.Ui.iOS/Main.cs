@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace RegularScript.iOS;
+namespace RegularScript.Ui.iOS;
 
 public class Application
 {

@@ -6,7 +6,7 @@ using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
 
-namespace RegularScript.Android;
+namespace RegularScript.Ui.Android;
 
 [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
 public class SplashActivity : AvaloniaSplashActivity<App>

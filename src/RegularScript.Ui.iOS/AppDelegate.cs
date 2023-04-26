@@ -6,7 +6,7 @@ using Avalonia.iOS;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
 
-namespace RegularScript.iOS;
+namespace RegularScript.Ui.iOS;
 
 // The UIApplicationDelegate for the application. This class is responsible for launching the 
 // User Interface of the application, as well as listening (and optionally responding) to 

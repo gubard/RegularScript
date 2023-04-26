@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 
-namespace RegularScript.Desktop;
+namespace RegularScript.Ui.Desktop;
 
 class Program
 {
