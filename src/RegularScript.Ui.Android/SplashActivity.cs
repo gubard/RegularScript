@@ -1,5 +1,4 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.OS;
 using Avalonia;
 using Avalonia.Android;
@@ -25,6 +24,6 @@ public class SplashActivity : AvaloniaSplashActivity<App>
     protected override void OnResume()
     {
         base.OnResume();
-        StartActivity(intent: new Intent(Application.Context, type: typeof(MainActivity)));
+        StartActivity(intent: new (Application.Context, type: typeof(MainActivity)));
     }
 }

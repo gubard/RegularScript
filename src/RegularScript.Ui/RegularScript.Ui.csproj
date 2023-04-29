@@ -34,4 +34,20 @@
             <Link>Protos\script.proto</Link>
         </Protobuf>
     </ItemGroup>
+
+    <ItemGroup>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\ButtonIcon.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\Controls.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\DialogControl.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\MainView.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\MessageView.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\Path.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\PopupDialogControl.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\TabbedControl.axaml"/>
+        <UpToDateCheckInput Remove="AvaloniaUi\Styles\WindowPopup.axaml"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RegularScript.Core\RegularScript.Core.csproj"/>
+    </ItemGroup>
 </Project>
