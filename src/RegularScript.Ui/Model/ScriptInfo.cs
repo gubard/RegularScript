@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RegularScript.Model;
+namespace RegularScript.Ui.Model;
 
 public class ScriptInfo
 {

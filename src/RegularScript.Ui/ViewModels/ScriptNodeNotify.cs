@@ -2,7 +2,7 @@
 
 using ReactiveUI;
 
-namespace RegularScript.ViewModels;
+namespace RegularScript.Ui.ViewModels;
 
 public class ScriptNodeNotify : ViewModelBase
 {

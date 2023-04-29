@@ -1,9 +1,11 @@
 using System;
+
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using RegularScript.ViewModels;
 
-namespace RegularScript;
+using RegularScript.Ui.ViewModels;
+
+namespace RegularScript.Ui;
 
 public class ViewLocator : IDataTemplate
 {

@@ -1,8 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace RegularScript.Views;
+namespace RegularScript.Ui.Views;
 
 public partial class MainHeaderView : UserControl
 {

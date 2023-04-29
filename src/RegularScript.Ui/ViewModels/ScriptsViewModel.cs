@@ -1,6 +1,6 @@
 ﻿using Avalonia.Collections;
 
-namespace RegularScript.ViewModels;
+namespace RegularScript.Ui.ViewModels;
 
 public class ScriptsViewModel : ViewModelBase
 {

@@ -1,9 +1,11 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
+
 using Avalonia;
 using Avalonia.Styling;
 
-namespace RegularScript.ViewModels;
+using ReactiveUI;
+
+namespace RegularScript.Ui.ViewModels;
 
 public class MainHeaderViewModel : ViewModelBase
 {

@@ -1,10 +1,12 @@
 ﻿using System.Runtime.Versioning;
+
 using Avalonia;
 using Avalonia.Browser;
 using Avalonia.ReactiveUI;
-using RegularScript;
 
 [assembly: SupportedOSPlatform("browser")]
+
+namespace RegularScript.Ui.Browser;
 
 internal partial class Program
 {

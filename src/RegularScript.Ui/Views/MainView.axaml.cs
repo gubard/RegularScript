@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace RegularScript.Views;
+namespace RegularScript.Ui.Views;
 
 public partial class MainView : UserControl
 {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using RegularScript.Model;
+using RegularScript.Ui.Model;
 
-namespace RegularScript.Interfaces;
+namespace RegularScript.Ui.Interfaces;
 
 public interface IScriptService
 {

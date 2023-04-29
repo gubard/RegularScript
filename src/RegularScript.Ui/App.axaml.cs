@@ -1,10 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using RegularScript.ViewModels;
-using RegularScript.Views;
 
-namespace RegularScript;
+using RegularScript.Ui.ViewModels;
+using RegularScript.Ui.Views;
+
+namespace RegularScript.Ui;
 
 public partial class App : Application
 {

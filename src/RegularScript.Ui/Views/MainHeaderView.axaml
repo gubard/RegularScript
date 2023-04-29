@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:RegularScript.ViewModels"
+             xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
              x:DataType="viewModels:MainHeaderViewModel"
-             x:Class="RegularScript.Views.MainHeaderView">
+             x:Class="RegularScript.Ui.Views.MainHeaderView">
   <Design.DataContext>
     <viewModels:MainHeaderViewModel />
   </Design.DataContext>
