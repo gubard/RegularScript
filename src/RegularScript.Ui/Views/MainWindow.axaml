@@ -7,5 +7,5 @@
         x:Class="RegularScript.Ui.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="RegularScript.Ui">
-        <views:MainView />
+    <views:MainView />
 </Window>

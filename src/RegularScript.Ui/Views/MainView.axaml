@@ -7,12 +7,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RegularScript.Ui.Views.MainView"
              x:DataType="viewModels:MainViewModel">
-  <Design.DataContext>
-    <viewModels:MainViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*">
-      <views:MainHeaderView/>
-      <views:ScriptsView Grid.Row="1"/>
+        <views:MainHeaderView />
+        <views:ScriptsView Grid.Row="1" />
     </Grid>
 </UserControl>

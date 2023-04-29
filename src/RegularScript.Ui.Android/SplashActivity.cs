@@ -1,10 +1,10 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Application = Android.App.Application;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
+using Application = Android.App.Application;
 
 namespace RegularScript.Ui.Android;
 
@@ -14,7 +14,7 @@ public class SplashActivity : AvaloniaSplashActivity<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         return base.CustomizeAppBuilder(builder)
-            .UseReactiveUI();
+           .UseReactiveUI();
     }
 
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -25,7 +25,6 @@ public class SplashActivity : AvaloniaSplashActivity<App>
     protected override void OnResume()
     {
         base.OnResume();
-
-        StartActivity(new Intent(Application.Context, typeof(MainActivity)));
+        StartActivity(intent: new Intent(Application.Context, type: typeof(MainActivity)));
     }
 }

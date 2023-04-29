@@ -12,6 +12,6 @@ public partial class MainHeaderView : UserControl
 
     private void InitializeComponent()
     {
-        AvaloniaXamlLoader.Load(this);
+        AvaloniaXamlLoader.Load(obj: this);
     }
 }

@@ -6,12 +6,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
              x:DataType="viewModels:MainHeaderViewModel"
              x:Class="RegularScript.Ui.Views.MainHeaderView">
-  <Design.DataContext>
-    <viewModels:MainHeaderViewModel />
-  </Design.DataContext>
-    
+    <Design.DataContext>
+        <viewModels:MainHeaderViewModel />
+    </Design.DataContext>
+
     <DockPanel>
-        <ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding IsDarkTheme}"/>
-        <Control/>
+        <ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding IsDarkTheme}" />
+        <Control />
     </DockPanel>
 </UserControl>

@@ -1,0 +1,13 @@
+﻿namespace RegularScript.Core.Common.Helpers;
+
+public class EnumConstants<TEnum> where TEnum : struct, Enum
+{
+    public static readonly IEnumerable<TEnum> Values;
+    public static readonly IEnumerable<TEnum?> NullableValues;
+
+    static EnumConstants()
+    {
+        Values = Enum.GetValues<TEnum>();
+        NullableValues = Values.Select(selector: x => (TEnum?)x).ToArray();
+    }
+}

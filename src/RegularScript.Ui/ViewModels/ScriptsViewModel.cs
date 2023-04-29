@@ -4,10 +4,10 @@ namespace RegularScript.Ui.ViewModels;
 
 public class ScriptsViewModel : ViewModelBase
 {
+    public AvaloniaList<ScriptNodeNotify> Scripts { get; }
+
     public ScriptsViewModel()
     {
         Scripts = new ();
     }
-
-    public AvaloniaList<ScriptNodeNotify> Scripts { get; }
 }
