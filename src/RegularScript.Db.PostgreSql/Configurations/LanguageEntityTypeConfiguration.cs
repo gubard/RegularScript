@@ -13,7 +13,7 @@ public class LanguageEntityTypeConfiguration : IEntityTypeConfiguration<Language
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Name).IsUnique();
         builder.Property(x => x.Name).HasMaxLength(255).IsRequired();
-        builder.HasIndex(x => x.Code).IsUnique();
-        builder.Property(x => x.Code).HasMaxLength(20).IsRequired();
+        builder.HasIndex(x => x.CodeIso3).IsUnique();
+        builder.Property(x => x.CodeIso3).HasMaxLength(3).IsRequired();
     }
 }
