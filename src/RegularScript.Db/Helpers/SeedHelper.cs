@@ -782,6 +782,7 @@ public static class SeedHelper
                     Id = Guid.Parse(input: "178c9e13-fa02-4b90-8c0d-b9b11cf988fb"),
                     CodeIso3 = "eng",
                     Name = "English",
+                    IsSupported = true
                 },
                 new Language
                 {

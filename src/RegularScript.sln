@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegularScript.Helper", "Reg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegularScript.Core", "RegularScript.Core\RegularScript.Core.csproj", "{0A6BC3C9-85F9-4B45-82EA-9D7DA0E6D0D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegularScript.Db.PostgreSql.Migration", "RegularScript.Db.PostgreSql.Migration\RegularScript.Db.PostgreSql.Migration.csproj", "{BF995BFA-E354-41B9-A348-BEFDB4ED5641}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegularScript.Db.PostgreSql.MigrationHelper", "RegularScript.Db.PostgreSql.MigrationHelper\RegularScript.Db.PostgreSql.MigrationHelper.csproj", "{BF995BFA-E354-41B9-A348-BEFDB4ED5641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
