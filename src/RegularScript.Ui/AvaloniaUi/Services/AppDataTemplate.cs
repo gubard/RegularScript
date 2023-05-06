@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using ReactiveUI;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.DependencyInjection.Interfaces;
+using RegularScript.Ui.ViewModels;
 
 namespace RegularScript.Ui.AvaloniaUi.Services;
 
-public class AppViewLocator : IViewLocator
+public class AppDataTemplate : IDataTemplate
 {
     private readonly IResolver resolver;
     private readonly Dictionary<Type, Type> resolveViewDictionary;
 
-    public AppViewLocator(IReadOnlyDictionary<Type, Type> resolveViewDictionary, IResolver resolver)
+    public AppDataTemplate(IReadOnlyDictionary<Type, Type> resolveViewDictionary, IResolver resolver)
     {
         this.resolver = resolver;
         this.resolveViewDictionary = new (resolveViewDictionary);
@@ -64,5 +67,30 @@ public class AppViewLocator : IViewLocator
         }
 
         return view.ThrowIfIsNot<IViewFor>();
+    }
+
+    public Control? Build(object? param)
+    {
+        if (param is null)
+        {
+            return null;
+        }
+
+        var type = param.GetType();
+
+        if (resolveViewDictionary.TryGetValue(type, out var viewType))
+        {
+            return (Control)resolver.Resolve(viewType);
+        }
+
+        return new TextBlock
+        {
+            Text = type.FullName,
+        };
+    }
+
+    public bool Match(object? data)
+    {
+       return data is ViewModelBase;
     }
 }

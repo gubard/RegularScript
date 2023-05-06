@@ -5,18 +5,18 @@ using RegularScript.Core.DependencyInjection.Interfaces;
 
 namespace RegularScript.Ui.AvaloniaUi.Services;
 
-public class AppViewLocatorBuilder : IBuilder<AppViewLocator>
+public class AppDataTemplateBuilder : IBuilder<AppDataTemplate>
 {
     private readonly IResolver resolver;
     private readonly Dictionary<Type, Type> resolveViewDictionary;
 
-    public AppViewLocatorBuilder(IResolver resolver)
+    public AppDataTemplateBuilder(IResolver resolver)
     {
         this.resolver = resolver;
         resolveViewDictionary = new ();
     }
 
-    public AppViewLocator Build()
+    public AppDataTemplate Build()
     {
         return new (resolveViewDictionary, resolver);
     }

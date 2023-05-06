@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Services\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Protobuf Include="..\Protos\script.proto">
             <Link>Protos\script.proto</Link>
         </Protobuf>

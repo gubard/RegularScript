@@ -12,6 +12,6 @@
 
     <Grid ColumnDefinitions="*,Auto,*">
         <TreeView Items="{Binding Scripts}" />
-        <GridSplitter Grid.Column="1" Background="{DynamicResource SystemControlBackgroundBaseHighBrush}" ResizeDirection="Columns" />
+        <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
     </Grid>
 </UserControl>

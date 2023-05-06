@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.DependencyInjection.Attributes;
@@ -17,6 +19,7 @@ public class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(obj: this);
+        DataTemplates.AddRange(Resolver.Resolve<IEnumerable<IDataTemplate>>());
     }
 
     public override void OnFrameworkInitializationCompleted()

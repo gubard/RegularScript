@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
@@ -24,29 +26,19 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
     {
         register.RegisterTransient<Application, App>();
         register.RegisterTransient(() => UriBase.AppStyleUri);
+        register.RegisterTransient<IEnumerable<IDataTemplate>>((IDataTemplate viewLocator) => new []{viewLocator});
         register.RegisterTransient<ViewModelBase>();
-        register.RegisterTransient<AppViewLocatorBuilder>();
+        register.RegisterTransient<AppDataTemplateBuilder>();
         register.RegisterTransient<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());
-        register.RegisterTransient<FluentTheme>(() => new (null));
+        register.RegisterTransient<FluentTheme>(() => new(null));
         register.RegisterTransient(() => new Window());
         register.RegisterTransient<Control, MainView>();
         register.RegisterTransient(() => new RoutingState(null));
         RegisterViewModels(register);
+        register.RegisterTransient(() => Enumerable.Empty<IStyle>());
 
-        register.RegisterTransient<IEnumerable<IStyle>>(
-            (FluentTheme fluentTheme, Uri uri) =>
-                new IStyle[]
-                {
-                    fluentTheme,
-                    new StyleInclude(uri)
-                    {
-                        Source = UriBase.ControlsStylesUri
-                    }
-                }
-        );
-
-        register.RegisterTransient<IViewLocator>(
-            (AppViewLocatorBuilder builder) => builder.Build()
+        register.RegisterTransient<IDataTemplate>(
+            (AppDataTemplateBuilder builder) => builder.Build()
         );
 
         register.RegisterTransientAutoInject(
@@ -79,8 +71,8 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
                 }
 
                 var ns = type.Namespace
-                   .Replace(".Views.", ".ViewModels.")
-                   .Replace(".Views", ".ViewModels");
+                    .Replace(".Views.", ".ViewModels.")
+                    .Replace(".Views", ".ViewModels");
 
                 var viewModelName = $"{ns}.{type.Name}Model";
                 var viewModelType = assembly.GetType(viewModelName);
