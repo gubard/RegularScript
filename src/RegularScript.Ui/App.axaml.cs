@@ -12,7 +12,7 @@ namespace RegularScript.Ui;
 public class App : Application
 {
     [Inject]
-    public IResolver? Resolver { get; set; }
+    public IResolver Resolver { get; set; }
     
     public override void Initialize()
     {
