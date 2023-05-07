@@ -18,7 +18,7 @@ builder.Services.AddTransient<MapperConfiguration>(
 builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
 
 builder.Services.AddDbContext<RegularScriptDbContext>((sp, options) =>
-    options.UseNpgsql(sp.GetService<IConfiguration>()["PostgreSql::ConnectionString"]));
+    options.UseNpgsql(sp.GetService<IConfiguration>()["PostgreSql:ConnectionString"]));
 
 var app = builder.Build();
 app.MapGrpcService<LanguageService>();

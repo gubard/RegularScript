@@ -23,7 +23,7 @@ public class LanguageService : ILanguageService
 
     public async Task<IEnumerable<Language>> GetAllAsync()
     {
-        var httpHandler = new HttpClientHandler();
+        using var httpHandler = new HttpClientHandler();
 
         // This is for development purposes only; do not use in production.
         httpHandler.ServerCertificateCustomValidationCallback =
@@ -41,6 +41,33 @@ public class LanguageService : ILanguageService
 
         // Call the SayHello method on the server
         var reply = await client.GetAllAsync(request);
+
+        // Shutdown the channel gracefully
+        await channel.ShutdownAsync();
+
+        return reply.Languages.Select(x => mapper.Map<Language>(x)).ToArray();
+    }
+
+    public async Task<IEnumerable<Language>> GetSupportedAsync()
+    {
+        using var httpHandler = new HttpClientHandler();
+
+        // This is for development purposes only; do not use in production.
+        httpHandler.ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+
+        var channelOptions = new GrpcChannelOptions { HttpHandler = httpHandler };
+        // Create a channel to the gRPC server
+        var channel = GrpcChannel.ForAddress("https://localhost:5002", channelOptions);
+
+        // Create a client for the Greeter service
+        var client = new LanguageServiceApi.LanguageServiceApiClient(channel);
+
+        // Create a request message
+        var request = new GetSupportedRequest();
+
+        // Call the SayHello method on the server
+        var reply = await client.GetSupportedAsync(request);
 
         // Shutdown the channel gracefully
         await channel.ShutdownAsync();

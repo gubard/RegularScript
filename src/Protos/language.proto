@@ -6,6 +6,15 @@ package script;
 
 service LanguageServiceApi {
   rpc GetAll (GetAllRequest) returns (GetAllReply);
+  rpc GetSupported (GetSupportedRequest) returns (GetSupportedReply);
+}
+
+message GetSupportedRequest {
+
+}
+
+message GetSupportedReply {
+  repeated LanguageApi Languages = 1;
 }
 
 message GetAllRequest {

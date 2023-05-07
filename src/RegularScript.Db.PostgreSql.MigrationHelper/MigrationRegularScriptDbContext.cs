@@ -15,6 +15,7 @@ public class MigrationRegularScriptDbContext : RegularScriptDbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration["PostgreSql::ConnectionString"]);
+        var connectionString = configuration["PostgreSql:ConnectionString"];
+        optionsBuilder.UseNpgsql(connectionString);
     }
 }

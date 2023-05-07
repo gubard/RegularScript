@@ -26,4 +26,13 @@ public class LanguageService : LanguageServiceApi.LanguageServiceApiBase
 
         return reply;
     }
+
+    public override async Task<GetSupportedReply> GetSupported(GetSupportedRequest request, ServerCallContext context)
+    {
+        var languages = await dbContext.Set<Language>().Where(x => x.IsSupported).ToArrayAsync();
+        var reply = new GetSupportedReply();
+        reply.Languages.AddRange(languages.Select(x => mapper.Map<LanguageApi>(x)).ToArray());
+
+        return reply;
+    }
 }

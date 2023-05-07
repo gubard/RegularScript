@@ -17,7 +17,7 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*">
-        <ComboBox Items="{Binding Languages}">
+        <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
             <ComboBox.DataTemplates>
                 <DataTemplate DataType="viewModels:LanguageNotify">
                     <StackPanel>

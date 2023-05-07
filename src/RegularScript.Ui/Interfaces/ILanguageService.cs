@@ -7,4 +7,5 @@ namespace RegularScript.Ui.Interfaces;
 public interface ILanguageService
 {
     Task<IEnumerable<Language>> GetAllAsync();
+    Task<IEnumerable<Language>> GetSupportedAsync();
 }
