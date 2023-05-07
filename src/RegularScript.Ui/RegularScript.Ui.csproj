@@ -16,7 +16,9 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.0.0-preview5" />
         <PackageReference Include="Google.Protobuf" Version="3.22.3" />
+        <PackageReference Include="Grpc" Version="2.46.6" />
         <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
         <PackageReference Include="Grpc.Tools" Version="2.54.0">
             <PrivateAssets>all</PrivateAssets>
@@ -28,6 +30,9 @@
     <ItemGroup>
         <Protobuf Include="..\Protos\script.proto">
             <Link>Protos\script.proto</Link>
+        </Protobuf>
+        <Protobuf Include="..\Protos\language.proto">
+            <Link>Protos\language.proto</Link>
         </Protobuf>
     </ItemGroup>
 

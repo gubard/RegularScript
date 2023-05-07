@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcClient.Language";
+
+package script;
+
+service LanguageServiceApi {
+  rpc GetAll (GetAllRequest) returns (GetAllReply);
+}
+
+message GetAllRequest {
+  
+}
+
+message GetAllReply {
+  repeated LanguageApi Languages = 1;
+}
+
+message LanguageApi {
+  bytes Id = 1;
+  string CodeIso3 = 2;
+  string Name = 3;
+}

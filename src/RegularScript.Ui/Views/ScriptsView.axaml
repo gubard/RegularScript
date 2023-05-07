@@ -9,9 +9,27 @@
     <Design.DataContext>
         <viewModels:ScriptsViewModel />
     </Design.DataContext>
+    
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Initialized">
+            <InvokeCommandAction Command="{Binding InitializedCommand}"/>
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
 
-    <Grid ColumnDefinitions="*,Auto,*">
-        <TreeView Items="{Binding Scripts}" />
-        <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+    <Grid RowDefinitions="Auto,*">
+        <ComboBox Items="{Binding Languages}">
+            <ComboBox.DataTemplates>
+                <DataTemplate DataType="viewModels:LanguageNotify">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding CodeIso3}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.DataTemplates>
+        </ComboBox>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
+            <TreeView Items="{Binding Scripts}" />
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+        </Grid>
     </Grid>
 </UserControl>

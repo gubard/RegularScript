@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.52.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.52.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,5 +21,12 @@
         <Protobuf Include="..\Protos\script.proto">
             <Link>Protos\script.proto</Link>
         </Protobuf>
+        <Protobuf Include="..\Protos\language.proto">
+            <Link>Protos\language.proto</Link>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj" />
     </ItemGroup>
 </Project>

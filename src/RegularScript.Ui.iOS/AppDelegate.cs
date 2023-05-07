@@ -1,8 +1,3 @@
-using Avalonia;
-using Avalonia.iOS;
-using Avalonia.ReactiveUI;
-using Foundation;
-
 namespace RegularScript.Ui.iOS;
 
 // The UIApplicationDelegate for the application. This class is responsible for launching the 

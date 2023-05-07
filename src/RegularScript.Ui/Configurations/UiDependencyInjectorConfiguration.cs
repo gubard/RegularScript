@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using ReactiveUI;
@@ -15,6 +15,9 @@ using RegularScript.Core.DependencyInjection.Models;
 using RegularScript.Core.Expressions.Extensions;
 using RegularScript.Ui.AvaloniaUi.Helpers;
 using RegularScript.Ui.AvaloniaUi.Services;
+using RegularScript.Ui.Interfaces;
+using RegularScript.Ui.Profiles;
+using RegularScript.Ui.Services;
 using RegularScript.Ui.ViewModels;
 using RegularScript.Ui.Views;
 
@@ -25,8 +28,11 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
     public void Configure(IDependencyInjectorRegister register)
     {
         register.RegisterTransient<Application, App>();
+        register.RegisterTransient<ILanguageService, LanguageService>();
+        register.RegisterTransient(() => new MapperConfiguration(cfg => cfg.AddProfile<UiProfile>()));
+        register.RegisterTransient<IMapper>((MapperConfiguration cfg) => new Mapper(cfg));
         register.RegisterTransient(() => UriBase.AppStyleUri);
-        register.RegisterTransient<IEnumerable<IDataTemplate>>((IDataTemplate viewLocator) => new []{viewLocator});
+        register.RegisterTransient<IEnumerable<IDataTemplate>>((IDataTemplate viewLocator) => new[] { viewLocator });
         register.RegisterTransient<ViewModelBase>();
         register.RegisterTransient<AppDataTemplateBuilder>();
         register.RegisterTransient<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());

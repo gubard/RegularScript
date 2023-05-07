@@ -5,6 +5,14 @@ namespace RegularScript.Db.Contexts;
 
 public class RegularScriptDbContext : DbContext
 {
+    protected RegularScriptDbContext()
+    {
+    }
+
+    public RegularScriptDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

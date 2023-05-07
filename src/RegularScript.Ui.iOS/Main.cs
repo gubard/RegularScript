@@ -1,5 +1,3 @@
-using UIKit;
-
 namespace RegularScript.Ui.iOS;
 
 public class Application

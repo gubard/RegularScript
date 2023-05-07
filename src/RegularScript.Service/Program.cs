@@ -1,3 +1,9 @@
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using RegularScript.Db.Contexts;
+using RegularScript.Service.Profiles;
+using RegularScript.Service.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Additional configuration is required to successfully run gRPC on macOS.
@@ -5,7 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+builder.Services.AddTransient<MapperConfiguration>(
+    _ => new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>()));
+
+builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
+
+builder.Services.AddDbContext<RegularScriptDbContext>((sp, options) =>
+    options.UseNpgsql(sp.GetService<IConfiguration>()["PostgreSql::ConnectionString"]));
+
 var app = builder.Build();
+app.MapGrpcService<LanguageService>();
 
 app.MapGet(
     pattern: "/",
