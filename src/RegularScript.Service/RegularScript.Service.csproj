@@ -8,20 +8,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.52.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.22.4" />
+        <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcVersion)" />
+        <PackageReference Include="Grpc.AspNetCore.Web" Version="$(GrpcVersion)" />
+        <PackageReference Include="Grpc.Tools" Version="$(GrpcVersion)">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
+        <Content Update="appsettings.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\Protos\script.proto">
+        <Protobuf Include="..\Protos\script.proto" GrpcServices="Server">
             <Link>Protos\script.proto</Link>
         </Protobuf>
-        <Protobuf Include="..\Protos\language.proto">
+        <Protobuf Include="..\Protos\language.proto" GrpcServices="Server">
             <Link>Protos\language.proto</Link>
         </Protobuf>
     </ItemGroup>

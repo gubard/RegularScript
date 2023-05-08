@@ -40,6 +40,6 @@ internal class Program
     {
         InitModules();
 
-        return AppBuilder.Configure(() => module.GetObject<Application>());
+        return AppBuilder.Configure(() => module.GetObject<Application>()).UseReactiveUI();
     }
 }

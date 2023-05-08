@@ -30,13 +30,21 @@ public class ScriptsViewModel : ViewModelBase
     {
         Languages = new();
         Scripts = new();
-        
+
         InitializedCommand = ReactiveCommand.Create( async () =>
         {
-            var languages  = await LanguageService.GetSupportedAsync();
-            Languages.Clear();
-            Languages.AddRange(languages.Select(x => Mapper.Map<LanguageNotify>(x)));
-            SelectedLanguage = Languages.First();
+            try
+            {
+                var languages  = await LanguageService.GetSupportedAsync();
+                Languages.Clear();
+                Languages.AddRange(languages.Select(x => Mapper.Map<LanguageNotify>(x)));
+                SelectedLanguage = Languages.First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         });
     }
 }

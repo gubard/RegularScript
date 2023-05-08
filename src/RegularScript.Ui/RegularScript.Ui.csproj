@@ -16,11 +16,11 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.0.0-preview5" />
-        <PackageReference Include="Google.Protobuf" Version="3.22.3" />
-        <PackageReference Include="Grpc" Version="2.46.6" />
-        <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.54.0">
+        <PackageReference Include="Avalonia.Xaml.Interactions" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Google.Protobuf" Version="3.22.4" />
+        <PackageReference Include="Grpc.Net.Client" Version="$(GrpcVersion)" />
+        <PackageReference Include="Grpc.Net.Client.Web" Version="$(GrpcVersion)" />
+        <PackageReference Include="Grpc.Tools" Version="$(GrpcVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -28,24 +28,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\Protos\script.proto">
+        <Protobuf Include="..\Protos\script.proto" GrpcServices="Client">
             <Link>Protos\script.proto</Link>
         </Protobuf>
-        <Protobuf Include="..\Protos\language.proto">
+        <Protobuf Include="..\Protos\language.proto" GrpcServices="Client">
             <Link>Protos\language.proto</Link>
         </Protobuf>
-    </ItemGroup>
-
-    <ItemGroup>
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\ButtonIcon.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\Controls.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\DialogControl.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\MainView.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\MessageView.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\Path.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\PopupDialogControl.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\TabbedControl.axaml" />
-        <UpToDateCheckInput Remove="AvaloniaUi\Styles\WindowPopup.axaml" />
     </ItemGroup>
 
     <ItemGroup>

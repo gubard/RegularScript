@@ -6,22 +6,37 @@ using RegularScript.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Additional configuration is required to successfully run gRPC on macOS.
-// For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-
-// Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
+builder.Services.AddGrpc(options => options.EnableDetailedErrors = true);
+builder.Logging.AddConsole();
 
 builder.Services.AddTransient<MapperConfiguration>(
     _ => new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>()));
 
-builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
-
 builder.Services.AddDbContext<RegularScriptDbContext>((sp, options) =>
-    options.UseNpgsql(sp.GetService<IConfiguration>()["PostgreSql:ConnectionString"]));
+{
+    var configuration = sp.GetService<IConfiguration>() ?? throw new NullReferenceException();
+    options.UseNpgsql(configuration["PostgreSql:ConnectionString"]);
+});
+
+builder.Services.AddCors(setupAction =>
+    setupAction.AddPolicy("AllowAll",
+        policy =>
+            policy.AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyMethod()));
 
 var app = builder.Build();
-app.MapGrpcService<LanguageService>();
+app.UseHsts();
+app.UseCors("AllowAll");
+app.UseRouting();
+
+app.UseGrpcWeb(new GrpcWebOptions()
+{
+    DefaultEnabled = true
+});
+
+app.MapGrpcService<LanguageService>().EnableGrpcWeb();
 
 app.MapGet(
     pattern: "/",
