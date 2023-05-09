@@ -38,4 +38,10 @@
     <ItemGroup>
       <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="localhost.pfx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
