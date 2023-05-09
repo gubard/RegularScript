@@ -1,3 +1,2 @@
-CREATE SCHEMA IF NOT EXISTS regular_script;
 CREATE USER postgresuser WITH PASSWORD 'QAZ78963wsx';
 ALTER ROLE postgresuser WITH CREATEDB;
