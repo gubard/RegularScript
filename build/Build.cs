@@ -25,14 +25,16 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+    [Solution] Solution Solution { get; set; }
+
     Target Restore => _ => _
-        .Executes(() => DotNetRestore());
+        .Executes(() => DotNetRestore(setting => setting.SetProjectFile(Solution.Path)));
 
     Target Clean => _ => _
         .DependsOn(Restore)
-        .Executes(() => DotNetClean());
+        .Executes(() => DotNetClean(setting => setting.SetProject(Solution.Path)));
 
     Target Compile => _ => _
         .DependsOn(Clean)
-        .Executes(() => DotNetBuild(settings => settings.EnableNoRestore()));
+        .Executes(() => DotNetBuild(settings => settings.SetProjectFile(Solution.Path)));
 }
