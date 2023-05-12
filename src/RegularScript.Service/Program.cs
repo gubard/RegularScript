@@ -7,7 +7,7 @@ using RegularScript.Service.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
-builder.Services.AddGrpc(options => options.EnableDetailedErrors = true);
+builder.Services.AddGrpc();
 builder.Logging.AddConsole();
 
 builder.Services.AddTransient<MapperConfiguration>(
@@ -19,22 +19,19 @@ builder.Services.AddDbContext<RegularScriptDbContext>((sp, options) =>
     options.UseNpgsql(configuration["PostgreSql:ConnectionString"]);
 });
 
-builder.Services.AddCors(setupAction =>
-    setupAction.AddPolicy("AllowAll",
-        policy =>
-            policy.AllowAnyHeader()
-                .AllowAnyOrigin()
-                .AllowAnyMethod()));
+builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+{
+    builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+}));
 
 var app = builder.Build();
-app.UseHsts();
-app.UseCors("AllowAll");
+app.UseHttpsRedirection();
 app.UseRouting();
-
-app.UseGrpcWeb(new GrpcWebOptions()
-{
-    DefaultEnabled = true
-});
+app.UseGrpcWeb(new GrpcWebOptions {DefaultEnabled = true});
+app.UseCors("AllowAll");
 
 app.MapGrpcService<LanguageService>().EnableGrpcWeb();
 
