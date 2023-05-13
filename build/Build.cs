@@ -12,10 +12,12 @@ using Serilog;
 using Serviecs;
 using SmartFormat;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static System.IO.File;
 
 class Build : NukeBuild
 {
     public const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
+
     public static int Main() => Execute<Build>(x => x.Result);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -75,7 +77,7 @@ class Build : NukeBuild
 
                 var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
                 Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
-                var appSettingsTemplate = File.ReadAllText(appSettingsTemplatePath);
+                var appSettingsTemplate = ReadAllText(appSettingsTemplatePath);
                 Log.Information("App settings template {AppSettingsTemplate}", appSettingsTemplate);
 
                 var options = new
@@ -93,7 +95,7 @@ class Build : NukeBuild
 
                 var smartFormatter = new Formatter();
                 var appSettings = smartFormatter.Format(appSettingsTemplate, options);
-                File.WriteAllText(appSettingsFile, appSettings);
+                WriteAllText(appSettingsFile, appSettings);
                 Log.Information("Save app settings {AppSettingsFile}", appSettingsFile);
             }
         });
@@ -216,7 +218,7 @@ class Build : NukeBuild
         .DependsOn(DockerRemovePostresContainer)
         .Executes(() =>
         {
-            var postgresDockerTemplateConfiguration = File.ReadAllText(PostgresDockerTemplateConfigurationFilePath);
+            var postgresDockerTemplateConfiguration = ReadAllText(PostgresDockerTemplateConfigurationFilePath);
 
             Log.Information(
                 "Loaded postgres docker template configuration from {PostgresDockerTemplateConfigurationFilePath}",
@@ -244,7 +246,7 @@ class Build : NukeBuild
             }
 
             var postgresDockerConfigurationFilePath = TempFolderPath / DefaultPostgresDockerConfigurationFileName;
-            File.WriteAllText(postgresDockerConfigurationFilePath, postgresDockerConfiguration);
+            WriteAllText(postgresDockerConfigurationFilePath, postgresDockerConfiguration);
 
             Log.Information(
                 "Save postgres docker configuration in {PostgresDockerConfigurationFilePath}",
