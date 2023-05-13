@@ -129,7 +129,11 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var hosts = new Hosts().Discover();
-            var docker = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
+
+            var docker = hosts.FirstOrDefault(x => x.IsNative) ??
+                         hosts.FirstOrDefault(x => x.Name == "default") ??
+                         throw new NullReferenceException("docker");
+
             var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
 
             if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
