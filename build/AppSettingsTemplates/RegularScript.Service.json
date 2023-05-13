@@ -1,0 +1,28 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "{LogLevelDefault}"
+    }
+  },
+  "AllowedHosts": "*",
+  "Kestrel": {
+    "Certificates": {
+      "Default": {
+        "Path": "{CertificatePath}",
+        "Password": "{CertificatePassword}"
+      }
+    },
+    "EndpointDefaults": {
+      "Protocols": "Http2"
+    },
+    "Endpoints": {
+      "HttpsDefaultCert": {
+        "Url": "{Url}",
+        "Protocols": "Http2"
+      }
+    }
+  },
+  "PostgreSql": {
+    "ConnectionString": "User ID={PostgresUser};Password={PostgresPassword};Host={PostgresHost};Port={PostgresPort};Database={PostgresDataBaseName};Pooling=true;Connection Lifetime=0;"
+  }
+}

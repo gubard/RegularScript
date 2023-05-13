@@ -9,20 +9,34 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Serilog;
+using Serviecs;
 using SmartFormat;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 class Build : NukeBuild
 {
     public const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
-    public static int Main() => Execute<Build>(x => x.Docker);
+    public static int Main() => Execute<Build>(x => x.DockerBuild);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] Solution Solution { get; set; }
     [Parameter] AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
+    [Parameter] AbsolutePath TemplateAppSettingsFolderPath { get; set; }
     [Parameter] public AbsolutePath TempFolderPath { get; set; }
+
+    #region App Parameters
+
+    [Parameter] public string LogLevelDefault { get; set; } = "Debug";
+    [Parameter] public string CertificatePath { get; set; } = "localhost.pfx";
+    [Parameter] public string CertificatePassword { get; set; } = "QAZ78963wsx";
+    [Parameter] public string Url { get; set; } = "https://localhost:5002";
+
+    #endregion
+
+    #region Postgres Parameters
+
     [Parameter] public string PostgresContainerName { get; set; } = "regular_script_postgres";
     [Parameter] public string PostgresImageName { get; set; } = "postgres";
     [Parameter] public string PostgresPassword { get; set; } = "QAZ78963wsx";
@@ -30,6 +44,9 @@ class Build : NukeBuild
     [Parameter] public string PostgresDataBaseName { get; set; } = "regular_script";
     [Parameter] public string PostgresDataFilePath { get; set; } = "~/postgres/data";
     [Parameter] public ushort PostgresPort { get; set; } = 1713;
+    [Parameter] public string PostgresHost { get; set; } = "localhost";
+
+    #endregion
 
     protected override void OnBuildInitialized()
     {
@@ -38,9 +55,51 @@ class Build : NukeBuild
 
         PostgresDockerTemplateConfigurationFilePath ??=
             Solution.Directory / ".." / "build" / "DockerFileTemplates" / DefaultPostgresDockerConfigurationFileName;
+
+        TemplateAppSettingsFolderPath ??=
+            Solution.Directory / ".." / "build" / "AppSettingsTemplates";
     }
 
+    Target SetupAppSettings => _ => _
+        .Executes(() =>
+        {
+            foreach (var project in Solution.Projects)
+            {
+                var appSettingsFile = project.Directory.GetFiles("appsettings.json").SingleOrDefault();
+                Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
+
+                if (appSettingsFile is null)
+                {
+                    continue;
+                }
+
+                var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
+                Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
+                var appSettingsTemplate = File.ReadAllText(appSettingsTemplatePath);
+                Log.Information("App settings template {AppSettingsTemplate}", appSettingsTemplate);
+
+                var options = new
+                {
+                    PostgresUser,
+                    PostgresPassword,
+                    PostgresHost,
+                    PostgresPort,
+                    PostgresDataBaseName,
+                    CertificatePath,
+                    CertificatePassword,
+                    Url,
+                    LogLevelDefault
+                };
+
+                var smartFormatter = new Formatter();
+                var appSettings = smartFormatter.Format(appSettingsTemplate, options);
+                File.WriteAllText(appSettingsFile, appSettings);
+                Log.Information("Save app settings {AppSettingsFile}", appSettingsFile);
+            }
+        });
+
     Target Restore => _ => _
+        .DependsOn(SetupAppSettings)
         .Executes(() => DotNetRestore(setting => setting.SetProjectFile(Solution.Path)));
 
     Target Clean => _ => _
@@ -69,7 +128,7 @@ class Build : NukeBuild
             {
                 throw new Exception(psCommandResponse.Error);
             }
-            
+
             Log.Information("List {PostgresContainerName}", PostgresContainerName);
 
             foreach (var log in psCommandResponse.Log)
@@ -90,15 +149,15 @@ class Build : NukeBuild
             {
                 throw new Exception(stopCommandResponse.Error);
             }
-            
+
             Log.Information("Stop {PostgresContainerName}", PostgresContainerName, containerId);
-            
+
             foreach (var log in stopCommandResponse.Log)
             {
                 Log.Information(log);
             }
         });
-    
+
     Target DockerRemoveContainers => _ => _
         .DependsOn(DockerStopContainers)
         .Executes(() =>
@@ -111,9 +170,9 @@ class Build : NukeBuild
             {
                 throw new Exception(psCommandResponse.Error);
             }
-            
+
             Log.Information("List {PostgresContainerName}", PostgresContainerName);
-            
+
             foreach (var log in psCommandResponse.Log)
             {
                 Log.Information(log);
@@ -132,16 +191,16 @@ class Build : NukeBuild
             {
                 throw new Exception(removeContainerCommandResponse.Error);
             }
-            
+
             Log.Information("Remove {PostgresContainerName}", PostgresContainerName, containerId);
-            
+
             foreach (var log in removeContainerCommandResponse.Log)
             {
                 Log.Information(log);
             }
         });
 
-    Target Docker => _ => _
+    Target DockerBuild => _ => _
         .DependsOn(Tests)
         .DependsOn(DockerRemoveContainers)
         .Executes(() =>
@@ -179,8 +238,6 @@ class Build : NukeBuild
             Log.Information(
                 "Save postgres docker configuration in {PostgresDockerConfigurationFilePath}",
                 postgresDockerConfigurationFilePath);
-
-            Log.Information("{PostgresDockerConfiguration}", postgresDockerConfiguration);
 
             new Builder()
                 .UseContainer()

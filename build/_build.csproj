@@ -23,4 +23,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="AppSettingsTemplates\RegularScript.Service.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
