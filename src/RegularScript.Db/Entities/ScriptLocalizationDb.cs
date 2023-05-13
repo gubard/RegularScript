@@ -1,6 +1,6 @@
 ﻿namespace RegularScript.Db.Entities;
 
-public class ScriptLocalization
+public class ScriptLocalizationDb
 {
     public Guid Id { get; set; }
     public Guid ScriptId { get; set; }
@@ -8,6 +8,6 @@ public class ScriptLocalization
     public string? Name { get; set; }
     public string? Description { get; set; }
 
-    public Script? Script { get; set; }
-    public Language? Language { get; set; }
+    public ScriptDb? Script { get; set; }
+    public LanguageDb? Language { get; set; }
 }

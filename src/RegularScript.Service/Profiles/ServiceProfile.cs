@@ -9,7 +9,7 @@ public class ServiceProfile : Profile
 {
     public ServiceProfile()
     {
-        CreateMap<Language, LanguageApi>()
+        CreateMap<LanguageDb, LanguageApi>()
             .ForMember(x => x.Id, opt => opt.MapFrom(src => ByteString.CopyFrom(src.Id.ToByteArray())));
     }
 }

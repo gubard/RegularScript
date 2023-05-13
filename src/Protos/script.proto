@@ -3,3 +3,21 @@
 option csharp_namespace = "GrpcClient.Script";
 
 package script;
+
+service ScriptServiceApi {
+  rpc GetRootScripts (GetRootScriptsRequest) returns (GetRootScriptsReply);
+}
+
+message GetRootScriptsRequest {
+  bytes LanguageId = 1;
+}
+
+message GetRootScriptsReply {
+  repeated ScriptApi Scripts = 1;
+}
+
+message ScriptApi {
+  bytes Id = 1;
+  string Name = 2;
+  string Description = 3;
+}

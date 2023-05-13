@@ -4,9 +4,9 @@ using RegularScript.Db.Entities;
 
 namespace RegularScript.Db.PostgreSql.Configurations;
 
-public class ScriptLocalizationEntityTypeConfiguration : IEntityTypeConfiguration<ScriptLocalization>
+public class ScriptLocalizationEntityTypeConfiguration : IEntityTypeConfiguration<ScriptLocalizationDb>
 {
-    public void Configure(EntityTypeBuilder<ScriptLocalization> builder)
+    public void Configure(EntityTypeBuilder<ScriptLocalizationDb> builder)
     {
         builder.ToTable(name: "script_localizations");
         builder.HasKey(keyExpression: x => x.Id);

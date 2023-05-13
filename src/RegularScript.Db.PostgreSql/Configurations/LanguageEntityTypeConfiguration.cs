@@ -4,9 +4,9 @@ using RegularScript.Db.Entities;
 
 namespace RegularScript.Db.PostgreSql.Configurations;
 
-public class LanguageEntityTypeConfiguration : IEntityTypeConfiguration<Language>
+public class LanguageEntityTypeConfiguration : IEntityTypeConfiguration<LanguageDb>
 {
-    public void Configure(EntityTypeBuilder<Language> builder)
+    public void Configure(EntityTypeBuilder<LanguageDb> builder)
     {
         builder.ToTable(name: "languages");
         builder.HasKey(keyExpression: x => x.Id);

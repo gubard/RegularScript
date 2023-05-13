@@ -27,6 +27,7 @@ class Build : NukeBuild
     [Parameter] AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
     [Parameter] AbsolutePath TemplateAppSettingsFolderPath { get; set; }
     [Parameter] AbsolutePath TempFolderPath { get; set; }
+    [Parameter] string DefaultLanguageCodeIso3 { get; set; } = "eng";
 
     #region App Parameters
 
@@ -90,7 +91,8 @@ class Build : NukeBuild
                     CertificatePath,
                     CertificatePassword,
                     Url,
-                    LogLevelDefault
+                    LogLevelDefault,
+                    DefaultLanguageCodeIso3
                 };
 
                 var smartFormatter = new Formatter();

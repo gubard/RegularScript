@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Input;
 using AutoMapper;
 using Avalonia.Collections;
@@ -14,8 +13,9 @@ public class ScriptsViewModel : ViewModelBase
 {
     private LanguageNotify? selectedLanguage;
 
-    [Inject] public IMapper? Mapper { get; set; }
-    [Inject] public ILanguageService? LanguageService { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    [Inject] public ILanguageService LanguageService { get; set; }
+    [Inject] public IScriptService ScriptService { get; set; }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
     public AvaloniaList<LanguageNotify> Languages { get; }
@@ -32,20 +32,12 @@ public class ScriptsViewModel : ViewModelBase
         Languages = new();
         Scripts = new();
 
-        InitializedCommand = ReactiveCommand.Create( async () =>
+        InitializedCommand = ReactiveCommand.Create(async () =>
         {
-            try
-            {
-                var languages  = await LanguageService.ThrowIfNull().GetSupportedAsync();
-                Languages.Clear();
-                Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
-                SelectedLanguage = Languages.First();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var languages = await LanguageService.ThrowIfNull().GetSupportedAsync();
+            Languages.Clear();
+            Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
+            SelectedLanguage = Languages.First();
         });
     }
 }

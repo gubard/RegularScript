@@ -1,26 +1,24 @@
 using AutoMapper;
 using Grpc.Core;
 using GrpcClient.Language;
-using Microsoft.EntityFrameworkCore;
-using RegularScript.Db.Contexts;
-using RegularScript.Db.Entities;
+using RegularScript.Service.Interfaces;
 
-namespace RegularScript.Service.Services;
+namespace RegularScript.Service.GrpcServices;
 
 public class LanguageService : LanguageServiceApi.LanguageServiceApiBase
 {
-    private readonly RegularScriptDbContext dbContext;
+    private readonly ILanguageRepository languageRepository;
     private readonly IMapper mapper;
 
-    public LanguageService(RegularScriptDbContext dbContext, IMapper mapper)
+    public LanguageService(ILanguageRepository languageRepository, IMapper mapper)
     {
-        this.dbContext = dbContext;
+        this.languageRepository = languageRepository;
         this.mapper = mapper;
     }
 
     public override async Task<GetAllReply> GetAll(GetAllRequest request, ServerCallContext context)
     {
-        var languages = await dbContext.Set<Language>().ToArrayAsync();
+        var languages = await languageRepository.GetAllAsync();
         var reply = new GetAllReply();
         reply.Languages.AddRange(languages.Select(x => mapper.Map<LanguageApi>(x)).ToArray());
 
@@ -29,7 +27,7 @@ public class LanguageService : LanguageServiceApi.LanguageServiceApiBase
 
     public override async Task<GetSupportedReply> GetSupported(GetSupportedRequest request, ServerCallContext context)
     {
-        var languages = await dbContext.Set<Language>().Where(x => x.IsSupported).ToArrayAsync();
+        var languages = await languageRepository.GetSupportedAsync();
         var reply = new GetSupportedReply();
         reply.Languages.AddRange(languages.Select(x => mapper.Map<LanguageApi>(x)).ToArray());
 

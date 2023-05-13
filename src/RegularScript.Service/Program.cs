@@ -1,16 +1,21 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RegularScript.Db.Contexts;
+using RegularScript.Service.GrpcServices;
+using RegularScript.Service.Interfaces;
+using RegularScript.Service.Models;
 using RegularScript.Service.Profiles;
 using RegularScript.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
+builder.Services.AddScoped<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
+builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddGrpc();
+builder.Services.AddOptions<ScriptRepositoryOptions>(ScriptRepositoryOptions.ConfigurationPath);
 builder.Logging.AddConsole();
 
-builder.Services.AddTransient<MapperConfiguration>(
+builder.Services.AddScoped<MapperConfiguration>(
     _ => new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>()));
 
 builder.Services.AddDbContext<RegularScriptDbContext>((sp, options) =>
@@ -30,7 +35,7 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseGrpcWeb(new GrpcWebOptions {DefaultEnabled = true});
+app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
 app.UseCors("AllowAll");
 
 app.MapGrpcService<LanguageService>().EnableGrpcWeb();
