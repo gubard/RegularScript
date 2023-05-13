@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using Ductus.FluentDocker.Builders;
-using Ductus.FluentDocker.Commands;
 using Ductus.FluentDocker.Services;
+using Extensions;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -128,46 +128,15 @@ class Build : NukeBuild
     Target DockerStopPostresContainer => _ => _
         .Executes(() =>
         {
-            var hosts = new Hosts().Discover();
-
-            var docker = hosts.FirstOrDefault(x => x.IsNative) ??
-                         hosts.FirstOrDefault(x => x.Name == "default") ??
-                         throw new NullReferenceException("docker");
-
-            var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
-
-            if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
-            {
-                throw new Exception(psCommandResponse.Error);
-            }
-
-            Log.Information("List {PostgresContainerName}", PostgresContainerName);
-
-            foreach (var log in psCommandResponse.Log)
-            {
-                Log.Information(log);
-            }
-
-            var containerId = psCommandResponse.Data.SingleOrDefault();
+            var docker = CreateDockerClient();
+            var containerId = docker.GetContainerId(PostgresContainerName);
 
             if (string.IsNullOrWhiteSpace(containerId))
             {
                 return;
             }
 
-            var stopCommandResponse = docker.Host.Stop(containerId);
-
-            if (!string.IsNullOrWhiteSpace(stopCommandResponse.Error))
-            {
-                throw new Exception(stopCommandResponse.Error);
-            }
-
-            Log.Information("Stop {PostgresContainerName}", PostgresContainerName, containerId);
-
-            foreach (var log in stopCommandResponse.Log)
-            {
-                Log.Information(log);
-            }
+            docker.StopContainer(containerId, PostgresContainerName);
         });
 
     Target DockerStopContainers => _ => _
@@ -177,46 +146,15 @@ class Build : NukeBuild
         .DependsOn(DockerStopPostresContainer)
         .Executes(() =>
         {
-            var hosts = new Hosts().Discover();
-
-            var docker = hosts.FirstOrDefault(x => x.IsNative) ??
-                         hosts.FirstOrDefault(x => x.Name == "default") ??
-                         throw new NullReferenceException("docker");
-
-            var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
-
-            if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
-            {
-                throw new Exception(psCommandResponse.Error);
-            }
-
-            Log.Information("List {PostgresContainerName}", PostgresContainerName);
-
-            foreach (var log in psCommandResponse.Log)
-            {
-                Log.Information("{Log}", log);
-            }
-
-            var containerId = psCommandResponse.Data.SingleOrDefault();
+            var docker = CreateDockerClient();
+            var containerId = docker.GetContainerId(PostgresContainerName);
 
             if (string.IsNullOrWhiteSpace(containerId))
             {
                 return;
             }
 
-            var removeContainerCommandResponse = docker.Host.RemoveContainer(containerId);
-
-            if (!string.IsNullOrWhiteSpace(removeContainerCommandResponse.Error))
-            {
-                throw new Exception(removeContainerCommandResponse.Error);
-            }
-
-            Log.Information("Remove {PostgresContainerName}", PostgresContainerName, containerId);
-
-            foreach (var log in removeContainerCommandResponse.Log)
-            {
-                Log.Information("{Log}", log);
-            }
+            docker.RemoveContainer(containerId, PostgresContainerName);
         });
 
     Target DockerRemoveContainers => _ => _
@@ -286,4 +224,15 @@ class Build : NukeBuild
         .DependsOn(ResultDocker);
 
     #endregion
+
+    IHostService CreateDockerClient()
+    {
+        var hosts = new Hosts().Discover();
+
+        var docker = hosts.FirstOrDefault(x => x.IsNative) ??
+                     hosts.FirstOrDefault(x => x.Name == "default") ??
+                     throw new NullReferenceException("docker");
+
+        return docker;
+    }
 }
