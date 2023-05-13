@@ -58,8 +58,92 @@ class Build : NukeBuild
         .Executes(() => DotNetTest(settings => settings.SetProjectFile(Solution.Path)
             .SetConfiguration(Configuration)));
 
+    Target DockerStopContainers => _ => _
+        .Executes(() =>
+        {
+            var hosts = new Hosts().Discover();
+            var docker = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
+            var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
+
+            if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
+            {
+                throw new Exception(psCommandResponse.Error);
+            }
+            
+            Log.Information("List {PostgresContainerName}", PostgresContainerName);
+
+            foreach (var log in psCommandResponse.Log)
+            {
+                Log.Information(log);
+            }
+
+            var containerId = psCommandResponse.Data.SingleOrDefault();
+
+            if (string.IsNullOrWhiteSpace(containerId))
+            {
+                return;
+            }
+
+            var stopCommandResponse = docker.Host.Stop(containerId);
+
+            if (!string.IsNullOrWhiteSpace(stopCommandResponse.Error))
+            {
+                throw new Exception(stopCommandResponse.Error);
+            }
+            
+            Log.Information("Stop {PostgresContainerName}", PostgresContainerName, containerId);
+            
+            foreach (var log in stopCommandResponse.Log)
+            {
+                Log.Information(log);
+            }
+        });
+    
+    Target DockerRemoveContainers => _ => _
+        .DependsOn(DockerStopContainers)
+        .Executes(() =>
+        {
+            var hosts = new Hosts().Discover();
+            var docker = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
+            var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
+
+            if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
+            {
+                throw new Exception(psCommandResponse.Error);
+            }
+            
+            Log.Information("List {PostgresContainerName}", PostgresContainerName);
+            
+            foreach (var log in psCommandResponse.Log)
+            {
+                Log.Information(log);
+            }
+
+            var containerId = psCommandResponse.Data.SingleOrDefault();
+
+            if (string.IsNullOrWhiteSpace(containerId))
+            {
+                return;
+            }
+
+            var removeContainerCommandResponse = docker.Host.RemoveContainer(containerId);
+
+            if (!string.IsNullOrWhiteSpace(removeContainerCommandResponse.Error))
+            {
+                throw new Exception(removeContainerCommandResponse.Error);
+            }
+            
+            Log.Information("Remove {PostgresContainerName}", PostgresContainerName, containerId);
+            
+            foreach (var log in removeContainerCommandResponse.Log)
+            {
+                Log.Information(log);
+            }
+        });
+
     Target Docker => _ => _
         .DependsOn(Tests)
+        .DependsOn(DockerRemoveContainers)
         .Executes(() =>
         {
             var postgresDockerTemplateConfiguration = File.ReadAllText(PostgresDockerTemplateConfigurationFilePath);
@@ -97,33 +181,6 @@ class Build : NukeBuild
                 postgresDockerConfigurationFilePath);
 
             Log.Information("{PostgresDockerConfiguration}", postgresDockerConfiguration);
-            var hosts = new Hosts().Discover();
-            var docker = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
-            var containers = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
-
-            if (!string.IsNullOrWhiteSpace(containers.Error))
-            {
-                throw new Exception(containers.Error);
-            }
-
-            var containerId = containers.Data.SingleOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(containerId))
-            {
-                var stop = docker.Host.Stop(containerId);
-
-                if (!string.IsNullOrWhiteSpace(stop.Error))
-                {
-                    throw new Exception(stop.Error);
-                }
-
-                var run = docker.Host.RemoveContainer(containerId);
-
-                if (!string.IsNullOrWhiteSpace(run.Error))
-                {
-                    throw new Exception(run.Error);
-                }
-            }
 
             new Builder()
                 .UseContainer()
