@@ -13,9 +13,9 @@ public class ScriptsViewModel : ViewModelBase
 {
     private LanguageNotify? selectedLanguage;
 
-    [Inject] public IMapper Mapper { get; set; }
-    [Inject] public ILanguageService LanguageService { get; set; }
-    [Inject] public IScriptService ScriptService { get; set; }
+    [Inject] public IMapper? Mapper { get; set; }
+    [Inject] public ILanguageService? LanguageService { get; set; }
+    [Inject] public IScriptService? ScriptService { get; set; }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
     public AvaloniaList<LanguageNotify> Languages { get; }
