@@ -14,11 +14,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
+    public const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
     public static int Main() => Execute<Build>(x => x.Docker);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -27,7 +23,6 @@ class Build : NukeBuild
     [Solution] Solution Solution { get; set; }
     [Parameter] AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
     [Parameter] public AbsolutePath TempFolderPath { get; set; }
-
     [Parameter] public string PostgresContainerName { get; set; } = "regular_script_postgres";
     [Parameter] public string PostgresImageName { get; set; } = "postgres";
     [Parameter] public string PostgresPassword { get; set; } = "QAZ78963wsx";
@@ -40,8 +35,9 @@ class Build : NukeBuild
     {
         base.OnBuildInitialized();
         TempFolderPath ??= Solution.Directory / ".." / "temp";
+
         PostgresDockerTemplateConfigurationFilePath ??=
-            Solution.Directory / ".." / "build" / "DockerFileTemplates" / "PostresSQL.yml";
+            Solution.Directory / ".." / "build" / "DockerFileTemplates" / DefaultPostgresDockerConfigurationFileName;
     }
 
     Target Restore => _ => _
@@ -93,7 +89,7 @@ class Build : NukeBuild
                 Log.Information("Created temp folder {TempFolderPath}", TempFolderPath);
             }
 
-            var postgresDockerConfigurationFilePath = TempFolderPath / "PostresSQL.yml";
+            var postgresDockerConfigurationFilePath = TempFolderPath / DefaultPostgresDockerConfigurationFileName;
             File.WriteAllText(postgresDockerConfigurationFilePath, postgresDockerConfiguration);
 
             Log.Information(
