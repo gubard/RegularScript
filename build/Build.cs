@@ -16,7 +16,7 @@ using static System.IO.File;
 
 class Build : NukeBuild
 {
-    public const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
+    const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
 
     public static int Main() => Execute<Build>(x => x.Result);
 
@@ -26,27 +26,27 @@ class Build : NukeBuild
     [Solution] Solution Solution { get; set; }
     [Parameter] AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
     [Parameter] AbsolutePath TemplateAppSettingsFolderPath { get; set; }
-    [Parameter] public AbsolutePath TempFolderPath { get; set; }
+    [Parameter] AbsolutePath TempFolderPath { get; set; }
 
     #region App Parameters
 
-    [Parameter] public string LogLevelDefault { get; set; } = "Debug";
-    [Parameter] public string CertificatePath { get; set; } = "localhost.pfx";
-    [Parameter] public string CertificatePassword { get; set; } = "QAZ78963wsx";
-    [Parameter] public string Url { get; set; } = "https://localhost:5002";
+    [Parameter] string LogLevelDefault { get; set; } = "Debug";
+    [Parameter] string CertificatePath { get; set; } = "localhost.pfx";
+    [Parameter] string CertificatePassword { get; set; } = "QAZ78963wsx";
+    [Parameter] string Url { get; set; } = "https://localhost:5002";
 
     #endregion
 
     #region Postgres Parameters
 
-    [Parameter] public string PostgresContainerName { get; set; } = "regular_script_postgres";
-    [Parameter] public string PostgresImageName { get; set; } = "postgres";
-    [Parameter] public string PostgresPassword { get; set; } = "QAZ78963wsx";
-    [Parameter] public string PostgresUser { get; set; } = "postgresuser";
-    [Parameter] public string PostgresDataBaseName { get; set; } = "regular_script";
-    [Parameter] public string PostgresDataFilePath { get; set; } = "~/postgres/data";
-    [Parameter] public ushort PostgresPort { get; set; } = 1713;
-    [Parameter] public string PostgresHost { get; set; } = "localhost";
+    [Parameter] string PostgresContainerName { get; set; } = "regular_script_postgres";
+    [Parameter] string PostgresImageName { get; set; } = "postgres";
+    [Parameter] string PostgresPassword { get; set; } = "QAZ78963wsx";
+    [Parameter] string PostgresUser { get; set; } = "postgresuser";
+    [Parameter] string PostgresDataBaseName { get; set; } = "regular_script";
+    [Parameter] string PostgresDataFilePath { get; set; } = "~/postgres/data";
+    [Parameter] ushort PostgresPort { get; set; } = 1713;
+    [Parameter] string PostgresHost { get; set; } = "localhost";
 
     #endregion
 
