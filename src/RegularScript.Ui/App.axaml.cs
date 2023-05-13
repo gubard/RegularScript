@@ -14,12 +14,12 @@ namespace RegularScript.Ui;
 public class App : Application
 {
     [Inject]
-    public IResolver Resolver { get; set; }
+    public IResolver? Resolver { get; set; }
     
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(obj: this);
-        DataTemplates.AddRange(Resolver.Resolve<IEnumerable<IDataTemplate>>());
+        DataTemplates.AddRange(Resolver.ThrowIfNull().Resolve<IEnumerable<IDataTemplate>>());
     }
 
     public override void OnFrameworkInitializationCompleted()

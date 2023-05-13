@@ -6,5 +6,5 @@ public class Script
     public Guid? ParentId { get; set; }
 
     public Script? Parent { get; set; }
-    public List<ScriptLocalization> Localizations { get; set; }
+    public List<ScriptLocalization>? Localizations { get; set; }
 }

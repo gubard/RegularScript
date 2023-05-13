@@ -4,6 +4,7 @@ using System.Windows.Input;
 using AutoMapper;
 using Avalonia.Collections;
 using ReactiveUI;
+using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.DependencyInjection.Attributes;
 using RegularScript.Ui.Interfaces;
 
@@ -35,9 +36,9 @@ public class ScriptsViewModel : ViewModelBase
         {
             try
             {
-                var languages  = await LanguageService.GetSupportedAsync();
+                var languages  = await LanguageService.ThrowIfNull().GetSupportedAsync();
                 Languages.Clear();
-                Languages.AddRange(languages.Select(x => Mapper.Map<LanguageNotify>(x)));
+                Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
                 SelectedLanguage = Languages.First();
             }
             catch (Exception e)

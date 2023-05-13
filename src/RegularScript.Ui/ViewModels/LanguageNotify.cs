@@ -6,8 +6,8 @@ namespace RegularScript.Ui.ViewModels;
 public class LanguageNotify : ViewModelBase
 {
     private Guid id;
-    private string codeIso3;
-    private string name;
+    private string? codeIso3;
+    private string? name;
 
     public Guid Id
     {
@@ -15,13 +15,13 @@ public class LanguageNotify : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref id, value);
     }
 
-    public string CodeIso3
+    public string? CodeIso3
     {
         get => codeIso3;
         set => this.RaiseAndSetIfChanged(ref codeIso3, value);
     }
 
-    public string Name
+    public string? Name
     {
         get => name;
         set => this.RaiseAndSetIfChanged(ref name, value);

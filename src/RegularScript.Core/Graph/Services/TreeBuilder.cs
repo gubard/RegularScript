@@ -192,6 +192,6 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
     {
         var newRoot = root.ThrowIfNull().Build();
 
-        return new (newRoot);
+        return new (newRoot!);
     }
 }

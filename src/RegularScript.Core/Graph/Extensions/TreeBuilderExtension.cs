@@ -1,4 +1,5 @@
 ﻿using RegularScript.Core.Graph.Services;
+using RegularScript.Core.ModularSystem.Interfaces;
 
 namespace RegularScript.Core.Graph.Extensions;
 
@@ -6,9 +7,9 @@ public static class TreeBuilderExtension
 {
     public static TreeBuilder<TKey, TValue> SetRoot<TKey, TValue>(
         this TreeBuilder<TKey, TValue> builder,
-        TreeNodeBuilder<TKey, TValue?> root) where TKey : notnull
+        TreeNodeBuilder<TKey, TValue> root) where TKey : notnull
     {
-        builder.Root = root;
+        builder.Root = root!;
 
         return builder;
     }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using RegularScript.Core.Common.Exceptions;
@@ -23,7 +24,7 @@ public class DependencyInjector : IDependencyInjector
     )
     {
         Check(injectors);
-        fields = new (injectors, autoInjects, reservedCtorParameters);
+        fields = new(injectors, autoInjects, reservedCtorParameters);
     }
 
     public ReadOnlyMemory<TypeInformation> Inputs => fields.Inputs;
@@ -37,7 +38,7 @@ public class DependencyInjector : IDependencyInjector
         }
 
         BuildExpression(type, injectorItem, result: out var expression);
-        var func = BuildFunc(expression);
+        var func = BuildFunc(expression.ThrowIfNull());
         var value = func.Invoke();
 
         return value;
@@ -72,13 +73,13 @@ public class DependencyInjector : IDependencyInjector
 
         BuildExpression(type, injectorItem, result: out var expression);
 
-        return new (type, expression);
+        return new(type, expression.ThrowIfNull());
     }
 
     private bool BuildExpression(
         TypeInformation type,
         InjectorItem injectorItem,
-        out Expression result
+        [MaybeNullWhen(false)] out Expression result
     )
     {
         switch (injectorItem.Type)
@@ -93,11 +94,11 @@ public class DependencyInjector : IDependencyInjector
                 if (UpdateParameters(injectorItem.Expression, out result))
                 {
                     var constant = result
-                       .ToLambda()
-                       .Compile()
-                       .DynamicInvoke()
-                       .ThrowIfNull()
-                       .ToConstant();
+                        .ToLambda()
+                        .Compile()
+                        .DynamicInvoke()
+                        .ThrowIfNull()
+                        .ToConstant();
 
                     fields.CacheSingleton.Add(type, constant);
 
@@ -212,7 +213,7 @@ public class DependencyInjector : IDependencyInjector
                             isFull = false;
                         }
 
-                        arguments.Add(reserved);
+                        arguments.Add(reserved.ThrowIfNull());
 
                         continue;
                     }
@@ -301,12 +302,14 @@ public class DependencyInjector : IDependencyInjector
 
             if (
                 injectorItem.Expression is LambdaExpression lambdaExpression
-             && lambdaExpression.Parameters.IsSingle()
-             && lambdaExpression.Body is ParameterExpression parameterExpression
-             && lambdaExpression.Parameters[index: 0].Type == parameterExpression.Type
+                && lambdaExpression.Parameters.IsSingle()
+                && lambdaExpression.Body is ParameterExpression parameterExpression
+                && lambdaExpression.Parameters[index: 0].Type == parameterExpression.Type
             )
             {
-                if (fields.Injectors.ContainsKey(parameterExpression.Type))
+                var type = parameterExpression.ThrowIfNull().Type;
+
+                if (fields.Injectors.ContainsKey(type))
                 {
                     injectorItem = fields.Injectors[parameterExpression.Type];
                 }
@@ -322,7 +325,8 @@ public class DependencyInjector : IDependencyInjector
 
             if (!BuildExpression(identifier.Member.Type, injectorItem, result: out var expression))
             {
-                variables.AddRange(collection: GetParameters(expression));
+                expression = expression.ThrowIfNull();
+                variables.AddRange(collection: GetParameters(expression.ThrowIfNull()));
                 isFull = false;
             }
 
@@ -343,8 +347,8 @@ public class DependencyInjector : IDependencyInjector
         foreach (var memberExpression in memberExpressions)
         {
             var assign = rootVariable
-               .ToMember(memberExpression.Member)
-               .ToAssign(memberExpression.Expression);
+                .ToMember(memberExpression.Member)
+                .ToAssign(memberExpression.Expression);
 
             blockItems.Add(assign);
         }
@@ -440,7 +444,7 @@ public class DependencyInjector : IDependencyInjector
 
         BuildExpression(parameterExpression.Type, injectorItem, result: out var result);
 
-        return result;
+        return result.ThrowIfNull();
     }
 
     private Func<object> BuildFunc(Expression expression)
@@ -450,7 +454,7 @@ public class DependencyInjector : IDependencyInjector
         return result;
     }
 
-#region Checks
+    #region Checks
 
     private void Check(IReadOnlyDictionary<TypeInformation, InjectorItem> injectors)
     {
@@ -473,7 +477,7 @@ public class DependencyInjector : IDependencyInjector
             }
 
             var types = GetParameters(injector.Value.Expression)
-               .Select(selector: x => (TypeInformation)x.Type);
+                .Select(selector: x => (TypeInformation)x.Type);
 
             listParameterTypes.AddRange(types);
 
@@ -489,5 +493,5 @@ public class DependencyInjector : IDependencyInjector
         }
     }
 
-#endregion
+    #endregion
 }
