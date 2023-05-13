@@ -16,7 +16,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 class Build : NukeBuild
 {
     public const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
-    public static int Main() => Execute<Build>(x => x.DockerBuild);
+    public static int Main() => Execute<Build>(x => x.Result);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -98,6 +98,8 @@ class Build : NukeBuild
             }
         });
 
+    #region DotNet
+
     Target Restore => _ => _
         .DependsOn(SetupAppSettings)
         .Executes(() => DotNetRestore(setting => setting.SetProjectFile(Solution.Path)));
@@ -117,7 +119,11 @@ class Build : NukeBuild
         .Executes(() => DotNetTest(settings => settings.SetProjectFile(Solution.Path)
             .SetConfiguration(Configuration)));
 
-    Target DockerStopContainers => _ => _
+    #endregion
+
+    #region Docker
+
+    Target DockerStopPostresContainer => _ => _
         .Executes(() =>
         {
             var hosts = new Hosts().Discover();
@@ -158,8 +164,11 @@ class Build : NukeBuild
             }
         });
 
-    Target DockerRemoveContainers => _ => _
-        .DependsOn(DockerStopContainers)
+    Target DockerStopContainers => _ => _
+        .DependsOn(DockerStopPostresContainer);
+
+    Target DockerRemovePostresContainer => _ => _
+        .DependsOn(DockerStopPostresContainer)
         .Executes(() =>
         {
             var hosts = new Hosts().Discover();
@@ -200,9 +209,11 @@ class Build : NukeBuild
             }
         });
 
-    Target DockerBuild => _ => _
-        .DependsOn(Tests)
-        .DependsOn(DockerRemoveContainers)
+    Target DockerRemoveContainers => _ => _
+        .DependsOn(DockerRemovePostresContainer);
+
+    Target DockerBuildPostres => _ => _
+        .DependsOn(DockerRemovePostresContainer)
         .Executes(() =>
         {
             var postgresDockerTemplateConfiguration = File.ReadAllText(PostgresDockerTemplateConfigurationFilePath);
@@ -246,4 +257,22 @@ class Build : NukeBuild
                 .Build()
                 .Start();
         });
+
+    Target DockerBuild => _ => _
+        .DependsOn(DockerBuildPostres);
+
+    #endregion
+
+    #region Result
+
+    Target ResultDotnet => _ => _
+        .Inherit(Tests);
+    Target ResultDocker => _ => _
+        .DependsOn(ResultDotnet)
+        .Inherit(DockerBuild);
+    
+    Target Result => _ => _
+        .DependsOn(ResultDocker);
+
+    #endregion
 }
