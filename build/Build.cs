@@ -174,7 +174,11 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var hosts = new Hosts().Discover();
-            var docker = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
+
+            var docker = hosts.FirstOrDefault(x => x.IsNative) ??
+                         hosts.FirstOrDefault(x => x.Name == "default") ??
+                         throw new NullReferenceException("docker");
+
             var psCommandResponse = docker.Host.Ps($"--all --filter name={PostgresContainerName}");
 
             if (!string.IsNullOrWhiteSpace(psCommandResponse.Error))
@@ -186,7 +190,7 @@ class Build : NukeBuild
 
             foreach (var log in psCommandResponse.Log)
             {
-                Log.Information(log);
+                Log.Information("{Log}", log);
             }
 
             var containerId = psCommandResponse.Data.SingleOrDefault();
@@ -207,7 +211,7 @@ class Build : NukeBuild
 
             foreach (var log in removeContainerCommandResponse.Log)
             {
-                Log.Information(log);
+                Log.Information("{Log}", log);
             }
         });
 
@@ -269,11 +273,11 @@ class Build : NukeBuild
 
     Target ResultDotnet => _ => _
         .Inherit(Tests);
-    
+
     Target ResultDocker => _ => _
         .DependsOn(ResultDotnet)
         .Inherit(DockerBuild);
-    
+
     Target Result => _ => _
         .DependsOn(ResultDocker);
 
