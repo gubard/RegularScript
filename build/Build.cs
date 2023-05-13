@@ -269,6 +269,7 @@ class Build : NukeBuild
 
     Target ResultDotnet => _ => _
         .Inherit(Tests);
+    
     Target ResultDocker => _ => _
         .DependsOn(ResultDotnet)
         .Inherit(DockerBuild);
