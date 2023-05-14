@@ -124,12 +124,15 @@ class Build : NukeBuild
     Target Compile => _ => _
         .DependsOn(Clean)
         .Executes(() => DotNetBuild(settings => settings.SetProjectFile(Solution.Path)
-            .SetConfiguration(Configuration)));
+            .SetConfiguration(Configuration)
+            .EnableNoRestore()));
 
     Target Tests => _ => _
         .DependsOn(Compile)
         .Executes(() => DotNetTest(settings => settings.SetProjectFile(Solution.Path)
-            .SetConfiguration(Configuration)));
+            .SetConfiguration(Configuration)
+            .EnableNoBuild()
+            .EnableNoRestore()));
 
     #endregion
 
