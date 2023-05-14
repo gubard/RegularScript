@@ -33,10 +33,10 @@ class Build : NukeBuild
             foreach (var project in Solution.Projects)
             {
                 var appSettingsFile = project.Directory.GetFiles("appsettings.json").SingleOrDefault();
-                Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
 
                 if (appSettingsFile is null) continue;
 
+                Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
                 var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
                 Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
                 var appSettingsTemplate = ReadAllText(appSettingsTemplatePath);
