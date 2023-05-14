@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
+builder.Services.AddScoped<IScriptRepository, ScriptRepository>();
 builder.Services.AddGrpc();
 builder.Services.AddOptions<ScriptRepositoryOptions>(ScriptRepositoryOptions.ConfigurationPath);
 builder.Logging.AddConsole();
@@ -39,10 +40,11 @@ app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
 app.UseCors("AllowAll");
 
 app.MapGrpcService<LanguageService>().EnableGrpcWeb();
+app.MapGrpcService<ScriptService>().EnableGrpcWeb();
 
 app.MapGet(
-    pattern: "/",
-    handler: () =>
+    "/",
+    () =>
         "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();

@@ -8,7 +8,7 @@ public class RandomUInt16InInterval : IRandom<ushort, Interval<ushort>>
 {
     public ushort GetRandom(Interval<ushort> options)
     {
-        var value = CommonConstants.Random.Next(options.Min, maxValue: options.Max + 1);
+        var value = CommonConstants.Random.Next(options.Min, options.Max + 1);
 
         return (ushort)value;
     }

@@ -18,10 +18,7 @@ public class RegularScriptDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        foreach (var assembly in assemblies)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
-        }
+        foreach (var assembly in assemblies) modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
         SeedHelper.SeedLanguages(modelBuilder);
     }

@@ -6,17 +6,17 @@ public static class DataTableExtension
 {
     public static string ToCsv(this DataTable dataTable)
     {
-        return dataTable.ToCsv(separator: ";", Environment.NewLine);
+        return dataTable.ToCsv(";", Environment.NewLine);
     }
 
     public static string GetTableString(this DataTable dataTable)
     {
-        return dataTable.GetTableString(Environment.NewLine, padding: -2);
+        return dataTable.GetTableString(Environment.NewLine, -2);
     }
 
     public static Task<string> GetTableStringAsync(this Task<DataTable> task)
     {
-        return task.GetTableStringAsync(Environment.NewLine, padding: -2);
+        return task.GetTableStringAsync(Environment.NewLine, -2);
     }
 
     public static string ToCsv(this DataTable dataTable, string separator, string rowSeparator)
@@ -38,15 +38,13 @@ public static class DataTableExtension
         var maxLengths = new int[columnNames.Length];
 
         for (var index = 0; index < columnNames.Length; index++)
-        {
             maxLengths[index] = columnNames[index].ColumnName.Length;
-        }
 
         for (var rowIndex = 0; rowIndex < valueRows.Length; rowIndex++)
         {
             var valuesRow = columnNames
-               .Select(selector: x => valueRows[rowIndex][x].ToString() ?? string.Empty)
-               .ToArray();
+                .Select(x => valueRows[rowIndex][x].ToString() ?? string.Empty)
+                .ToArray();
 
             values[rowIndex] = new string[columnNames.Length];
 
@@ -54,7 +52,7 @@ public static class DataTableExtension
             {
                 var value = valuesRow[columnIndex];
                 values[rowIndex][columnIndex] = value;
-                maxLengths[columnIndex] = Math.Max(value.Length, val2: maxLengths[columnIndex]);
+                maxLengths[columnIndex] = Math.Max(value.Length, maxLengths[columnIndex]);
             }
         }
 
@@ -63,7 +61,7 @@ public static class DataTableExtension
         for (var index = 0; index < formatColumnNames.Length; index++)
         {
             var template = $"{{0,{-maxLengths[index] + padding}}}";
-            formatColumnNames[index] = string.Format(template, arg0: columnNames[index]);
+            formatColumnNames[index] = string.Format(template, columnNames[index]);
         }
 
         var formatRows = new string[valueRows.Length];
@@ -73,16 +71,14 @@ public static class DataTableExtension
             var formatRow = new List<string>();
 
             for (var columnIndex = 0; columnIndex < columnNames.Length; columnIndex++)
-            {
-                formatRow.Add(item: "{" + columnIndex + "," + (-maxLengths[columnIndex] + padding) + "}");
-            }
+                formatRow.Add("{" + columnIndex + "," + (-maxLengths[columnIndex] + padding) + "}");
 
             var @params = values[rowIndex].Cast<object>();
-            formatRows[rowIndex] = string.Format(format: formatRow.JoinString(separator: ""), @params);
+            formatRows[rowIndex] = string.Format(formatRow.JoinString(""), @params);
         }
 
         var result =
-            $"{formatColumnNames.JoinString(separator: "")}{rowSeparator}{formatRows.JoinString(Environment.NewLine)}";
+            $"{formatColumnNames.JoinString("")}{rowSeparator}{formatRows.JoinString(Environment.NewLine)}";
 
         return result;
     }

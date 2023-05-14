@@ -16,14 +16,12 @@ public static class DataRowCollectionExtension
         var result = new List<string>();
 
         foreach (DataRow row in rowCollection)
-        {
             result.Add(
-                item: columnCollection
-                   .OfType<DataColumn>()
-                   .Select(selector: x => row[x].ToString() ?? string.Empty)
-                   .JoinString(separator)
+                columnCollection
+                    .OfType<DataColumn>()
+                    .Select(x => row[x].ToString() ?? string.Empty)
+                    .JoinString(separator)
             );
-        }
 
         return result.JoinString(rowSeparator);
     }

@@ -3,7 +3,7 @@
 public class EmptyEnumerableException : Exception
 {
     public EmptyEnumerableException(string enumerableName)
-        : base(message: $"{enumerableName} empty enumerable.")
+        : base($"{enumerableName} empty enumerable.")
     {
     }
 }

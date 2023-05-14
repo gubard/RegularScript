@@ -22,26 +22,24 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RegularScript.Db.Entities.Language", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.LanguageDb", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("CodeIso3")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsSupported")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language");
+                    b.ToTable("LanguageDb");
 
                     b.HasData(
                         new
@@ -3345,7 +3343,7 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                         {
                             Id = new Guid("90af6e63-4890-4e60-ab66-f2d2095c380d"),
                             CodeIso3 = "ukr",
-                            IsSupported = false,
+                            IsSupported = true,
                             Name = "Ukrainian"
                         },
                         new
@@ -3595,7 +3593,7 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                         });
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.Script", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.ScriptDb", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3608,24 +3606,22 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Script");
+                    b.ToTable("ScriptDb");
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.ScriptLocalization", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.ScriptLocalizationDb", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("LanguageId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("ScriptId")
@@ -3637,27 +3633,27 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
 
                     b.HasIndex("ScriptId");
 
-                    b.ToTable("ScriptLocalization");
+                    b.ToTable("ScriptLocalizationDb");
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.Script", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.ScriptDb", b =>
                 {
-                    b.HasOne("RegularScript.Db.Entities.Script", "Parent")
+                    b.HasOne("RegularScript.Db.Entities.ScriptDb", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.ScriptLocalization", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.ScriptLocalizationDb", b =>
                 {
-                    b.HasOne("RegularScript.Db.Entities.Language", "Language")
+                    b.HasOne("RegularScript.Db.Entities.LanguageDb", "Language")
                         .WithMany("ScriptLocalizations")
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RegularScript.Db.Entities.Script", "Script")
+                    b.HasOne("RegularScript.Db.Entities.ScriptDb", "Script")
                         .WithMany("Localizations")
                         .HasForeignKey("ScriptId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3668,12 +3664,12 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                     b.Navigation("Script");
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.Language", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.LanguageDb", b =>
                 {
                     b.Navigation("ScriptLocalizations");
                 });
 
-            modelBuilder.Entity("RegularScript.Db.Entities.Script", b =>
+            modelBuilder.Entity("RegularScript.Db.Entities.ScriptDb", b =>
                 {
                     b.Navigation("Localizations");
                 });

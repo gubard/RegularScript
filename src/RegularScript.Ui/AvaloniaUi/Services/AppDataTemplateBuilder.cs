@@ -13,12 +13,12 @@ public class AppDataTemplateBuilder : IBuilder<AppDataTemplate>
     public AppDataTemplateBuilder(IResolver resolver)
     {
         this.resolver = resolver;
-        resolveViewDictionary = new ();
+        resolveViewDictionary = new Dictionary<Type, Type>();
     }
 
     public AppDataTemplate Build()
     {
-        return new (resolveViewDictionary, resolver);
+        return new AppDataTemplate(resolveViewDictionary, resolver);
     }
 
     public void AddResolve(Type viewModelType, Type viewType)

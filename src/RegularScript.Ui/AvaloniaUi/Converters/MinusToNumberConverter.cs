@@ -21,10 +21,7 @@ public class MinusToNumberConverter : IValueConverter
         CultureInfo culture
     )
     {
-        if (value is null)
-        {
-            return targetType.GetDefaultValue();
-        }
+        if (value is null) return targetType.GetDefaultValue();
 
         var str = value.ToString();
 
@@ -44,7 +41,7 @@ public class MinusToNumberConverter : IValueConverter
 
                 try
                 {
-                    return converter.ConvertFromInvariantString(text: str.ThrowIfNull());
+                    return converter.ConvertFromInvariantString(str.ThrowIfNull());
                 }
                 catch
                 {

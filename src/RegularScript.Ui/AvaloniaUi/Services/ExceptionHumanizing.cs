@@ -23,7 +23,7 @@ public class ExceptionHumanizing : IHumanizing<Exception, object>
         {
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
-            Text = text,
+            Text = text
         };
     }
 }

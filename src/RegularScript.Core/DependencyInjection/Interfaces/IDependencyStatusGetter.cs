@@ -5,5 +5,8 @@ namespace RegularScript.Core.DependencyInjection.Interfaces;
 
 public interface IDependencyStatusGetter
 {
-    DependencyStatus GetStatus(TypeInformation type);
+    DependencyStatus GetStatus(
+        TypeInformation type,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
+    );
 }

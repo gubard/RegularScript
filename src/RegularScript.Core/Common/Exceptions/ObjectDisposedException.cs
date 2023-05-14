@@ -2,10 +2,10 @@
 
 public class ObjectDisposedException<T> : ObjectDisposedException where T : notnull
 {
-    public T Value { get; }
-
-    public ObjectDisposedException(T value) : base(objectName: value.ToString())
+    public ObjectDisposedException(T value) : base(value.ToString())
     {
         Value = value;
     }
+
+    public T Value { get; }
 }

@@ -18,10 +18,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RegularScript.Ui\RegularScript.Ui.csproj" />
+        <ProjectReference Include="..\RegularScript.Ui\RegularScript.Ui.csproj"/>
     </ItemGroup>
 </Project>

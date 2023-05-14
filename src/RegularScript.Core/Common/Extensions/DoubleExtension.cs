@@ -17,36 +17,27 @@ public static class DoubleExtension
 
     public static double ThrowIfZero(
         this double value,
-        [CallerArgumentExpression(parameterName: "value")]
-        string paramName = ""
+        [CallerArgumentExpression("value")] string paramName = ""
     )
     {
-        if (value.IsZero())
-        {
-            throw new ZeroException(paramName);
-        }
+        if (value.IsZero()) throw new ZeroException(paramName);
 
         return value;
     }
 
     public static double ThrowIfNegative(
         this double value,
-        [CallerArgumentExpression(parameterName: "value")]
-        string paramName = ""
+        [CallerArgumentExpression("value")] string paramName = ""
     )
     {
-        if (value.IsNegative())
-        {
-            throw new NegativeException<double>(paramName, value);
-        }
+        if (value.IsNegative()) throw new NegativeException<double>(paramName, value);
 
         return value;
     }
 
     public static double ThrowIfZeroOrNegative(
         this double value,
-        [CallerArgumentExpression(parameterName: "value")]
-        string paramName = ""
+        [CallerArgumentExpression("value")] string paramName = ""
     )
     {
         return value.ThrowIfZero(paramName).ThrowIfNegative(paramName);

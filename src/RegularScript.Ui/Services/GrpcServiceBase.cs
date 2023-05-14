@@ -1,24 +1,39 @@
+using System;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
-using Microsoft.Extensions.Options;
-using RegularScript.Ui.Modules;
+using RegularScript.Ui.Models;
 
 namespace RegularScript.Ui.Services;
 
-public abstract class GrpcServiceBase
+public abstract class GrpcServiceBase : IAsyncDisposable, IDisposable
 {
-    protected readonly IOptions<GrpcServiceOptions> options;
+    protected readonly GrpcChannel grpcChannel;
+    private readonly GrpcChannelOptions grpcChannelOptions;
+    private readonly GrpcWebHandler grpcWebHandler;
+    private readonly HttpClientHandler httpClientHandler;
+    private readonly GrpcServiceOptions options;
 
-    protected GrpcServiceBase(IOptions<GrpcServiceOptions> options)
+    protected GrpcServiceBase(GrpcServiceOptions options)
     {
         this.options = options;
+        httpClientHandler = new HttpClientHandler();
+        grpcWebHandler = new GrpcWebHandler(options.Mode, httpClientHandler);
+        grpcChannelOptions = new GrpcChannelOptions { HttpHandler = grpcWebHandler };
+        grpcChannel = GrpcChannel.ForAddress(options.Host, grpcChannelOptions);
     }
 
-    protected GrpcWebHandler CreateHttpClientHandle()
+    public virtual async ValueTask DisposeAsync()
     {
-        var httpHandler = new HttpClientHandler();
-        var result = new GrpcWebHandler(options.Value.Mode, httpHandler);
+        Dispose();
+        await grpcChannel.ShutdownAsync();
+    }
 
-        return result;
+    public virtual void Dispose()
+    {
+        httpClientHandler.Dispose();
+        grpcWebHandler.Dispose();
+        grpcChannel.Dispose();
     }
 }

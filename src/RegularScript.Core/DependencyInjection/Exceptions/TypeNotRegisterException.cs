@@ -2,10 +2,11 @@
 
 public class TypeNotRegisterException : Exception
 {
-    public Type Type { get; }
-
-    public TypeNotRegisterException(Type type) : base(message: $"Type {type} not register.")
+    public TypeNotRegisterException(Type type)
+        : base($"Type {type} not register.")
     {
         Type = type;
     }
+
+    public Type Type { get; }
 }

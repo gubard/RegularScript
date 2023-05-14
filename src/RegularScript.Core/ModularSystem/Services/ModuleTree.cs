@@ -15,91 +15,82 @@ namespace RegularScript.Core.ModularSystem.Services;
 
 public class ModuleTree : IModule, IResolver, IInvoker
 {
-    private readonly Tree<Guid, IModule> tree;
     private readonly Dictionary<TypeInformation, Func<object>> cache;
     private readonly Expression thisExpression;
+    private readonly Tree<Guid, IModule> tree;
 
     public ModuleTree(Tree<Guid, IModule> tree)
     {
         this.tree = tree;
-        cache = new ();
+        cache = new Dictionary<TypeInformation, Func<object>>();
         Id = Guid.NewGuid();
         var inputs = new List<TypeInformation>();
         var outputs = new List<TypeInformation>();
         var ends = this.tree.GetEnds();
 
-        foreach (var node in ends)
-        {
-            AddTypes(inputs, outputs, node);
-        }
-
-        var defaultTypes = new TypeInformation[]
-        {
-            typeof(IResolver),
-            typeof(IInvoker)
-        };
+        foreach (var node in ends) AddTypes(inputs, outputs, node);
 
         var outputsArray = outputs
-           .Distinct()
-           .Concat(defaultTypes)
-           .OrderBy(x => x.ToString())
-           .ToArray();
+            .Distinct()
+            .Concat(new TypeInformation[] { typeof(IResolver), typeof(IInvoker) })
+            .OrderBy(x => x.ToString())
+            .ToArray();
 
         Outputs = outputsArray;
         Inputs = inputs.Distinct().Where(x => !outputsArray.Contains(x)).ToArray();
         thisExpression = this.ToConstant();
     }
 
+    public bool IsFull => Inputs.IsEmpty;
+
+    public object? Invoke(Delegate del, DictionarySpan<TypeInformation, object> arguments)
+    {
+        var parameterTypes = del.GetParameterTypes();
+        var args = new object[parameterTypes.Length];
+
+        for (var index = 0; index < args.Length; index++)
+            if (arguments.TryGetValue(parameterTypes[index], out var value))
+                args[index] = value;
+            else
+                args[index] = Resolve(parameterTypes[index]);
+
+        return del.DynamicInvoke(args);
+    }
+
     public Guid Id { get; }
     public ReadOnlyMemory<TypeInformation> Inputs { get; }
     public ReadOnlyMemory<TypeInformation> Outputs { get; }
-    public bool IsFull => Inputs.IsEmpty;
 
-    public DependencyStatus GetStatus(TypeInformation type)
+    public DependencyStatus GetStatus(
+        TypeInformation type,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
+    )
     {
-        if (typeof(IResolver) == type)
-        {
-            return new (type, thisExpression);
-        }
+        if (typeof(IResolver) == type) return new DependencyStatus(type, thisExpression);
 
-        if (typeof(IInvoker) == type)
-        {
-            return new (type, thisExpression);
-        }
+        if (typeof(IInvoker) == type) return new DependencyStatus(type, thisExpression);
 
-        if (!Outputs.Span.Contains(type))
-        {
-            throw new TypeNotRegisterException(type.Type);
-        }
+        if (!IsTypeContains(type)) throw new TypeNotRegisterException(type.Type);
 
-        if (tree.Root.Value.Outputs.Span.Contains(type))
+        if (IsTypeContains(tree.Root.Value.Outputs, type))
         {
-            var rootStatus = tree.Root.Value.GetStatus(type);
+            var rootStatus = tree.Root.Value.GetStatus(type, scopeParameters);
 
             return rootStatus;
         }
 
-        var status = GetDependencyStatus(tree.Root, type).ThrowIfNullStruct();
+        var status = GetDependencyStatus(tree.Root, type, scopeParameters).ThrowIfNullStruct();
 
         return status;
     }
 
     public object GetObject(TypeInformation type)
     {
-        if (typeof(IResolver) == type)
-        {
-            return this;
-        }
+        if (typeof(IResolver) == type) return this;
 
-        if (typeof(IInvoker) == type)
-        {
-            return this;
-        }
+        if (typeof(IInvoker) == type) return this;
 
-        if (!Outputs.Span.Contains(type))
-        {
-            throw new TypeNotRegisterException(type.Type);
-        }
+        if (!IsTypeContains(type)) throw new TypeNotRegisterException(type.Type);
 
         if (cache.TryGetValue(type, out var func))
         {
@@ -108,15 +99,13 @@ public class ModuleTree : IModule, IResolver, IInvoker
             return value;
         }
 
-        var status = GetStatus(type);
-        var expression = UpdateExpression(status.Expression);
+        var scopeParameters = new Dictionary<TypeInformation, ScopeValue>();
+        var status = GetStatus(type, scopeParameters);
+        var expression = UpdateExpression(status.Expression, scopeParameters);
 
-        if (expression.Type.IsValueType)
-        {
-            expression = expression.ToConvert(typeof(object));
-        }
+        if (expression.Type.IsValueType) expression = expression.ToConvert(typeof(object));
 
-        var lambda = expression.ToLambda();
+        var lambda = InitScopeValues(expression, scopeParameters).ToLambda();
         func = lambda.Compile().ThrowIfIsNot<Func<object>>();
         var result = func.Invoke();
         cache.Add(type, func);
@@ -129,7 +118,61 @@ public class ModuleTree : IModule, IResolver, IInvoker
         return GetObject(type);
     }
 
-    private Expression UpdateExpression(Expression expression)
+    private Expression InitScopeValues(
+        Expression expression,
+        Dictionary<TypeInformation, ScopeValue> values
+    )
+    {
+        if (values.IsEmpty()) return expression;
+
+        foreach (var value in values)
+        {
+            var exp = UpdateExpression(value.Value.Expression, values);
+            values[value.Key] = value.Value with { Expression = exp };
+        }
+
+        var blockItems = new List<Expression>();
+        var variables = values.Select(x => x.Value.Parameter).Distinct().ToArray();
+        var parameters = values.GroupBy(x => x.Value.Parameter);
+
+        foreach (var parameter in parameters)
+            blockItems.Add(parameter.Key.ToAssign(parameter.First().Value.Expression));
+
+        blockItems.Add(expression);
+
+        return variables.ToBlock(blockItems);
+    }
+
+    private bool IsTypeContains(ReadOnlyMemory<TypeInformation> outputs, TypeInformation type)
+    {
+        if (!outputs.Span.Contains(type))
+        {
+            if (!type.Type.IsGenericType) return false;
+
+            if (type.Type.GetGenericTypeDefinition() != typeof(Lazy<>)) return false;
+
+            var argument = type.Type.GenericTypeArguments.Single();
+
+            if (!outputs.Span.Contains(argument)) return false;
+        }
+
+        return true;
+    }
+
+    private bool IsTypeContains(TypeInformation type)
+    {
+        return IsTypeContains(Outputs, type);
+    }
+
+    private bool IsTypeContains(TreeNode<Guid, IModule> node, TypeInformation type)
+    {
+        return IsTypeContains(node.Value.Outputs, type);
+    }
+
+    private Expression UpdateExpression(
+        Expression expression,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
+    )
     {
         switch (expression)
         {
@@ -138,18 +181,20 @@ public class ModuleTree : IModule, IResolver, IInvoker
                 var arguments = new List<Expression>();
 
                 foreach (var argument in invocationExpression.Arguments)
-                {
-                    arguments.Add(UpdateExpression(argument));
-                }
+                    arguments.Add(UpdateExpression(argument, scopeParameters));
 
-                var innerExpression = invocationExpression.Expression;
-                var result = invocationExpression.Update(innerExpression, arguments);
+                var result = invocationExpression.Update(
+                    invocationExpression.Expression,
+                    arguments
+                );
 
                 return result;
             }
             case ParameterExpression parameterExpression:
             {
-                var result = CreateParameter(parameterExpression);
+                if (scopeParameters.TryGetValue(parameterExpression.Type, out var value)) return value.Parameter;
+
+                var result = CreateParameter(parameterExpression, scopeParameters);
 
                 return result;
             }
@@ -159,12 +204,10 @@ public class ModuleTree : IModule, IResolver, IInvoker
 
                 foreach (var argument in newExpression.Arguments)
                 {
-                    var argumentExpression = UpdateExpression(argument);
+                    var argumentExpression = UpdateExpression(argument, scopeParameters);
 
                     if (argumentExpression.Type.IsValueType)
-                    {
                         argumentExpression = argumentExpression.ToConvert(argument.Type);
-                    }
 
                     arguments.Add(argumentExpression);
                 }
@@ -174,17 +217,15 @@ public class ModuleTree : IModule, IResolver, IInvoker
             case BlockExpression blockExpression:
             {
                 var expressions = new List<Expression>();
-                var count = blockExpression.Expressions.Count - 1;
-                var blockExpressionItems = blockExpression.Expressions.Take(count);
-
+                var blockExpressionItems = blockExpression.Expressions.Take(
+                    blockExpression.Expressions.Count - 1
+                );
                 var blockResult = blockExpression.Expressions
-                   .Last()
-                   .ThrowIfIsNot<ParameterExpression>();
+                    .Last()
+                    .ThrowIfIsNot<ParameterExpression>();
 
                 foreach (var blockExpressionItem in blockExpressionItems)
-                {
-                    expressions.Add(UpdateExpression(blockExpressionItem));
-                }
+                    expressions.Add(UpdateExpression(blockExpressionItem, scopeParameters));
 
                 expressions.Add(blockResult);
                 var result = blockExpression.Update(blockResult.AsArray(), expressions);
@@ -199,9 +240,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
             {
                 var conversion = binaryExpression.Conversion is null
                     ? null
-                    : UpdateExpression(binaryExpression).ThrowIfIsNot<LambdaExpression>();
-
-                var right = UpdateExpression(binaryExpression.Right);
+                    : UpdateExpression(binaryExpression, scopeParameters)
+                        .ThrowIfIsNot<LambdaExpression>();
+                var right = UpdateExpression(binaryExpression.Right, scopeParameters);
                 var result = binaryExpression.Update(binaryExpression.Left, conversion, right);
 
                 return result;
@@ -210,16 +251,34 @@ public class ModuleTree : IModule, IResolver, IInvoker
             {
                 var obj = methodCallExpression.Object is null
                     ? null
-                    : UpdateExpression(methodCallExpression.Object);
-
+                    : UpdateExpression(methodCallExpression.Object, scopeParameters);
                 var arguments = new List<Expression>();
 
                 foreach (var argument in methodCallExpression.Arguments)
-                {
-                    arguments.Add(UpdateExpression(argument));
-                }
+                    arguments.Add(UpdateExpression(argument, scopeParameters));
 
                 return methodCallExpression.Update(obj, arguments);
+            }
+            case LambdaExpression lambdaExpression:
+            {
+                var body = UpdateExpression(lambdaExpression.Body, scopeParameters);
+                var expressions = new List<Expression>();
+
+                foreach (var parameter in lambdaExpression.Parameters)
+                    expressions.Add(UpdateExpression(parameter, scopeParameters));
+
+                if (expressions.Any())
+                {
+                    var result = body.ToLambda().ToInvoke(expressions).ToLambda();
+
+                    return result;
+                }
+                else
+                {
+                    var result = body.ToLambda();
+
+                    return result;
+                }
             }
             default:
             {
@@ -230,47 +289,40 @@ public class ModuleTree : IModule, IResolver, IInvoker
         }
     }
 
-    private Expression CreateParameter(ParameterExpression parameterExpression)
+    private Expression CreateParameter(
+        ParameterExpression parameterExpression,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
+    )
     {
-        var status = GetStatus(parameterExpression.Type);
-        var expression = UpdateExpression(status.Expression);
+        var status = GetStatus(parameterExpression.Type, scopeParameters);
+        var expression = UpdateExpression(status.Expression, scopeParameters);
 
         return expression;
     }
 
     private DependencyStatus? GetDependencyStatus(
         TreeNode<Guid, IModule> node,
-        TypeInformation type
+        TypeInformation type,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
     )
     {
-        if (typeof(IResolver) == type)
-        {
-            return new DependencyStatus(type, thisExpression);
-        }
+        if (typeof(IResolver) == type) return new DependencyStatus(type, thisExpression);
 
-        if (typeof(IInvoker) == type)
-        {
-            return new DependencyStatus(type, thisExpression);
-        }
+        if (typeof(IInvoker) == type) return new DependencyStatus(type, thisExpression);
 
         foreach (var treeNode in node.Nodes)
-        {
-            if (treeNode.Value.Outputs.Span.Contains(type))
+            if (IsTypeContains(treeNode, type))
             {
-                var status = treeNode.Value.GetStatus(type);
+                var status = treeNode.Value.GetStatus(type, scopeParameters);
 
                 return status;
             }
-        }
 
         foreach (var treeNode in node.Nodes)
         {
-            var status = GetDependencyStatus(treeNode, type);
+            var status = GetDependencyStatus(treeNode, type, scopeParameters);
 
-            if (status is null)
-            {
-                continue;
-            }
+            if (status is null) continue;
 
             return status;
         }
@@ -287,31 +339,8 @@ public class ModuleTree : IModule, IResolver, IInvoker
         outputs.AddRange(node.Value.Outputs.ToArray());
         inputs.AddRange(node.Value.Inputs.ToArray());
 
-        if (node.Parent is null)
-        {
-            return;
-        }
+        if (node.Parent is null) return;
 
         AddTypes(inputs, outputs, node.Parent);
-    }
-
-    public object? Invoke(Delegate del, DictionarySpan<TypeInformation, object> arguments)
-    {
-        var parameterTypes = del.GetParameterTypes();
-        var args = new object[parameterTypes.Length];
-
-        for (var index = 0; index < args.Length; index++)
-        {
-            if (arguments.TryGetValue(parameterTypes[index], out var value))
-            {
-                args[index] = value;
-            }
-            else
-            {
-                args[index] = Resolve(parameterTypes[index]);
-            }
-        }
-
-        return del.DynamicInvoke(args);
     }
 }

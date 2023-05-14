@@ -5,8 +5,8 @@ namespace RegularScript.Ui.ViewModels;
 
 public class LanguageNotify : ViewModelBase
 {
-    private Guid id;
     private string? codeIso3;
+    private Guid id;
     private string? name;
 
     public Guid Id

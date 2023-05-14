@@ -17,8 +17,8 @@ public static class RegisterTransientReservedCtorParameterExtension
         var constructor = type.GetSingleConstructor().ThrowIfNull();
 
         var parameter = constructor
-           .GetParameters()
-           .Single(predicate: x => x.ParameterType == typeof(TParameter));
+            .GetParameters()
+            .Single(x => x.ParameterType == typeof(TParameter));
 
         var identifier = new ReservedCtorParameterIdentifier(type, constructor, parameter);
         register.RegisterTransientReservedCtorParameter(identifier, expression);
@@ -33,14 +33,14 @@ public static class RegisterTransientReservedCtorParameterExtension
         var constructor = type.GetSingleConstructor().ThrowIfNull();
 
         var parameter = constructor
-           .GetParameters()
-           .Single(predicate: x => x.ParameterType == typeof(TParameter));
+            .GetParameters()
+            .Single(x => x.ParameterType == typeof(TParameter));
 
         var identifier = new ReservedCtorParameterIdentifier(type, constructor, parameter);
 
         var variables = del.Method
-           .GetParameters()
-           .Select(selector: x => x.ParameterType.ToVariableAutoName());
+            .GetParameters()
+            .Select(x => x.ParameterType.ToVariableAutoName());
 
         var call = del.ToCall(variables);
         register.RegisterTransientReservedCtorParameter(identifier, call);

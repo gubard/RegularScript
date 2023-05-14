@@ -9,10 +9,10 @@
     <Design.DataContext>
         <viewModels:ScriptsViewModel />
     </Design.DataContext>
-    
+
     <Interaction.Behaviors>
         <EventTriggerBehavior EventName="Initialized">
-            <InvokeCommandAction Command="{Binding InitializedCommand}"/>
+            <InvokeCommandAction Command="{Binding InitializedCommand}" />
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 

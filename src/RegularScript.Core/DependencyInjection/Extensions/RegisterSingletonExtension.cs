@@ -10,22 +10,22 @@ public static class RegisterSingletonExtension
         Expression expression
     )
     {
-        registerSingleton.RegisterSingleton(type: typeof(T), expression);
+        registerSingleton.RegisterSingleton(typeof(T), expression);
     }
 
     public static void RegisterSingleton<T>(this IRegisterSingleton registerSingleton)
     {
-        registerSingleton.RegisterSingleton<T>(expression: (T value) => value);
+        registerSingleton.RegisterSingleton<T>((T value) => value);
     }
 
     public static void RegisterSingleton<T>(this IRegisterSingleton registerSingleton, T value)
     {
-        registerSingleton.RegisterSingleton(type: typeof(T), expression: () => value);
+        registerSingleton.RegisterSingleton(typeof(T), () => value);
     }
 
     public static void RegisterSingleton<T, TImp>(this IRegisterSingleton registerSingleton)
         where TImp : notnull, T
     {
-        registerSingleton.RegisterSingleton<T>(expression: (TImp imp) => imp);
+        registerSingleton.RegisterSingleton<T>((TImp imp) => imp);
     }
 }

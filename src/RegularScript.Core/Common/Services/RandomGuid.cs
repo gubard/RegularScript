@@ -4,7 +4,7 @@ namespace RegularScript.Core.Common.Services;
 
 public readonly struct RandomGuid : IRandom<Guid>
 {
-    public static readonly RandomGuid Default = new ();
+    public static readonly RandomGuid Default = new();
 
     public Guid GetRandom()
     {

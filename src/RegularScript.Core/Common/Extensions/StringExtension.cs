@@ -14,38 +14,35 @@ public static class StringExtension
 
     public static Uri ToUri(this string str)
     {
-        return new (str);
+        return new Uri(str);
     }
 
     public static string ThrowIfNullOrWhiteSpace(
         this string? str,
-        [CallerArgumentExpression(parameterName: nameof(str))]
+        [CallerArgumentExpression(nameof(str))]
         string paramName = ""
     )
     {
         str = str.ThrowIfNull(paramName);
 
-        if (str.IsNullOrWhiteSpace())
-        {
-            throw new WhiteSpaceException(paramName);
-        }
+        if (str.IsNullOrWhiteSpace()) throw new WhiteSpaceException(paramName);
 
         return str;
     }
 
-    public static bool IsNullOrWhiteSpace([NotNullWhen(returnValue: false)] this string? str)
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }
 
     public static FileInfo ToFile(this string path)
     {
-        return new (path);
+        return new FileInfo(path);
     }
 
     public static DirectoryInfo ToDirectory(this string path)
     {
-        return new (path);
+        return new DirectoryInfo(path);
     }
 
     public static string ToConsoleLine(this string line)
@@ -59,7 +56,7 @@ public static class StringExtension
     {
         var bytes = str.ToByteArray(encoding);
         var stream = new MemoryStream();
-        await stream.WriteAsync(bytes, offset: 0, bytes.Length);
+        await stream.WriteAsync(bytes, 0, bytes.Length);
 
         return stream;
     }
@@ -81,14 +78,11 @@ public static class StringExtension
 
     public static string ToWriteToFile(this string str, FileInfo file, Encoding encoding)
     {
-        if (file.Exists)
-        {
-            file.Delete();
-        }
+        if (file.Exists) file.Delete();
 
         using var stream = file.Create();
         var bytes = encoding.GetBytes(str);
-        stream.Write(bytes, offset: 0, bytes.Length);
+        stream.Write(bytes, 0, bytes.Length);
 
         return str;
     }
@@ -100,15 +94,9 @@ public static class StringExtension
 
     public static string? AddLine(this string? str, string? line)
     {
-        if (str is null)
-        {
-            return line;
-        }
+        if (str is null) return line;
 
-        if (line is null)
-        {
-            return str;
-        }
+        if (line is null) return str;
 
         return $"{str}{line}{Environment.NewLine}";
     }

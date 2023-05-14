@@ -5,6 +5,8 @@ public interface IDependencyInjectorRegister
         IRegisterSingleton,
         IRegisterAutoInjectMember,
         IRegisterConfiguration,
-        IRegisterReservedCtorParameter
+        IRegisterReservedCtorParameter,
+        IRegisterScope,
+        ILazyConfigurator
 {
 }

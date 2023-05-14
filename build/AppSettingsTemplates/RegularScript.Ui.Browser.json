@@ -1,0 +1,11 @@
+﻿{
+  "Logging": {
+    "LogLevel": {
+      "Default": "{LogLevelDefault}"
+    }
+  },
+  "GrpcService": {
+    "Host": "https://localhost:5002",
+    "Mode": "GrpcWeb"
+  }
+}

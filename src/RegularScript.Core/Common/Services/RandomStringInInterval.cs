@@ -25,15 +25,9 @@ public class RandomStringInInterval : IRandom<string, Interval<int>>
     {
         var value = randomInt32.GetRandom(interval);
 
-        if (value == 0)
-        {
-            return string.Empty;
-        }
+        if (value == 0) return string.Empty;
 
-        if (value == -1)
-        {
-            return null;
-        }
+        if (value == -1) return null;
 
         var result = new char[value];
 
@@ -43,6 +37,6 @@ public class RandomStringInInterval : IRandom<string, Interval<int>>
             result[index] = @char;
         }
 
-        return new (result);
+        return new string(result);
     }
 }

@@ -2,6 +2,7 @@
 
 public interface IRegisterAutoInjectMember
     : IRegisterTransientAutoInjectMember,
-        IRegisterSingletonAutoInjectMember
+        IRegisterSingletonAutoInjectMember,
+        IRegisterScopeAutoInjectMember
 {
 }

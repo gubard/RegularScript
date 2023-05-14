@@ -17,10 +17,7 @@ public class BooleanToInt32Converter : IValueConverter
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (targetType == typeof(int) && value is bool booleanValue)
-        {
-            return booleanValue ? trueValue : falseValue;
-        }
+        if (targetType == typeof(int) && value is bool booleanValue) return booleanValue ? trueValue : falseValue;
 
         return value;
     }
@@ -32,20 +29,11 @@ public class BooleanToInt32Converter : IValueConverter
         CultureInfo culture
     )
     {
-        if (targetType != typeof(bool) || value is not int int32Value)
-        {
-            return value;
-        }
+        if (targetType != typeof(bool) || value is not int int32Value) return value;
 
-        if (int32Value == falseValue)
-        {
-            return false;
-        }
+        if (int32Value == falseValue) return false;
 
-        if (int32Value == trueValue)
-        {
-            return true;
-        }
+        if (int32Value == trueValue) return true;
 
         return value;
     }

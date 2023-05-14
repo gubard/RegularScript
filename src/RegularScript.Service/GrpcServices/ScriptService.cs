@@ -1,16 +1,16 @@
 using AutoMapper;
 using Grpc.Core;
 using GrpcClient.Script;
-using RegularScript.Service.Services;
+using RegularScript.Service.Interfaces;
 
 namespace RegularScript.Service.GrpcServices;
 
 public class ScriptService : ScriptServiceApi.ScriptServiceApiBase
 {
-    private readonly ScriptRepository scriptRepository;
     private readonly IMapper mapper;
+    private readonly IScriptRepository scriptRepository;
 
-    public ScriptService(ScriptRepository scriptRepository, IMapper mapper)
+    public ScriptService(IScriptRepository scriptRepository, IMapper mapper)
     {
         this.scriptRepository = scriptRepository;
         this.mapper = mapper;

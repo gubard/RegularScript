@@ -9,7 +9,7 @@ public static class ObjectExtension
     {
         return new[]
         {
-            obj,
+            obj
         };
     }
 
@@ -20,10 +20,7 @@ public static class ObjectExtension
 
     public static T ThrowIfIsNot<T>(this object obj)
     {
-        if (obj is not T result)
-        {
-            throw new TypeInvalidCastException(expectedType: typeof(T), currentType: obj.GetType());
-        }
+        if (obj is not T result) throw new TypeInvalidCastException(typeof(T), obj.GetType());
 
         return result;
     }
@@ -45,21 +42,18 @@ public static class ObjectExtension
 
     public static T ThrowIfNull<T>(
         this T? obj,
-        [CallerArgumentExpression(parameterName: nameof(obj))]
+        [CallerArgumentExpression(nameof(obj))]
         string paramName = ""
     )
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(paramName);
-        }
+        if (obj is null) throw new ArgumentNullException(paramName);
 
         return obj;
     }
 
     public static T ThrowIfNullStruct<T>(
         this T? obj,
-        [CallerArgumentExpression(parameterName: nameof(obj))]
+        [CallerArgumentExpression(nameof(obj))]
         string paramName = ""
     ) where T : struct
     {
@@ -69,20 +63,14 @@ public static class ObjectExtension
     public static TObj ThrowIfNotEquals<TObj>(this TObj obj, TObj expected, string name)
         where TObj : notnull
     {
-        if (obj.Equals(expected))
-        {
-            return obj;
-        }
+        if (obj.Equals(expected)) return obj;
 
         throw new NotEqualsException<TObj>(name, obj, expected);
     }
 
     public static T IfNullUse<T>(this T? obj, T @default)
     {
-        if (obj is null)
-        {
-            return @default;
-        }
+        if (obj is null) return @default;
 
         return obj;
     }

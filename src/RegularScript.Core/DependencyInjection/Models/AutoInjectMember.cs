@@ -9,8 +9,6 @@ public readonly record struct AutoInjectMember
 {
     private readonly string name;
 
-    public TypeInformation Type { get; }
-
     public AutoInjectMember(MemberInfo member)
     {
         name = member.Name;
@@ -57,13 +55,15 @@ public readonly record struct AutoInjectMember
             {
                 var type = member.GetType();
 
-                throw new UnreachableException(message: type.ToString());
+                throw new UnreachableException(type.ToString());
             }
         }
     }
 
+    public TypeInformation Type { get; }
+
     public static implicit operator AutoInjectMember(MemberInfo member)
     {
-        return new (member);
+        return new AutoInjectMember(member);
     }
 }

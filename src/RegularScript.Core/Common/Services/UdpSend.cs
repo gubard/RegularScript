@@ -9,21 +9,22 @@ public class UdpSend<TMessage> : ISend<TMessage>, IDisposable
 {
     private readonly UdpClient client;
     private bool disposed;
-    public IPEndPoint IpEndPoint { get; }
-    public Func<TMessage, byte[]> Converter { get; }
 
     public UdpSend(IPEndPoint ipEndPoint, Func<TMessage, byte[]> converter)
     {
-        IpEndPoint = ipEndPoint.ThrowIfNull(paramName: nameof(ipEndPoint));
-        client = new ();
-        Converter = converter.ThrowIfNull(paramName: nameof(converter));
+        IpEndPoint = ipEndPoint.ThrowIfNull(nameof(ipEndPoint));
+        client = new UdpClient();
+        Converter = converter.ThrowIfNull(nameof(converter));
         disposed = false;
     }
 
+    public IPEndPoint IpEndPoint { get; }
+    public Func<TMessage, byte[]> Converter { get; }
+
     public void Dispose()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(obj: this);
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     public Task SendAsync(TMessage message, CancellationToken token)
@@ -42,15 +43,9 @@ public class UdpSend<TMessage> : ISend<TMessage>, IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposed)
-        {
-            return;
-        }
+        if (disposed) return;
 
-        if (disposing)
-        {
-            client.Dispose();
-        }
+        if (disposing) client.Dispose();
 
         disposed = true;
     }

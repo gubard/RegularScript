@@ -6,22 +6,23 @@ using RegularScript.Core.DependencyInjection.Models;
 
 namespace RegularScript.Core.DependencyInjection.Services;
 
-public class ReadOnlyDependencyInjectorRegister
-    : IBuilder<DependencyInjector>,
-        IDependencyInjectorRegister
+public class DependencyInjectorRegister : IBuilder<DependencyInjector>, IDependencyInjectorRegister
 {
     private readonly Dictionary<AutoInjectMemberIdentifier, InjectorItem> autoInjectMembers;
     private readonly Dictionary<TypeInformation, InjectorItem> injectors;
+    private readonly Dictionary<TypeInformation, LazyDependencyInjectorOptions> lazyOptions;
+
     private readonly Dictionary<
         ReservedCtorParameterIdentifier,
         InjectorItem
     > reservedCtorParameters;
 
-    public ReadOnlyDependencyInjectorRegister()
+    public DependencyInjectorRegister()
     {
-        reservedCtorParameters = new ();
-        injectors = new ();
-        autoInjectMembers = new ();
+        lazyOptions = new Dictionary<TypeInformation, LazyDependencyInjectorOptions>();
+        reservedCtorParameters = new Dictionary<ReservedCtorParameterIdentifier, InjectorItem>();
+        injectors = new Dictionary<TypeInformation, InjectorItem>();
+        autoInjectMembers = new Dictionary<AutoInjectMemberIdentifier, InjectorItem>();
     }
 
     public DependencyInjector Build()
@@ -29,7 +30,8 @@ public class ReadOnlyDependencyInjectorRegister
         var dependencyInjector = new DependencyInjector(
             injectors,
             autoInjectMembers,
-            reservedCtorParameters
+            reservedCtorParameters,
+            lazyOptions
         );
 
         return dependencyInjector;
@@ -37,7 +39,7 @@ public class ReadOnlyDependencyInjectorRegister
 
     public void RegisterConfiguration(IDependencyInjectorConfiguration configuration)
     {
-        configuration.Configure(register: this);
+        configuration.Configure(this);
     }
 
     public void RegisterTransient(Type type, Expression expression)
@@ -86,13 +88,29 @@ public class ReadOnlyDependencyInjectorRegister
         reservedCtorParameters[identifier] = injectorItem;
     }
 
+    public void RegisterScope(Type type, Expression expression)
+    {
+        injectors[type] = new InjectorItem(InjectorItemType.Scope, expression);
+    }
+
+    public void SetLazyOptions(TypeInformation type, LazyDependencyInjectorOptions options)
+    {
+        lazyOptions[type] = options;
+    }
+
+    public void RegisterScopeAutoInjectMember(AutoInjectMemberIdentifier memberIdentifier, Expression expression)
+    {
+        var injectorItem = new InjectorItem(InjectorItemType.Scope, expression);
+        autoInjectMembers[memberIdentifier] = injectorItem;
+    }
+
     private void RegisterTransientCore(Type type, Expression expression)
     {
-        injectors[type] = new (InjectorItemType.Transient, expression);
+        injectors[type] = new InjectorItem(InjectorItemType.Transient, expression);
     }
 
     public void RegisterSingletonCore(Type type, Expression expression)
     {
-        injectors[type] = new (InjectorItemType.Singleton, expression);
+        injectors[type] = new InjectorItem(InjectorItemType.Singleton, expression);
     }
 }

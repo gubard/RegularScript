@@ -22,7 +22,7 @@ public static class TypeExtension
 
     public static ParameterExpression ToVariableAutoName(this Type type)
     {
-        return type.ToVariable(name: RandomStringGuid.Digits.GetRandom());
+        return type.ToVariable(RandomStringGuid.Digits.GetRandom());
     }
 
     public static ParameterExpression ToParameter(this Type type, string name)
@@ -37,7 +37,7 @@ public static class TypeExtension
 
     public static ParameterExpression ToParameterAutoName(this Type type)
     {
-        return type.ToParameter(name: RandomStringGuid.Digits.GetRandom());
+        return type.ToParameter(RandomStringGuid.Digits.GetRandom());
     }
 
     public static LabelTarget ToLabel(this Type type)

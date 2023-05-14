@@ -6,19 +6,13 @@ namespace RegularScript.Ui.AvaloniaUi.Converters;
 
 public class InvertBooleanConverter : IValueConverter
 {
-    public static readonly InvertBooleanConverter Default = new ();
+    public static readonly InvertBooleanConverter Default = new();
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (targetType != typeof(bool))
-        {
-            return value;
-        }
+        if (targetType != typeof(bool)) return value;
 
-        if (value is not bool result)
-        {
-            return value;
-        }
+        if (value is not bool result) return value;
 
         return !result;
     }
@@ -30,15 +24,9 @@ public class InvertBooleanConverter : IValueConverter
         CultureInfo culture
     )
     {
-        if (targetType != typeof(bool))
-        {
-            return value;
-        }
+        if (targetType != typeof(bool)) return value;
 
-        if (value is not bool result)
-        {
-            return value;
-        }
+        if (value is not bool result) return value;
 
         return !result;
     }

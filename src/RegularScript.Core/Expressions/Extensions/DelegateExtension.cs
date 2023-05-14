@@ -14,8 +14,8 @@ public static class DelegateExtension
         DelegateType = typeof(Delegate);
 
         DelegateInvokeDynamicType = DelegateType
-           .GetMethod(name: nameof(Delegate.DynamicInvoke))
-           .ThrowIfNull();
+            .GetMethod(nameof(Delegate.DynamicInvoke))
+            .ThrowIfNull();
     }
 
     public static Expression ToCall(this Delegate del, IEnumerable<Expression> arguments)
@@ -25,12 +25,12 @@ public static class DelegateExtension
 
         if (del.Method.IsRTDynamicMethod())
         {
-            var args = arguments.Where(predicate: x => !x.Type.IsClosure());
+            var args = arguments.Where(x => !x.Type.IsClosure());
             var parameters = typeof(object).ToNewArrayInit(args);
 
             return DelegateInvokeDynamicType
-               .ToCall(instance: del.ToConstant(), parameters)
-               .ToConvert(del.Method.ReturnType);
+                .ToCall(del.ToConstant(), parameters)
+                .ToConvert(del.Method.ReturnType);
         }
 
         return del.Method.ToCall(instance, arguments);
@@ -38,6 +38,6 @@ public static class DelegateExtension
 
     public static Expression ToCall(this Delegate del, params Expression[] arguments)
     {
-        return del.ToCall(arguments: arguments.AsEnumerable());
+        return del.ToCall(arguments.AsEnumerable());
     }
 }

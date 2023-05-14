@@ -12,7 +12,7 @@ public static class UriBase
     public const string ControlsStylesString =
         "avares://WorkTool.Core/Modules/AvaloniaUi/Styles/Controls.axaml";
 
-    public static readonly Uri AppStyleUri = new (AppStyleString);
-    public static readonly Uri DataGridThemeFluentUri = new (DataGridThemeFluentString);
-    public static readonly Uri ControlsStylesUri = new (ControlsStylesString);
+    public static readonly Uri AppStyleUri = new(AppStyleString);
+    public static readonly Uri DataGridThemeFluentUri = new(DataGridThemeFluentString);
+    public static readonly Uri ControlsStylesUri = new(ControlsStylesString);
 }

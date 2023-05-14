@@ -10,7 +10,7 @@ public class RandomStringCombine : IRandom<string>
 
     public RandomStringCombine(IEnumerable<IRandom<string>> randoms)
     {
-        this.randoms = new (collection: randoms.ThrowIfNull());
+        this.randoms = new List<IRandom<string>>(randoms.ThrowIfNull());
     }
 
     public string GetRandom()

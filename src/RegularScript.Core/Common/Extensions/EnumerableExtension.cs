@@ -10,20 +10,14 @@ public static class EnumerableExtension
 {
     public static object? ElementAt(this IEnumerable items, int index)
     {
-        if (items is IList list)
-        {
-            return list[index];
-        }
+        if (items is IList list) return list[index];
 
-        return Enumerable.ElementAt(source: items.Cast<object>(), index);
+        return Enumerable.ElementAt(items.Cast<object>(), index);
     }
 
     public static int Count(this IEnumerable items)
     {
-        if (TryGetCountFast(items, count: out var count))
-        {
-            return count;
-        }
+        if (TryGetCountFast(items, out var count)) return count;
 
         return 0;
     }
@@ -59,7 +53,7 @@ public static class EnumerableExtension
 
     public static IEnumerable<TItem> ThrowIfNullOrEmpty<TItem>(
         this IEnumerable<TItem>? enumerable,
-        [CallerArgumentExpression(parameterName: "enumerable")]
+        [CallerArgumentExpression("enumerable")]
         string paramName = ""
     )
     {
@@ -72,7 +66,7 @@ public static class EnumerableExtension
 
     public static IEnumerable<TItem> ThrowIfEmpty<TItem>(
         this IEnumerable<TItem> enumerable,
-        [CallerArgumentExpression(parameterName: "enumerable")]
+        [CallerArgumentExpression("enumerable")]
         string paramName = ""
     )
     {
@@ -84,7 +78,7 @@ public static class EnumerableExtension
     public static string JoinString<TEnumerable>(this TEnumerable enumerable, string separator)
         where TEnumerable : IEnumerable
     {
-        return string.Join(separator, values: enumerable.OfType<object>());
+        return string.Join(separator, enumerable.OfType<object>());
     }
 
     public static string JoinString<TEnumerable>(this TEnumerable enumerable)
@@ -96,21 +90,15 @@ public static class EnumerableExtension
     public static DataTable ToDataTable<T>(this IEnumerable<T> items)
     {
         var result = new DataTable(typeof(T).Name);
-        var props = typeof(T).GetProperties(bindingAttr: BindingFlags.Public | BindingFlags.Instance);
+        var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        foreach (var prop in props)
-        {
-            result.Columns.Add(prop.Name, prop.PropertyType);
-        }
+        foreach (var prop in props) result.Columns.Add(prop.Name, prop.PropertyType);
 
         foreach (var item in items)
         {
             var values = new object?[props.Length];
 
-            for (var i = 0; i < props.Length; i++)
-            {
-                values[i] = props[i].GetValue(item, index: null);
-            }
+            for (var i = 0; i < props.Length; i++) values[i] = props[i].GetValue(item, null);
 
             result.Rows.Add(values);
         }

@@ -28,28 +28,28 @@ public class StreamHumanizing : IHumanizing<Stream, string>
     }
 
     public StreamHumanizing() : this(
-        splitString: " ",
-        charSize: 2,
+        " ",
+        2,
         Environment.NewLine,
         Encoding.UTF8,
-        encodingCharSize: 4)
+        4)
     {
     }
 
     public string Humanize(Stream stream)
     {
         var stringBuilder = new StringBuilder();
-        var buffer = new Span<byte>(array: new byte[encodingCharSize * charSize]);
+        var buffer = new Span<byte>(new byte[encodingCharSize * charSize]);
 
         while (stream.Read(buffer) != 0)
         {
             for (var index = 0; index < buffer.Length; index++)
             {
-                stringBuilder.Append(value: buffer[index].ToString(format: "X2"));
+                stringBuilder.Append(buffer[index].ToString("X2"));
                 stringBuilder.Append(splitString);
             }
 
-            stringBuilder.Append(value: encoding.GetString(buffer));
+            stringBuilder.Append(encoding.GetString(buffer));
             stringBuilder.Append(breakString);
         }
 

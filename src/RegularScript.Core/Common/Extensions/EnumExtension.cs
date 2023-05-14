@@ -40,7 +40,7 @@ public static class EnumExtension
         }
 
         throw new NotSupportedException(
-            message: "Enum with size of " + Unsafe.SizeOf<T>() + " are not supported"
+            "Enum with size of " + Unsafe.SizeOf<T>() + " are not supported"
         );
     }
 }

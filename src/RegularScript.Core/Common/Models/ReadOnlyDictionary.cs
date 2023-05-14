@@ -4,15 +4,16 @@ namespace RegularScript.Core.Common.Models;
 
 public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
 {
-    public static readonly ReadOnlyDictionary<TKey, TValue> Empty = new (
-        memory: Array.Empty<KeyValuePair<TKey, TValue>>());
+    public static readonly ReadOnlyDictionary<TKey, TValue> Empty = new(
+        Array.Empty<KeyValuePair<TKey, TValue>>());
+
     public readonly Memory<KeyValuePair<TKey, TValue>> Memory;
     public readonly int Count;
     public readonly Memory<TKey> Keys;
     public readonly Memory<TValue> Values;
 
     public ReadOnlyDictionary(IReadOnlyDictionary<TKey, TValue> dictionary)
-        : this(memory: dictionary.ToArray())
+        : this(dictionary.ToArray())
     {
     }
 
@@ -37,38 +38,32 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
         Dictionary<TKey, TValue> dictionary
     )
     {
-        return new (dictionary);
+        return new ReadOnlyDictionary<TKey, TValue>(dictionary);
     }
 
     public Enumerator GetEnumerator()
     {
-        return new (Memory.Span);
+        return new Enumerator(Memory.Span);
     }
 
     public bool ContainsKey(TKey key)
     {
         foreach (var item in Memory.Span)
-        {
             if (item.Equals(key))
-            {
                 return true;
-            }
-        }
 
         return false;
     }
 
-    public bool TryGetValue(TKey key, [MaybeNullWhen(returnValue: false)] out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         foreach (var item in Memory.Span)
-        {
             if (item.Key.Equals(key))
             {
                 value = item.Value;
 
                 return true;
             }
-        }
 
         value = default;
 
@@ -94,10 +89,7 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
         {
             var num = index + 1;
 
-            if (num >= span.Length)
-            {
-                return false;
-            }
+            if (num >= span.Length) return false;
 
             index = num;
 

@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.23.0" />
-        <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcVersion)" />
-        <PackageReference Include="Grpc.AspNetCore.Web" Version="$(GrpcVersion)" />
+        <PackageReference Include="Google.Protobuf" Version="3.23.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcVersion)"/>
+        <PackageReference Include="Grpc.AspNetCore.Web" Version="$(GrpcVersion)"/>
         <PackageReference Include="Grpc.Tools" Version="$(GrpcVersion)">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
@@ -22,7 +22,7 @@
             <Link>.dockerignore</Link>
         </Content>
         <Content Update="appsettings.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
@@ -36,12 +36,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj" />
+        <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="localhost.pfx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="localhost.pfx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

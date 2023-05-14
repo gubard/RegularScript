@@ -8,14 +8,16 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
 {
     private readonly Dictionary<TKey, TreeNodeBuilder<TKey, TValue?>?> nodes;
 
+    public TreeNodeBuilder()
+    {
+        nodes = new Dictionary<TKey, TreeNodeBuilder<TKey, TValue?>?>();
+    }
+
     public TreeNodeBuilder<TKey, TValue?>? this[TKey key]
     {
         get
         {
-            if (nodes.ContainsKey(key))
-            {
-                return nodes[key];
-            }
+            if (nodes.ContainsKey(key)) return nodes[key];
 
             var node = new TreeNodeBuilder<TKey, TValue?>
             {
@@ -31,10 +33,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
             nodes[key] = value;
             var node = nodes[key];
 
-            if (node is null)
-            {
-                return;
-            }
+            if (node is null) return;
 
             node.Parent = this!;
             node.Key = key;
@@ -45,10 +44,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
     {
         get
         {
-            if (nodes.ContainsKey(key))
-            {
-                return nodes[key];
-            }
+            if (nodes.ContainsKey(key)) return nodes[key];
 
             var node = new TreeNodeBuilder<TKey, TValue?>
             {
@@ -68,10 +64,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
         {
             TreeNodeBuilder<TKey, TValue?>? currentNode = this!;
 
-            foreach (var key in keys)
-            {
-                currentNode = currentNode?[key, defaultValue];
-            }
+            foreach (var key in keys) currentNode = currentNode?[key, defaultValue];
 
             return currentNode;
         }
@@ -79,23 +72,14 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
         {
             TreeNodeBuilder<TKey, TValue?>? currentNode = this!;
 
-            foreach (var key in keys[..^1])
-            {
-                currentNode = currentNode?[key, defaultValue];
-            }
+            foreach (var key in keys[..^1]) currentNode = currentNode?[key, defaultValue];
 
-            if (currentNode is null)
-            {
-                return;
-            }
+            if (currentNode is null) return;
 
             currentNode[keys[^1]] = value;
             var node = currentNode[keys[^1]];
 
-            if (node is null)
-            {
-                return;
-            }
+            if (node is null) return;
 
             node.Parent = this!;
             node.Key = keys[^1];
@@ -108,10 +92,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
         {
             TreeNodeBuilder<TKey, TValue?>? currentNode = this!;
 
-            foreach (var key in keys)
-            {
-                currentNode = currentNode?[key];
-            }
+            foreach (var key in keys) currentNode = currentNode?[key];
 
             return currentNode;
         }
@@ -119,23 +100,14 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
         {
             TreeNodeBuilder<TKey, TValue?>? currentNode = this!;
 
-            foreach (var key in keys[..^1])
-            {
-                currentNode = currentNode?[key];
-            }
+            foreach (var key in keys[..^1]) currentNode = currentNode?[key];
 
-            if (currentNode is null)
-            {
-                return;
-            }
+            if (currentNode is null) return;
 
             currentNode[keys[^1]] = value;
             var node = currentNode[keys[^1]];
 
-            if (node is null)
-            {
-                return;
-            }
+            if (node is null) return;
 
             node.Parent = this!;
             node.Key = keys[^1];
@@ -146,18 +118,13 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
     public TKey? Key { get; set; }
     public TValue? Value { get; set; }
 
-    public TreeNodeBuilder()
-    {
-        nodes = new ();
-    }
-
     public TreeNode<TKey, TValue> Build()
     {
         var key = Key.ThrowIfNull();
         var value = Value.ThrowIfNull();
         var newNodes = nodes.Values.Select(x => x.ThrowIfNull().Build());
 
-        return new (key, value, newNodes!);
+        return new TreeNode<TKey, TValue>(key, value, newNodes!);
     }
 
     public TreeNodeBuilder<TKey, TValue> Add(TreeNodeBuilder<TKey, TValue?> node)

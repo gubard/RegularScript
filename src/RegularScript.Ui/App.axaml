@@ -4,6 +4,6 @@
              RequestedThemeVariant="Light">
     <Application.Styles>
         <FluentTheme DensityStyle="Compact" />
-        <StyleInclude Source="Styles/Theme.axaml"/>
+        <StyleInclude Source="Styles/Theme.axaml" />
     </Application.Styles>
 </Application>

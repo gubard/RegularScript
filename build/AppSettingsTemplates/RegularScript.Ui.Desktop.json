@@ -1,10 +1,11 @@
-﻿{
+{
   "Logging": {
     "LogLevel": {
       "Default": "{LogLevelDefault}"
     }
   },
-  "ScriptService": {
-    "Host": "https://localhost:6262"
+  "GrpcService": {
+    "Host": "https://localhost:5002",
+    "Mode": "GrpcWeb"
   }
 }

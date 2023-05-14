@@ -22,17 +22,17 @@ public class Module : IModule
 
     public object GetObject(TypeInformation type)
     {
-        if (!Outputs.Span.Contains(type))
-        {
-            throw new TypeNotRegisterException(type.Type);
-        }
+        if (!Outputs.Span.Contains(type)) throw new TypeNotRegisterException(type.Type);
 
         return dependencyInjector.Resolve(type);
     }
 
-    public DependencyStatus GetStatus(TypeInformation type)
+    public DependencyStatus GetStatus(
+        TypeInformation type,
+        Dictionary<TypeInformation, ScopeValue> scopeParameters
+    )
     {
-        var status = dependencyInjector.GetStatus(type);
+        var status = dependencyInjector.GetStatus(type, scopeParameters);
 
         return status;
     }

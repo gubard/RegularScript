@@ -10,7 +10,7 @@ public readonly ref struct DictionarySpan<TKey, TValue> where TKey : notnull
     public readonly Span<TKey> Keys;
     public readonly Span<TValue> Values;
 
-    public DictionarySpan(IReadOnlyDictionary<TKey, TValue> dictionary) : this(span: dictionary.ToArray())
+    public DictionarySpan(IReadOnlyDictionary<TKey, TValue> dictionary) : this(dictionary.ToArray())
     {
     }
 
@@ -35,38 +35,32 @@ public readonly ref struct DictionarySpan<TKey, TValue> where TKey : notnull
         Dictionary<TKey, TValue> dictionary
     )
     {
-        return new (dictionary);
+        return new DictionarySpan<TKey, TValue>(dictionary);
     }
 
     public Enumerator GetEnumerator()
     {
-        return new (Span);
+        return new Enumerator(Span);
     }
 
     public bool ContainsKey(TKey key)
     {
         foreach (var item in Span)
-        {
             if (item.Equals(key))
-            {
                 return true;
-            }
-        }
 
         return false;
     }
 
-    public bool TryGetValue(TKey key, [MaybeNullWhen(returnValue: false)] out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         foreach (var item in Span)
-        {
             if (item.Key.Equals(key))
             {
                 value = item.Value;
 
                 return true;
             }
-        }
 
         value = default;
 
@@ -92,10 +86,7 @@ public readonly ref struct DictionarySpan<TKey, TValue> where TKey : notnull
         {
             var num = index + 1;
 
-            if (num >= span.Length)
-            {
-                return false;
-            }
+            if (num >= span.Length) return false;
 
             index = num;
 

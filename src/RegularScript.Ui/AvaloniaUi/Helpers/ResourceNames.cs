@@ -11,9 +11,11 @@ public static class ResourceNames
     public const string TextControlForeground = nameof(TextControlForeground);
     public const string TextControlBackground = nameof(TextControlBackground);
     public const string TextControlBorderBrush = nameof(TextControlBorderBrush);
+
     public const string TextControlSelectionHighlightColor = nameof(
         TextControlSelectionHighlightColor
     );
+
     public const string TextControlBorderThemeThickness = nameof(TextControlBorderThemeThickness);
     public const string SystemAccentColor = nameof(SystemAccentColor);
 }

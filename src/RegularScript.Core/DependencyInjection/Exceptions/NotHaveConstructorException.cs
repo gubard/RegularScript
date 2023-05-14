@@ -2,10 +2,11 @@
 
 public class NotHaveConstructorException : Exception
 {
-    public Type Type { get; }
-
-    public NotHaveConstructorException(Type type) : base(message: $"Type {type} not have constructor.")
+    public NotHaveConstructorException(Type type)
+        : base($"Type {type} not have constructor.")
     {
         Type = type;
     }
+
+    public Type Type { get; }
 }

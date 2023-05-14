@@ -18,8 +18,6 @@ class Build : NukeBuild
 {
     const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
 
-    public static int Main() => Execute<Build>(x => x.Result);
-
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
@@ -29,40 +27,6 @@ class Build : NukeBuild
     [Parameter] AbsolutePath TempFolderPath { get; set; }
     [Parameter] string DefaultLanguageCodeIso3 { get; set; } = "eng";
 
-    #region App Parameters
-
-    [Parameter] string LogLevelDefault { get; set; } = "Debug";
-    [Parameter] string CertificatePath { get; set; } = "localhost.pfx";
-    [Parameter] string CertificatePassword { get; set; } = "QAZ78963wsx";
-    [Parameter] string Url { get; set; } = "https://localhost:5002";
-
-    #endregion
-
-    #region Postgres Parameters
-
-    [Parameter] string PostgresContainerName { get; set; } = "regular_script_postgres";
-    [Parameter] string PostgresImageName { get; set; } = "postgres";
-    [Parameter] string PostgresPassword { get; set; } = "QAZ78963wsx";
-    [Parameter] string PostgresUser { get; set; } = "postgresuser";
-    [Parameter] string PostgresDataBaseName { get; set; } = "regular_script";
-    [Parameter] string PostgresDataFilePath { get; set; } = "~/postgres/data";
-    [Parameter] ushort PostgresPort { get; set; } = 1713;
-    [Parameter] string PostgresHost { get; set; } = "localhost";
-
-    #endregion
-
-    protected override void OnBuildInitialized()
-    {
-        base.OnBuildInitialized();
-        TempFolderPath ??= Solution.Directory / ".." / "temp";
-
-        PostgresDockerTemplateConfigurationFilePath ??=
-            Solution.Directory / ".." / "build" / "DockerFileTemplates" / DefaultPostgresDockerConfigurationFileName;
-
-        TemplateAppSettingsFolderPath ??=
-            Solution.Directory / ".." / "build" / "AppSettingsTemplates";
-    }
-
     Target SetupAppSettings => _ => _
         .Executes(() =>
         {
@@ -71,10 +35,7 @@ class Build : NukeBuild
                 var appSettingsFile = project.Directory.GetFiles("appsettings.json").SingleOrDefault();
                 Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
 
-                if (appSettingsFile is null)
-                {
-                    continue;
-                }
+                if (appSettingsFile is null) continue;
 
                 var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
                 Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
@@ -101,6 +62,53 @@ class Build : NukeBuild
                 Log.Information("Save app settings {AppSettingsFile}", appSettingsFile);
             }
         });
+
+    public static int Main() => Execute<Build>(x => x.Result);
+
+    protected override void OnBuildInitialized()
+    {
+        base.OnBuildInitialized();
+        TempFolderPath ??= Solution.Directory / ".." / "temp";
+
+        PostgresDockerTemplateConfigurationFilePath ??=
+            Solution.Directory / ".." / "build" / "DockerFileTemplates" / DefaultPostgresDockerConfigurationFileName;
+
+        TemplateAppSettingsFolderPath ??=
+            Solution.Directory / ".." / "build" / "AppSettingsTemplates";
+    }
+
+    IHostService CreateDockerClient()
+    {
+        var hosts = new Hosts().Discover();
+
+        var docker = hosts.FirstOrDefault(x => x.IsNative) ??
+                     hosts.FirstOrDefault(x => x.Name == "default") ??
+                     throw new NullReferenceException("docker");
+
+        return docker;
+    }
+
+    #region App Parameters
+
+    [Parameter] string LogLevelDefault { get; set; } = "Debug";
+    [Parameter] string CertificatePath { get; set; } = "localhost.pfx";
+    [Parameter] string CertificatePassword { get; set; } = "QAZ78963wsx";
+    [Parameter] string Url { get; set; } = "https://localhost:5002";
+
+    #endregion
+
+    #region Postgres Parameters
+
+    [Parameter] string PostgresContainerName { get; set; } = "regular_script_postgres";
+    [Parameter] string PostgresImageName { get; set; } = "postgres";
+    [Parameter] string PostgresPassword { get; set; } = "QAZ78963wsx";
+    [Parameter] string PostgresUser { get; set; } = "postgresuser";
+    [Parameter] string PostgresDataBaseName { get; set; } = "regular_script";
+    [Parameter] string PostgresDataFilePath { get; set; } = "~/postgres/data";
+    [Parameter] ushort PostgresPort { get; set; } = 1713;
+    [Parameter] string PostgresHost { get; set; } = "localhost";
+
+    #endregion
 
     #region DotNet
 
@@ -133,10 +141,7 @@ class Build : NukeBuild
             var docker = CreateDockerClient();
             var containerId = docker.GetContainerId(PostgresContainerName);
 
-            if (string.IsNullOrWhiteSpace(containerId))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(containerId)) return;
 
             docker.StopContainer(containerId, PostgresContainerName);
         });
@@ -151,10 +156,7 @@ class Build : NukeBuild
             var docker = CreateDockerClient();
             var containerId = docker.GetContainerId(PostgresContainerName);
 
-            if (string.IsNullOrWhiteSpace(containerId))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(containerId)) return;
 
             docker.RemoveContainer(containerId, PostgresContainerName);
         });
@@ -182,7 +184,7 @@ class Build : NukeBuild
                 User = PostgresUser,
                 DataBaseName = PostgresDataBaseName,
                 DataFilePath = PostgresDataFilePath,
-                Port = PostgresPort,
+                Port = PostgresPort
             };
 
             var postgresDockerConfiguration = Smart.Format(postgresDockerTemplateConfiguration, options);
@@ -226,15 +228,4 @@ class Build : NukeBuild
         .DependsOn(ResultDocker);
 
     #endregion
-
-    IHostService CreateDockerClient()
-    {
-        var hosts = new Hosts().Discover();
-
-        var docker = hosts.FirstOrDefault(x => x.IsNative) ??
-                     hosts.FirstOrDefault(x => x.Name == "default") ??
-                     throw new NullReferenceException("docker");
-
-        return docker;
-    }
 }

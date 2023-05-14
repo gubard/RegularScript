@@ -11,7 +11,7 @@ using RegularScript.Core.ModularSystem.Interfaces;
 using RegularScript.Core.ModularSystem.Services;
 using RegularScript.Ui.Modules;
 
-[assembly: SupportedOSPlatform(platformName: "browser")]
+[assembly: SupportedOSPlatform("browser")]
 
 namespace RegularScript.Ui.Browser;
 
@@ -23,7 +23,7 @@ internal class Program
     {
         BuildAvaloniaApp()
             .UseReactiveUI()
-            .SetupBrowserApp(mainDivId: "out");
+            .SetupBrowserApp("out");
     }
 
     private static void InitModules()

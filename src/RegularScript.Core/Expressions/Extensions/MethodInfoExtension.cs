@@ -9,11 +9,9 @@ public static class MethodInfoExtension
     {
         if (
             methodInfo.GetType().ToString()
-         == "System.Reflection.Emit.DynamicMethod+RTDynamicMethod"
+            == "System.Reflection.Emit.DynamicMethod+RTDynamicMethod"
         )
-        {
             return true;
-        }
 
         return false;
     }
@@ -24,7 +22,7 @@ public static class MethodInfoExtension
         params Expression[] arguments
     )
     {
-        return method.ToCall(instance, arguments: arguments.AsEnumerable());
+        return method.ToCall(instance, arguments.AsEnumerable());
     }
 
     public static MethodCallExpression ToCall(

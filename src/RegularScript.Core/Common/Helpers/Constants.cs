@@ -15,7 +15,7 @@ public static class CommonConstants
     public const string AllLineChars = LetterChars + NumberChars + SymbolsChars + SpaceChars;
 
     public static readonly string AllChars = AllLineChars + Environment.NewLine;
-    public static readonly Random Random = new ();
+    public static readonly Random Random = new();
 
     public static readonly string[] LastNames =
     {
@@ -81,7 +81,7 @@ public static class CommonConstants
         "Scott ",
         "Watson",
         "Richardson",
-        "Mitchell",
+        "Mitchell"
     };
 
     public static readonly string[] Names =
@@ -284,6 +284,6 @@ public static class CommonConstants
         "Charlotte",
         "Marie",
         "Kayla",
-        "Alexis",
+        "Alexis"
     };
 }

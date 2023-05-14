@@ -32,11 +32,11 @@ public class ScriptRepository : IScriptRepository
                 on defaultScriptLocalization.LanguageId equals language.Id
             select new
             {
-                Id = script.Id,
-                Name = scriptLocalization.Name,
+                script.Id,
+                scriptLocalization.Name,
                 DefaultName = defaultScriptLocalization.Name,
-                Description = scriptLocalization.Description,
-                DefaultDescription = scriptLocalization.Description,
+                scriptLocalization.Description,
+                DefaultDescription = scriptLocalization.Description
             };
 
         var scripts = await scriptsDb.ToArrayAsync();
@@ -48,7 +48,7 @@ public class ScriptRepository : IScriptRepository
             {
                 Description = item.Description.IsNullOrWhiteSpace() ? item.DefaultDescription : item.Description,
                 Id = item.Id,
-                Name = item.Name.IsNullOrWhiteSpace() ? item.DefaultName : item.Name,
+                Name = item.Name.IsNullOrWhiteSpace() ? item.DefaultName : item.Name
             };
 
             result.Add(script);

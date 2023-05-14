@@ -8,27 +8,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDataBase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Language",
+                name: "LanguageDb",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CodeIso3 = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    CodeIso3 = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     IsSupported = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.Id);
+                    table.PrimaryKey("PK_LanguageDb", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Script",
+                name: "ScriptDb",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -36,43 +36,43 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Script", x => x.Id);
+                    table.PrimaryKey("PK_ScriptDb", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Script_Script_ParentId",
+                        name: "FK_ScriptDb_ScriptDb_ParentId",
                         column: x => x.ParentId,
-                        principalTable: "Script",
+                        principalTable: "ScriptDb",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScriptLocalization",
+                name: "ScriptLocalizationDb",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ScriptId = table.Column<Guid>(type: "uuid", nullable: false),
                     LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScriptLocalization", x => x.Id);
+                    table.PrimaryKey("PK_ScriptLocalizationDb", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScriptLocalization_Language_LanguageId",
+                        name: "FK_ScriptLocalizationDb_LanguageDb_LanguageId",
                         column: x => x.LanguageId,
-                        principalTable: "Language",
+                        principalTable: "LanguageDb",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ScriptLocalization_Script_ScriptId",
+                        name: "FK_ScriptLocalizationDb_ScriptDb_ScriptId",
                         column: x => x.ScriptId,
-                        principalTable: "Script",
+                        principalTable: "ScriptDb",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "Language",
+                table: "LanguageDb",
                 columns: new[] { "Id", "CodeIso3", "IsSupported", "Name" },
                 values: new object[,]
                 {
@@ -350,7 +350,7 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                     { new Guid("905a8b24-4f90-4033-8ba9-608adeda4c0a"), "phi", false, "Philippine" },
                     { new Guid("90685dfa-5f6a-4f08-b071-649574ac6da2"), "sin", false, "Sinhalese" },
                     { new Guid("906bffac-daaf-49ad-8613-2fe0db1c77a8"), "mwr", false, "Marwari" },
-                    { new Guid("90af6e63-4890-4e60-ab66-f2d2095c380d"), "ukr", false, "Ukrainian" },
+                    { new Guid("90af6e63-4890-4e60-ab66-f2d2095c380d"), "ukr", true, "Ukrainian" },
                     { new Guid("90d5e14c-e10c-49dc-bd9c-f677d3944815"), "ful", false, "Fulah" },
                     { new Guid("90e61fb8-8ffd-4668-90a2-6f1f3b007044"), "cha", false, "Chamorro" },
                     { new Guid("91e46aa6-a5d6-4736-9bcf-6d769f55b6cf"), "sam", false, "Samaritan Aramaic" },
@@ -586,18 +586,18 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Script_ParentId",
-                table: "Script",
+                name: "IX_ScriptDb_ParentId",
+                table: "ScriptDb",
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScriptLocalization_LanguageId",
-                table: "ScriptLocalization",
+                name: "IX_ScriptLocalizationDb_LanguageId",
+                table: "ScriptLocalizationDb",
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScriptLocalization_ScriptId",
-                table: "ScriptLocalization",
+                name: "IX_ScriptLocalizationDb_ScriptId",
+                table: "ScriptLocalizationDb",
                 column: "ScriptId");
         }
 
@@ -605,13 +605,13 @@ namespace RegularScript.Db.PostgreSql.MigrationHelper.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ScriptLocalization");
+                name: "ScriptLocalizationDb");
 
             migrationBuilder.DropTable(
-                name: "Language");
+                name: "LanguageDb");
 
             migrationBuilder.DropTable(
-                name: "Script");
+                name: "ScriptDb");
         }
     }
 }

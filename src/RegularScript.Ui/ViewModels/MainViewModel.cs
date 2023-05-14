@@ -6,12 +6,9 @@ namespace RegularScript.Ui.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    [Inject]
-    public RoutingState? Router { get; set; }
+    [Inject] public RoutingState? Router { get; set; }
 
-    [Inject]
-    public MainHeaderView? HeaderView { get; set; }
+    [Inject] public MainHeaderView? HeaderView { get; set; }
 
-    [Inject]
-    public ScriptsView? ScriptsView { get; set; }
+    [Inject] public ScriptsView? ScriptsView { get; set; }
 }

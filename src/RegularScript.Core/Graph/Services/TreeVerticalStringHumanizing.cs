@@ -32,10 +32,7 @@ public class TreeVerticalStringHumanizing<TKey, TValue> : IHumanizing<Tree<TKey,
     {
         PrintWithIndent(treeNode, indent, stringBuilder);
 
-        foreach (var node in treeNode.Nodes)
-        {
-            PrintData(node, indent + options.Indent, stringBuilder);
-        }
+        foreach (var node in treeNode.Nodes) PrintData(node, indent + options.Indent, stringBuilder);
     }
 
     private void PrintWithIndent(

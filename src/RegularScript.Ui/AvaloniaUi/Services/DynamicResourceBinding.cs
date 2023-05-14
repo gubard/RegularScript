@@ -12,8 +12,6 @@ public class DynamicResourceBinding : IBinding
     private readonly object? anchor;
     private readonly BindingPriority priority;
 
-    public object? ResourceKey { get; set; }
-
     public DynamicResourceBinding()
     {
         anchor = null;
@@ -25,6 +23,8 @@ public class DynamicResourceBinding : IBinding
         ResourceKey = resourceKey;
     }
 
+    public object? ResourceKey { get; set; }
+
     InstancedBinding? IBinding.Initiate(
         AvaloniaObject target,
         AvaloniaProperty? targetProperty,
@@ -32,16 +32,13 @@ public class DynamicResourceBinding : IBinding
         bool enableDataValidation
     )
     {
-        if (ResourceKey is null)
-        {
-            return null;
-        }
+        if (ResourceKey is null) return null;
 
         var control = target as IResourceHost ?? anchor as IResourceHost;
 
         if (control != null)
         {
-            var source = control.GetResourceObservable(ResourceKey, converter: GetConverter(targetProperty));
+            var source = control.GetResourceObservable(ResourceKey, GetConverter(targetProperty));
 
             return InstancedBinding.OneWay(source, priority);
         }
@@ -50,7 +47,7 @@ public class DynamicResourceBinding : IBinding
         {
             var source = resourceProvider.GetResourceObservable(
                 ResourceKey,
-                converter: GetConverter(targetProperty)
+                GetConverter(targetProperty)
             );
 
             return InstancedBinding.OneWay(source, priority);
@@ -62,9 +59,7 @@ public class DynamicResourceBinding : IBinding
     private Func<object?, object?>? GetConverter(AvaloniaProperty? targetProperty)
     {
         if (targetProperty?.PropertyType == typeof(IBrush))
-        {
-            return x => ColorToBrushConverter.Convert(x, targetType: typeof(IBrush));
-        }
+            return x => ColorToBrushConverter.Convert(x, typeof(IBrush));
 
         return null;
     }

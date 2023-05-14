@@ -88,7 +88,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         return obj switch
         {
-            QuantitiesInformation info => Equals(info), ulong ul => Equals(ul), _ => false,
+            QuantitiesInformation info => Equals(info), ulong ul => Equals(ul), _ => false
         };
     }
 
@@ -99,10 +99,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
 
     public override string ToString()
     {
-        if (size == ulong.MinValue)
-        {
-            return "0";
-        }
+        if (size == ulong.MinValue) return "0";
 
         var stringBuilder = new StringBuilder();
         var restSize = size;
@@ -134,15 +131,9 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
 
     public int CompareTo(object? obj)
     {
-        if (obj == null)
-        {
-            return 1;
-        }
+        if (obj == null) return 1;
 
-        if (!(obj is QuantitiesInformation num))
-        {
-            throw new ArgumentException();
-        }
+        if (!(obj is QuantitiesInformation num)) throw new ArgumentException();
 
         return CompareTo(num);
     }
@@ -184,25 +175,22 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
 
     public static QuantitiesInformation operator +(QuantitiesInformation x, QuantitiesInformation y)
     {
-        return new (size: x.size + y.size);
+        return new QuantitiesInformation(x.size + y.size);
     }
 
     public static implicit operator QuantitiesInformation(ulong value)
     {
-        return new (value);
+        return new QuantitiesInformation(value);
     }
 
     public static implicit operator QuantitiesInformation(long value)
     {
-        return new (size: (ulong)value);
+        return new QuantitiesInformation((ulong)value);
     }
 
     private void SetB(ulong restSize, StringBuilder stringBuilder)
     {
-        if (restSize == ulong.MinValue)
-        {
-            return;
-        }
+        if (restSize == ulong.MinValue) return;
 
         var str = stringBuilder.Length == 0 ? $"{restSize} B" : $" {restSize} B";
         stringBuilder.Append(str);
@@ -212,10 +200,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / KiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} KiB" : $" {count} KiB";
         stringBuilder.Append(str);
@@ -227,10 +212,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / MiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} MiB" : $" {count} MiB";
         stringBuilder.Append(str);
@@ -242,10 +224,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / GiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} GiB" : $" {count} GiB";
         stringBuilder.Append(str);
@@ -257,10 +236,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / TiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} TiB" : $" {count} TiB";
         stringBuilder.Append(str);
@@ -272,10 +248,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / PiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} PiB" : $" {count} PiB";
         stringBuilder.Append(str);
@@ -287,10 +260,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
     {
         var count = restSize / EiBSize;
 
-        if (count == ulong.MinValue)
-        {
-            return restSize;
-        }
+        if (count == ulong.MinValue) return restSize;
 
         var str = stringBuilder.Length == 0 ? $"{count} EiB" : $" {count} EiB";
         stringBuilder.Append(str);
@@ -309,7 +279,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
         out QuantitiesInformation result
     )
     {
-        var value = ulong.TryParse(s, provider, result: out var ul);
+        var value = ulong.TryParse(s, provider, out var ul);
         result = ul;
 
         return value;
@@ -326,7 +296,7 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
         out QuantitiesInformation result
     )
     {
-        var value = ulong.TryParse(s, provider, result: out var ul);
+        var value = ulong.TryParse(s, provider, out var ul);
         result = ul;
 
         return value;

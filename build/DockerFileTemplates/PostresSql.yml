@@ -1,14 +1,14 @@
 services:
 
   db:
-    image: {ImageName}
-    container_name: {ContainerName}
+    image: { ImageName }
+    container_name: { ContainerName }
     restart: always
     environment:
-      POSTGRES_PASSWORD: {Password}
-      POSTGRES_USER: {User}
-      POSTGRES_DB: {DataBaseName}
-      PGDATA: {DataFilePath}
+      POSTGRES_PASSWORD: { Password }
+      POSTGRES_USER: { User }
+      POSTGRES_DB: { DataBaseName }
+      PGDATA: { DataFilePath }
       POSTGRES_INITDB_ARGS: "-A md5"
     ports:
       - "{Port}:5432"

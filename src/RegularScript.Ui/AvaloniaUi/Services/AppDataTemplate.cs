@@ -18,22 +18,35 @@ public class AppDataTemplate : IDataTemplate
     public AppDataTemplate(IReadOnlyDictionary<Type, Type> resolveViewDictionary, IResolver resolver)
     {
         this.resolver = resolver;
-        this.resolveViewDictionary = new (resolveViewDictionary);
+        this.resolveViewDictionary = new Dictionary<Type, Type>(resolveViewDictionary);
+    }
+
+    public Control? Build(object? param)
+    {
+        if (param is null) return null;
+
+        var type = param.GetType();
+
+        if (resolveViewDictionary.TryGetValue(type, out var viewType)) return (Control)resolver.Resolve(viewType);
+
+        return new TextBlock
+        {
+            Text = type.FullName
+        };
+    }
+
+    public bool Match(object? data)
+    {
+        return data is ViewModelBase;
     }
 
     public IViewFor ResolveView<T>(T? viewModel, string? contract = null)
     {
-        if (resolveViewDictionary.TryGetValue(key: typeof(T), value: out var viewType))
-        {
-            return CreateViewFor(viewType, viewModel);
-        }
+        if (resolveViewDictionary.TryGetValue(typeof(T), out var viewType)) return CreateViewFor(viewType, viewModel);
 
-        viewType = GetViewTypeOrNull(viewModelType: typeof(T));
+        viewType = GetViewTypeOrNull(typeof(T));
 
-        if (viewType is null)
-        {
-            throw new ArgumentOutOfRangeException(paramName: nameof(viewModel));
-        }
+        if (viewType is null) throw new ArgumentOutOfRangeException(nameof(viewModel));
 
         return CreateViewFor(viewType, viewModel);
     }
@@ -42,14 +55,11 @@ public class AppDataTemplate : IDataTemplate
     {
         var assembly = viewModelType.Assembly;
 
-        if (viewModelType.Namespace.IsNullOrWhiteSpace())
-        {
-            return null;
-        }
+        if (viewModelType.Namespace.IsNullOrWhiteSpace()) return null;
 
         var ns = viewModelType.Namespace
-           .Replace(oldValue: ".ViewModels.", newValue: ".Views.")
-           .Replace(oldValue: ".ViewModels", newValue: ".Views");
+            .Replace(".ViewModels.", ".Views.")
+            .Replace(".ViewModels", ".Views");
 
         var viewTypeName = $"{ns}.{viewModelType.Name}"[..^5];
         var viewType = assembly.GetType(viewTypeName);
@@ -61,36 +71,8 @@ public class AppDataTemplate : IDataTemplate
     {
         var view = resolver.Resolve(viewType);
 
-        if (view is IDataContextProvider dataContextProvider)
-        {
-            dataContextProvider.DataContext = viewModel;
-        }
+        if (view is IDataContextProvider dataContextProvider) dataContextProvider.DataContext = viewModel;
 
         return view.ThrowIfIsNot<IViewFor>();
-    }
-
-    public Control? Build(object? param)
-    {
-        if (param is null)
-        {
-            return null;
-        }
-
-        var type = param.GetType();
-
-        if (resolveViewDictionary.TryGetValue(type, out var viewType))
-        {
-            return (Control)resolver.Resolve(viewType);
-        }
-
-        return new TextBlock
-        {
-            Text = type.FullName,
-        };
-    }
-
-    public bool Match(object? data)
-    {
-       return data is ViewModelBase;
     }
 }

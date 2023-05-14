@@ -8,6 +8,6 @@ public class EnumConstants<TEnum> where TEnum : struct, Enum
     static EnumConstants()
     {
         Values = Enum.GetValues<TEnum>();
-        NullableValues = Values.Select(selector: x => (TEnum?)x).ToArray();
+        NullableValues = Values.Select(x => (TEnum?)x).ToArray();
     }
 }

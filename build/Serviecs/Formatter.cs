@@ -5,7 +5,7 @@ namespace Serviecs;
 
 public class Formatter
 {
-    private readonly Regex parameterRegex = new("{([A-Za-z0-9]+)}");
+    readonly Regex parameterRegex = new("{([A-Za-z0-9]+)}");
 
     public string Format(string input, object args)
     {
