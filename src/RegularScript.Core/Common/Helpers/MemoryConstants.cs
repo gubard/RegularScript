@@ -17,8 +17,7 @@ public static class MemoryConstants
         new(
             new[]
             {
-                PreambleUtf8,
-                NewLineUtf8,
-                SpaceUtf8
-            });
+                PreambleUtf8, NewLineUtf8, SpaceUtf8
+            }
+        );
 }

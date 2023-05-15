@@ -12,14 +12,20 @@ public static class EnumerableExtension
 {
     public static object? ElementAt(this IEnumerable items, int index)
     {
-        if (items is IList list) return list[index];
+        if (items is IList list)
+        {
+            return list[index];
+        }
 
         return Enumerable.ElementAt(items.Cast<object>(), index);
     }
 
     public static int Count(this IEnumerable items)
     {
-        if (TryGetCountFast(items, out var count)) return count;
+        if (TryGetCountFast(items, out var count))
+        {
+            return count;
+        }
 
         return 0;
     }
@@ -94,13 +100,19 @@ public static class EnumerableExtension
         var result = new DataTable(typeof(T).Name);
         var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        foreach (var prop in props) result.Columns.Add(prop.Name, prop.PropertyType);
+        foreach (var prop in props)
+        {
+            result.Columns.Add(prop.Name, prop.PropertyType);
+        }
 
         foreach (var item in items)
         {
             var values = new object?[props.Length];
 
-            for (var i = 0; i < props.Length; i++) values[i] = props[i].GetValue(item, null);
+            for (var i = 0; i < props.Length; i++)
+            {
+                values[i] = props[i].GetValue(item, null);
+            }
 
             result.Rows.Add(values);
         }

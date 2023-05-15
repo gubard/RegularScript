@@ -13,7 +13,8 @@ namespace RegularScript.Ui;
 
 public class App : Application
 {
-    [Inject] public IResolver? Resolver { get; set; }
+    [Inject]
+    public IResolver? Resolver { get; set; }
 
     public override void Initialize()
     {
@@ -26,9 +27,13 @@ public class App : Application
         var resolver = Resolver.ThrowIfNull();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
             desktop.MainWindow = resolver.Resolve<Window>();
+        }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        {
             singleViewPlatform.MainView = resolver.Resolve<Control>();
+        }
 
         base.OnFrameworkInitializationCompleted();
     }

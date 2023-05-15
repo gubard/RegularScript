@@ -29,7 +29,10 @@ public class TypeInformation : IEquatable<TypeInformation>
 
     public bool Equals(TypeInformation? other)
     {
-        if (other is null) return false;
+        if (other is null)
+        {
+            return false;
+        }
 
         var result = Identifier.Equals(other.Identifier);
 

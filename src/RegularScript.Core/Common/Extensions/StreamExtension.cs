@@ -20,7 +20,10 @@ public static class StreamExtension
         using var ms = new MemoryStream();
         int read;
 
-        while ((read = stream.Read(buffer, 0, buffer.Length)) > 0) ms.Write(buffer, 0, read);
+        while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            ms.Write(buffer, 0, read);
+        }
 
         return ms.ToArray();
     }
@@ -40,7 +43,10 @@ public static class StreamExtension
         await using var ms = new MemoryStream();
         int read;
 
-        while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0) await ms.WriteAsync(buffer, 0, read);
+        while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+        {
+            await ms.WriteAsync(buffer, 0, read);
+        }
 
         return ms.ToArray();
     }

@@ -34,7 +34,8 @@ public class StreamHumanizing : IHumanizing<Stream, string>
         2,
         Environment.NewLine,
         Encoding.UTF8,
-        4)
+        4
+    )
     {
     }
 

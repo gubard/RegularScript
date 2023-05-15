@@ -31,11 +31,19 @@ public class ModuleTree : IModule, IResolver, IInvoker
         var outputs = new List<TypeInformation>();
         var ends = this.tree.GetEnds();
 
-        foreach (var node in ends) AddTypes(inputs, outputs, node);
+        foreach (var node in ends)
+        {
+            AddTypes(inputs, outputs, node);
+        }
 
         var outputsArray = outputs
             .Distinct()
-            .Concat(new TypeInformation[] { typeof(IResolver), typeof(IInvoker) })
+            .Concat(
+                new TypeInformation[]
+                {
+                    typeof(IResolver), typeof(IInvoker)
+                }
+            )
             .OrderBy(x => x.ToString())
             .ToArray();
 
@@ -52,10 +60,16 @@ public class ModuleTree : IModule, IResolver, IInvoker
         var args = new object[parameterTypes.Length];
 
         for (var index = 0; index < args.Length; index++)
+        {
             if (arguments.TryGetValue(parameterTypes[index], out var value))
+            {
                 args[index] = value;
+            }
             else
+            {
                 args[index] = Resolve(parameterTypes[index]);
+            }
+        }
 
         return del.DynamicInvoke(args);
     }
@@ -69,11 +83,20 @@ public class ModuleTree : IModule, IResolver, IInvoker
         Dictionary<TypeInformation, ScopeValue> scopeParameters
     )
     {
-        if (typeof(IResolver) == type) return new DependencyStatus(type, thisExpression);
+        if (typeof(IResolver) == type)
+        {
+            return new DependencyStatus(type, thisExpression);
+        }
 
-        if (typeof(IInvoker) == type) return new DependencyStatus(type, thisExpression);
+        if (typeof(IInvoker) == type)
+        {
+            return new DependencyStatus(type, thisExpression);
+        }
 
-        if (!IsTypeContains(type)) throw new TypeNotRegisterException(type.Type);
+        if (!IsTypeContains(type))
+        {
+            throw new TypeNotRegisterException(type.Type);
+        }
 
         if (IsTypeContains(tree.Root.Value.Outputs, type))
         {
@@ -89,11 +112,20 @@ public class ModuleTree : IModule, IResolver, IInvoker
 
     public object GetObject(TypeInformation type)
     {
-        if (typeof(IResolver) == type) return this;
+        if (typeof(IResolver) == type)
+        {
+            return this;
+        }
 
-        if (typeof(IInvoker) == type) return this;
+        if (typeof(IInvoker) == type)
+        {
+            return this;
+        }
 
-        if (!IsTypeContains(type)) throw new TypeNotRegisterException(type.Type);
+        if (!IsTypeContains(type))
+        {
+            throw new TypeNotRegisterException(type.Type);
+        }
 
         if (cache.TryGetValue(type, out var func))
         {
@@ -106,7 +138,10 @@ public class ModuleTree : IModule, IResolver, IInvoker
         var status = GetStatus(type, scopeParameters);
         var expression = UpdateExpression(status.Expression, scopeParameters);
 
-        if (expression.Type.IsValueType) expression = expression.ToConvert(typeof(object));
+        if (expression.Type.IsValueType)
+        {
+            expression = expression.ToConvert(typeof(object));
+        }
 
         var lambda = InitScopeValues(expression, scopeParameters).ToLambda();
         func = lambda.Compile().ThrowIfIsNot<Func<object>>();
@@ -126,12 +161,18 @@ public class ModuleTree : IModule, IResolver, IInvoker
         Dictionary<TypeInformation, ScopeValue> values
     )
     {
-        if (values.IsEmpty()) return expression;
+        if (values.IsEmpty())
+        {
+            return expression;
+        }
 
         foreach (var value in values)
         {
             var exp = UpdateExpression(value.Value.Expression, values);
-            values[value.Key] = value.Value with { Expression = exp };
+            values[value.Key] = value.Value with
+            {
+                Expression = exp
+            };
         }
 
         var blockItems = new List<Expression>();
@@ -139,7 +180,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
         var parameters = values.GroupBy(x => x.Value.Parameter);
 
         foreach (var parameter in parameters)
+        {
             blockItems.Add(parameter.Key.ToAssign(parameter.First().Value.Expression));
+        }
 
         blockItems.Add(expression);
 
@@ -150,13 +193,22 @@ public class ModuleTree : IModule, IResolver, IInvoker
     {
         if (!outputs.Span.Contains(type))
         {
-            if (!type.Type.IsGenericType) return false;
+            if (!type.Type.IsGenericType)
+            {
+                return false;
+            }
 
-            if (type.Type.GetGenericTypeDefinition() != typeof(Lazy<>)) return false;
+            if (type.Type.GetGenericTypeDefinition() != typeof(Lazy<>))
+            {
+                return false;
+            }
 
             var argument = type.Type.GenericTypeArguments.Single();
 
-            if (!outputs.Span.Contains(argument)) return false;
+            if (!outputs.Span.Contains(argument))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -184,7 +236,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
                 var arguments = new List<Expression>();
 
                 foreach (var argument in invocationExpression.Arguments)
+                {
                     arguments.Add(UpdateExpression(argument, scopeParameters));
+                }
 
                 var result = invocationExpression.Update(
                     invocationExpression.Expression,
@@ -195,7 +249,10 @@ public class ModuleTree : IModule, IResolver, IInvoker
             }
             case ParameterExpression parameterExpression:
             {
-                if (scopeParameters.TryGetValue(parameterExpression.Type, out var value)) return value.Parameter;
+                if (scopeParameters.TryGetValue(parameterExpression.Type, out var value))
+                {
+                    return value.Parameter;
+                }
 
                 var result = CreateParameter(parameterExpression, scopeParameters);
 
@@ -210,7 +267,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
                     var argumentExpression = UpdateExpression(argument, scopeParameters);
 
                     if (argumentExpression.Type.IsValueType)
+                    {
                         argumentExpression = argumentExpression.ToConvert(argument.Type);
+                    }
 
                     arguments.Add(argumentExpression);
                 }
@@ -228,7 +287,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
                     .ThrowIfIsNot<ParameterExpression>();
 
                 foreach (var blockExpressionItem in blockExpressionItems)
+                {
                     expressions.Add(UpdateExpression(blockExpressionItem, scopeParameters));
+                }
 
                 expressions.Add(blockResult);
                 var result = blockExpression.Update(blockResult.AsArray(), expressions);
@@ -258,7 +319,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
                 var arguments = new List<Expression>();
 
                 foreach (var argument in methodCallExpression.Arguments)
+                {
                     arguments.Add(UpdateExpression(argument, scopeParameters));
+                }
 
                 return methodCallExpression.Update(obj, arguments);
             }
@@ -268,7 +331,9 @@ public class ModuleTree : IModule, IResolver, IInvoker
                 var expressions = new List<Expression>();
 
                 foreach (var parameter in lambdaExpression.Parameters)
+                {
                     expressions.Add(UpdateExpression(parameter, scopeParameters));
+                }
 
                 if (expressions.Any())
                 {
@@ -309,23 +374,34 @@ public class ModuleTree : IModule, IResolver, IInvoker
         Dictionary<TypeInformation, ScopeValue> scopeParameters
     )
     {
-        if (typeof(IResolver) == type) return new DependencyStatus(type, thisExpression);
+        if (typeof(IResolver) == type)
+        {
+            return new DependencyStatus(type, thisExpression);
+        }
 
-        if (typeof(IInvoker) == type) return new DependencyStatus(type, thisExpression);
+        if (typeof(IInvoker) == type)
+        {
+            return new DependencyStatus(type, thisExpression);
+        }
 
         foreach (var treeNode in node.Nodes)
+        {
             if (IsTypeContains(treeNode, type))
             {
                 var status = treeNode.Value.GetStatus(type, scopeParameters);
 
                 return status;
             }
+        }
 
         foreach (var treeNode in node.Nodes)
         {
             var status = GetDependencyStatus(treeNode, type, scopeParameters);
 
-            if (status is null) continue;
+            if (status is null)
+            {
+                continue;
+            }
 
             return status;
         }
@@ -342,7 +418,10 @@ public class ModuleTree : IModule, IResolver, IInvoker
         outputs.AddRange(node.Value.Outputs.ToArray());
         inputs.AddRange(node.Value.Inputs.ToArray());
 
-        if (node.Parent is null) return;
+        if (node.Parent is null)
+        {
+            return;
+        }
 
         AddTypes(inputs, outputs, node.Parent);
     }

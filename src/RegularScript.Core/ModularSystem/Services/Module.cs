@@ -24,7 +24,10 @@ public class Module : IModule
 
     public object GetObject(TypeInformation type)
     {
-        if (!Outputs.Span.Contains(type)) throw new TypeNotRegisterException(type.Type);
+        if (!Outputs.Span.Contains(type))
+        {
+            throw new TypeNotRegisterException(type.Type);
+        }
 
         return dependencyInjector.Resolve(type);
     }

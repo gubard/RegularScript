@@ -28,7 +28,10 @@ public static class StringExtension
     {
         str = str.ThrowIfNull(paramName);
 
-        if (str.IsNullOrWhiteSpace()) throw new WhiteSpaceException(paramName);
+        if (str.IsNullOrWhiteSpace())
+        {
+            throw new WhiteSpaceException(paramName);
+        }
 
         return str;
     }
@@ -81,7 +84,10 @@ public static class StringExtension
 
     public static string ToWriteToFile(this string str, FileInfo file, Encoding encoding)
     {
-        if (file.Exists) file.Delete();
+        if (file.Exists)
+        {
+            file.Delete();
+        }
 
         using var stream = file.Create();
         var bytes = encoding.GetBytes(str);
@@ -97,9 +103,15 @@ public static class StringExtension
 
     public static string? AddLine(this string? str, string? line)
     {
-        if (str is null) return line;
+        if (str is null)
+        {
+            return line;
+        }
 
-        if (line is null) return str;
+        if (line is null)
+        {
+            return str;
+        }
 
         return $"{str}{line}{Environment.NewLine}";
     }

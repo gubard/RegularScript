@@ -8,7 +8,8 @@ namespace RegularScript.Core.Common.Models;
 public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
 {
     public static readonly ReadOnlyDictionary<TKey, TValue> Empty = new(
-        Array.Empty<KeyValuePair<TKey, TValue>>());
+        Array.Empty<KeyValuePair<TKey, TValue>>()
+    );
 
     public readonly Memory<KeyValuePair<TKey, TValue>> Memory;
     public readonly int Count;
@@ -52,8 +53,12 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
     public bool ContainsKey(TKey key)
     {
         foreach (var item in Memory.Span)
+        {
             if (item.Equals(key))
+            {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -61,12 +66,14 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         foreach (var item in Memory.Span)
+        {
             if (item.Key.Equals(key))
             {
                 value = item.Value;
 
                 return true;
             }
+        }
 
         value = default;
 
@@ -92,7 +99,10 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
         {
             var num = index + 1;
 
-            if (num >= span.Length) return false;
+            if (num >= span.Length)
+            {
+                return false;
+            }
 
             index = num;
 

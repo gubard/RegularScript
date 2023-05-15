@@ -17,10 +17,14 @@ public class MainHeaderViewModel : ViewModelBase
                 {
                     var application = Application.Current;
 
-                    if (application is null) return;
+                    if (application is null)
+                    {
+                        return;
+                    }
 
                     application.RequestedThemeVariant = x ? ThemeVariant.Dark : ThemeVariant.Light;
-                });
+                }
+            );
     }
 
     public bool IsDarkTheme

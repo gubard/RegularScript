@@ -10,7 +10,10 @@ public static class ReadOnlyDictionaryExtension
         TValue def
     )
     {
-        if (dictionary.TryGetValue(key, out var result)) return result;
+        if (dictionary.TryGetValue(key, out var result))
+        {
+            return result;
+        }
 
         return def;
     }

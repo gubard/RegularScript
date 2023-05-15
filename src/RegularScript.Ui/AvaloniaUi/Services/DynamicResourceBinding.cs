@@ -32,7 +32,10 @@ public class DynamicResourceBinding : IBinding
         bool enableDataValidation
     )
     {
-        if (ResourceKey is null) return null;
+        if (ResourceKey is null)
+        {
+            return null;
+        }
 
         var control = target as IResourceHost ?? anchor as IResourceHost;
 
@@ -59,7 +62,9 @@ public class DynamicResourceBinding : IBinding
     private Func<object?, object?>? GetConverter(AvaloniaProperty? targetProperty)
     {
         if (targetProperty?.PropertyType == typeof(IBrush))
+        {
             return x => ColorToBrushConverter.Convert(x, typeof(IBrush));
+        }
 
         return null;
     }

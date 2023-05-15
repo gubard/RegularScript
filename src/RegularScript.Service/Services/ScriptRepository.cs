@@ -25,7 +25,8 @@ public class ScriptRepository : IScriptRepository
 
     public async Task<IEnumerable<Script>> GetRootScriptsAsync(Guid languageId)
     {
-        var scriptsDb = from script in dbContext.Set<ScriptDb>().Where(x => x.ParentId == null)
+        var scriptsDb =
+            from script in dbContext.Set<ScriptDb>().Where(x => x.ParentId == null)
             join scriptLocalization in dbContext.Set<ScriptLocalizationDb>().Where(x => x.LanguageId == languageId)
                 on script.Id equals scriptLocalization.ScriptId into scriptLocalizations
             from scriptLocalization in scriptLocalizations.DefaultIfEmpty()

@@ -21,7 +21,10 @@ public class MinusToNumberConverter : IValueConverter
         CultureInfo culture
     )
     {
-        if (value is null) return targetType.GetDefaultValue();
+        if (value is null)
+        {
+            return targetType.GetDefaultValue();
+        }
 
         var str = value.ToString();
 

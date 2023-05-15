@@ -6,9 +6,9 @@ namespace RegularScript.Core.StringFormat.Services;
 
 public class Formatter
 {
-    private const char startArg = '{';
-    private const char endArg = '}';
-    private const string argChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890_";
+    const char startArg = '{';
+    const char endArg = '}';
+    const string argChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890_";
 
     public string Format(string template, object args)
     {
@@ -53,7 +53,7 @@ public class Formatter
                         }
 
                         var textLength = currentStartArg - 1 - currentStart;
-                        var text = templateSpan.Slice(currentStart,  textLength);
+                        var text = templateSpan.Slice(currentStart, textLength);
                         stringBuilder.Append(text);
                         currentStart = index + 1;
                         var value = property.GetValue(args)?.ToString() ?? string.Empty;

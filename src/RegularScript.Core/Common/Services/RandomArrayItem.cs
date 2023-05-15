@@ -18,12 +18,18 @@ public class RandomArrayItem<TValue> : IRandomArrayItem<TValue>
 
     public TValue? GetRandom(TValue[] values)
     {
-        if (values.Length == 0) return includeDefault ? default : throw new EmptyEnumerableException(nameof(values));
+        if (values.Length == 0)
+        {
+            return includeDefault ? default : throw new EmptyEnumerableException(nameof(values));
+        }
 
         var min = includeDefault ? -1 : 0;
         var index = CommonConstants.Random.Next(min, values.Length);
 
-        if (index == -1) return default;
+        if (index == -1)
+        {
+            return default;
+        }
 
         return values[index];
     }

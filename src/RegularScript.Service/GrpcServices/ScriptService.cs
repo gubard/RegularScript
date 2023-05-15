@@ -21,7 +21,8 @@ public class ScriptService : ScriptServiceApi.ScriptServiceApiBase
 
     public override async Task<GetRootScriptsReply> GetRootScripts(
         GetRootScriptsRequest request,
-        ServerCallContext context)
+        ServerCallContext context
+    )
     {
         var languageId = new Guid(request.LanguageId.ToByteArray());
         var scripts = await scriptRepository.GetRootScriptsAsync(languageId);

@@ -20,7 +20,10 @@ public static class DoubleExtension
         [CallerArgumentExpression("value")] string paramName = ""
     )
     {
-        if (value.IsZero()) throw new ZeroException(paramName);
+        if (value.IsZero())
+        {
+            throw new ZeroException(paramName);
+        }
 
         return value;
     }
@@ -30,7 +33,10 @@ public static class DoubleExtension
         [CallerArgumentExpression("value")] string paramName = ""
     )
     {
-        if (value.IsNegative()) throw new NegativeException<double>(paramName, value);
+        if (value.IsNegative())
+        {
+            throw new NegativeException<double>(paramName, value);
+        }
 
         return value;
     }

@@ -20,47 +20,61 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution] Solution Solution { get; set; }
-    [Parameter] AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
-    [Parameter] AbsolutePath TemplateAppSettingsFolderPath { get; set; }
-    [Parameter] AbsolutePath TempFolderPath { get; set; }
-    [Parameter] string DefaultLanguageCodeIso3 { get; set; } = "eng";
+    [Solution]
+    Solution Solution { get; set; }
 
-    Target SetupAppSettings => _ => _
-        .Executes(() =>
-        {
-            foreach (var project in Solution.Projects)
-            {
-                var appSettingsFile = project.Directory.GetFiles("appsettings.json").SingleOrDefault();
+    [Parameter]
+    AbsolutePath PostgresDockerTemplateConfigurationFilePath { get; set; }
 
-                if (appSettingsFile is null) continue;
+    [Parameter]
+    AbsolutePath TemplateAppSettingsFolderPath { get; set; }
 
-                Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
-                var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
-                Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
-                var appSettingsTemplate = ReadAllText(appSettingsTemplatePath);
-                Log.Information("App settings template {AppSettingsTemplate}", appSettingsTemplate);
+    [Parameter]
+    AbsolutePath TempFolderPath { get; set; }
 
-                var options = new
+    [Parameter]
+    string DefaultLanguageCodeIso3 { get; set; } = "eng";
+
+    Target SetupAppSettings =>
+        _ => _
+            .Executes(() =>
                 {
-                    PostgresUser,
-                    PostgresPassword,
-                    PostgresHost,
-                    PostgresPort,
-                    PostgresDataBaseName,
-                    CertificatePath,
-                    CertificatePassword,
-                    Url,
-                    LogLevelDefault,
-                    DefaultLanguageCodeIso3
-                };
+                    foreach (var project in Solution.Projects)
+                    {
+                        var appSettingsFile = project.Directory.GetFiles("appsettings.json").SingleOrDefault();
 
-                var smartFormatter = new Formatter();
-                var appSettings = smartFormatter.Format(appSettingsTemplate, options);
-                WriteAllText(appSettingsFile, appSettings);
-                Log.Information("Save app settings {AppSettingsFile}", appSettingsFile);
-            }
-        });
+                        if (appSettingsFile is null)
+                        {
+                            continue;
+                        }
+
+                        Log.Information("Find app setting {AppSettingsFile}", appSettingsFile);
+                        var appSettingsTemplatePath = TemplateAppSettingsFolderPath / $"{project.Name}.json";
+                        Log.Information("Load app settings {AppSettingsTemplatePath}", appSettingsTemplatePath);
+                        var appSettingsTemplate = ReadAllText(appSettingsTemplatePath);
+                        Log.Information("App settings template {AppSettingsTemplate}", appSettingsTemplate);
+
+                        var options = new
+                        {
+                            PostgresUser,
+                            PostgresPassword,
+                            PostgresHost,
+                            PostgresPort,
+                            PostgresDataBaseName,
+                            CertificatePath,
+                            CertificatePassword,
+                            Url,
+                            LogLevelDefault,
+                            DefaultLanguageCodeIso3
+                        };
+
+                        var smartFormatter = new Formatter();
+                        var appSettings = smartFormatter.Format(appSettingsTemplate, options);
+                        WriteAllText(appSettingsFile, appSettings);
+                        Log.Information("Save app settings {AppSettingsFile}", appSettingsFile);
+                    }
+                }
+            );
 
     public static int Main() => Execute<Build>(x => x.Result);
 
@@ -80,155 +94,208 @@ class Build : NukeBuild
     {
         var hosts = new Hosts().Discover();
 
-        var docker = hosts.FirstOrDefault(x => x.IsNative) ??
-                     hosts.FirstOrDefault(x => x.Name == "default") ??
-                     throw new NullReferenceException("docker");
+        var docker = hosts.FirstOrDefault(x => x.IsNative)
+                     ?? hosts.FirstOrDefault(x => x.Name == "default") ?? throw new NullReferenceException("docker");
 
         return docker;
     }
 
     #region App Parameters
 
-    [Parameter] string LogLevelDefault { get; set; } = "Debug";
-    [Parameter] string CertificatePath { get; set; } = "localhost.pfx";
-    [Parameter] string CertificatePassword { get; set; } = "QAZ78963wsx";
-    [Parameter] string Url { get; set; } = "https://localhost:5002";
+    [Parameter]
+    string LogLevelDefault { get; set; } = "Debug";
+
+    [Parameter]
+    string CertificatePath { get; set; } = "localhost.pfx";
+
+    [Parameter]
+    string CertificatePassword { get; set; } = "QAZ78963wsx";
+
+    [Parameter]
+    string Url { get; set; } = "https://localhost:5002";
 
     #endregion
 
     #region Postgres Parameters
 
-    [Parameter] string PostgresContainerName { get; set; } = "regular_script_postgres";
-    [Parameter] string PostgresImageName { get; set; } = "postgres";
-    [Parameter] string PostgresPassword { get; set; } = "QAZ78963wsx";
-    [Parameter] string PostgresUser { get; set; } = "postgresuser";
-    [Parameter] string PostgresDataBaseName { get; set; } = "regular_script";
-    [Parameter] string PostgresDataFilePath { get; set; } = "~/postgres/data";
-    [Parameter] ushort PostgresPort { get; set; } = 1713;
-    [Parameter] string PostgresHost { get; set; } = "localhost";
+    [Parameter]
+    string PostgresContainerName { get; set; } = "regular_script_postgres";
+
+    [Parameter]
+    string PostgresImageName { get; set; } = "postgres";
+
+    [Parameter]
+    string PostgresPassword { get; set; } = "QAZ78963wsx";
+
+    [Parameter]
+    string PostgresUser { get; set; } = "postgresuser";
+
+    [Parameter]
+    string PostgresDataBaseName { get; set; } = "regular_script";
+
+    [Parameter]
+    string PostgresDataFilePath { get; set; } = "~/postgres/data";
+
+    [Parameter]
+    ushort PostgresPort { get; set; } = 1713;
+
+    [Parameter]
+    string PostgresHost { get; set; } = "localhost";
 
     #endregion
 
     #region DotNet
 
-    Target Restore => _ => _
-        .DependsOn(SetupAppSettings)
-        .Executes(() => DotNetRestore(setting => setting.SetProjectFile(Solution.Path)));
+    Target Restore =>
+        _ => _
+            .DependsOn(SetupAppSettings)
+            .Executes(() => DotNetRestore(setting => setting.SetProjectFile(Solution.Path)));
 
-    Target Clean => _ => _
-        .DependsOn(Restore)
-        .Executes(() => DotNetClean(setting => setting.SetProject(Solution.Path)
-            .SetConfiguration(Configuration)));
+    Target Clean =>
+        _ => _
+            .DependsOn(Restore)
+            .Executes(() => DotNetClean(setting => setting.SetProject(Solution.Path)
+                    .SetConfiguration(Configuration)
+                )
+            );
 
-    Target Compile => _ => _
-        .DependsOn(Clean)
-        .Executes(() => DotNetBuild(settings => settings.SetProjectFile(Solution.Path)
-            .SetConfiguration(Configuration)
-            .EnableNoRestore()));
+    Target Compile =>
+        _ => _
+            .DependsOn(Clean)
+            .Executes(() => DotNetBuild(settings => settings.SetProjectFile(Solution.Path)
+                    .SetConfiguration(Configuration)
+                    .EnableNoRestore()
+                )
+            );
 
-    Target Tests => _ => _
-        .DependsOn(Compile)
-        .Executes(() => DotNetTest(settings => settings.SetProjectFile(Solution.Path)
-            .SetConfiguration(Configuration)
-            .EnableNoBuild()
-            .EnableNoRestore()));
+    Target Tests =>
+        _ => _
+            .DependsOn(Compile)
+            .Executes(() => DotNetTest(settings => settings.SetProjectFile(Solution.Path)
+                    .SetConfiguration(Configuration)
+                    .EnableNoBuild()
+                    .EnableNoRestore()
+                )
+            );
 
     #endregion
 
     #region Docker
 
-    Target DockerStopPostresContainer => _ => _
-        .Executes(() =>
-        {
-            var docker = CreateDockerClient();
-            var containerId = docker.GetContainerId(PostgresContainerName);
+    Target DockerStopPostresContainer =>
+        _ => _
+            .Executes(() =>
+                {
+                    var docker = CreateDockerClient();
+                    var containerId = docker.GetContainerId(PostgresContainerName);
 
-            if (string.IsNullOrWhiteSpace(containerId)) return;
+                    if (string.IsNullOrWhiteSpace(containerId))
+                    {
+                        return;
+                    }
 
-            docker.StopContainer(containerId, PostgresContainerName);
-        });
+                    docker.StopContainer(containerId, PostgresContainerName);
+                }
+            );
 
-    Target DockerStopContainers => _ => _
-        .DependsOn(DockerStopPostresContainer);
+    Target DockerStopContainers =>
+        _ => _
+            .DependsOn(DockerStopPostresContainer);
 
-    Target DockerRemovePostresContainer => _ => _
-        .DependsOn(DockerStopPostresContainer)
-        .Executes(() =>
-        {
-            var docker = CreateDockerClient();
-            var containerId = docker.GetContainerId(PostgresContainerName);
+    Target DockerRemovePostresContainer =>
+        _ => _
+            .DependsOn(DockerStopPostresContainer)
+            .Executes(() =>
+                {
+                    var docker = CreateDockerClient();
+                    var containerId = docker.GetContainerId(PostgresContainerName);
 
-            if (string.IsNullOrWhiteSpace(containerId)) return;
+                    if (string.IsNullOrWhiteSpace(containerId))
+                    {
+                        return;
+                    }
 
-            docker.RemoveContainer(containerId, PostgresContainerName);
-        });
+                    docker.RemoveContainer(containerId, PostgresContainerName);
+                }
+            );
 
-    Target DockerRemoveContainers => _ => _
-        .DependsOn(DockerRemovePostresContainer);
+    Target DockerRemoveContainers =>
+        _ => _
+            .DependsOn(DockerRemovePostresContainer);
 
-    Target DockerBuildPostres => _ => _
-        .DependsOn(DockerRemovePostresContainer)
-        .Executes(() =>
-        {
-            var postgresDockerTemplateConfiguration = ReadAllText(PostgresDockerTemplateConfigurationFilePath);
+    Target DockerBuildPostres =>
+        _ => _
+            .DependsOn(DockerRemovePostresContainer)
+            .Executes(() =>
+                {
+                    var postgresDockerTemplateConfiguration = ReadAllText(PostgresDockerTemplateConfigurationFilePath);
 
-            Log.Information(
-                "Loaded postgres docker template configuration from {PostgresDockerTemplateConfigurationFilePath}",
-                PostgresDockerTemplateConfigurationFilePath);
+                    Log.Information(
+                        "Loaded postgres docker template configuration from {PostgresDockerTemplateConfigurationFilePath}",
+                        PostgresDockerTemplateConfigurationFilePath
+                    );
 
-            Log.Information("{PostgresDockerTemplateConfiguration}", postgresDockerTemplateConfiguration);
+                    Log.Information("{PostgresDockerTemplateConfiguration}", postgresDockerTemplateConfiguration);
 
-            var options = new
-            {
-                ContainerName = PostgresContainerName,
-                ImageName = PostgresImageName,
-                Password = PostgresPassword,
-                User = PostgresUser,
-                DataBaseName = PostgresDataBaseName,
-                DataFilePath = PostgresDataFilePath,
-                Port = PostgresPort
-            };
+                    var options = new
+                    {
+                        ContainerName = PostgresContainerName,
+                        ImageName = PostgresImageName,
+                        Password = PostgresPassword,
+                        User = PostgresUser,
+                        DataBaseName = PostgresDataBaseName,
+                        DataFilePath = PostgresDataFilePath,
+                        Port = PostgresPort
+                    };
 
-            var formatter = new Formatter();
-            var postgresDockerConfiguration = formatter.Format(postgresDockerTemplateConfiguration, options);
+                    var formatter = new Formatter();
+                    var postgresDockerConfiguration = formatter.Format(postgresDockerTemplateConfiguration, options);
 
-            if (!Directory.Exists(TempFolderPath))
-            {
-                Directory.CreateDirectory(TempFolderPath);
-                Log.Information("Created temp folder {TempFolderPath}", TempFolderPath);
-            }
+                    if (!Directory.Exists(TempFolderPath))
+                    {
+                        Directory.CreateDirectory(TempFolderPath);
+                        Log.Information("Created temp folder {TempFolderPath}", TempFolderPath);
+                    }
 
-            var postgresDockerConfigurationFilePath = TempFolderPath / DefaultPostgresDockerConfigurationFileName;
-            WriteAllText(postgresDockerConfigurationFilePath, postgresDockerConfiguration);
+                    var postgresDockerConfigurationFilePath =
+                        TempFolderPath / DefaultPostgresDockerConfigurationFileName;
 
-            Log.Information(
-                "Save postgres docker configuration in {PostgresDockerConfigurationFilePath}",
-                postgresDockerConfigurationFilePath);
+                    WriteAllText(postgresDockerConfigurationFilePath, postgresDockerConfiguration);
 
-            new Builder()
-                .UseContainer()
-                .UseCompose()
-                .FromFile(postgresDockerConfigurationFilePath)
-                .Build()
-                .Start();
-        });
+                    Log.Information(
+                        "Save postgres docker configuration in {PostgresDockerConfigurationFilePath}",
+                        postgresDockerConfigurationFilePath
+                    );
 
-    Target DockerBuild => _ => _
-        .DependsOn(DockerBuildPostres);
+                    new Builder()
+                        .UseContainer()
+                        .UseCompose()
+                        .FromFile(postgresDockerConfigurationFilePath)
+                        .Build()
+                        .Start();
+                }
+            );
+
+    Target DockerBuild =>
+        _ => _
+            .DependsOn(DockerBuildPostres);
 
     #endregion
 
     #region Result
 
-    Target ResultDotnet => _ => _
-        .Inherit(Tests);
+    Target ResultDotnet =>
+        _ => _
+            .Inherit(Tests);
 
-    Target ResultDocker => _ => _
-        .DependsOn(ResultDotnet)
-        .Inherit(DockerBuild);
+    Target ResultDocker =>
+        _ => _
+            .DependsOn(ResultDotnet)
+            .Inherit(DockerBuild);
 
-    Target Result => _ => _
-        .DependsOn(ResultDocker);
+    Target Result =>
+        _ => _
+            .DependsOn(ResultDocker);
 
     #endregion
 }

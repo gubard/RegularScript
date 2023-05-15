@@ -10,9 +10,15 @@ public static class TypeExtension
     {
         var constructors = type.GetConstructors();
 
-        if (constructors.Length == 0) return null;
+        if (constructors.Length == 0)
+        {
+            return null;
+        }
 
-        if (constructors.Length > 1) throw new ToManyConstructorsException(type, 1, constructors.Length);
+        if (constructors.Length > 1)
+        {
+            throw new ToManyConstructorsException(type, 1, constructors.Length);
+        }
 
         return constructors[0];
     }

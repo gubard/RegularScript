@@ -29,9 +29,15 @@ public class RandomString : IRandom<string>
     {
         var value = randomInt32.GetRandom(size);
 
-        if (value == 0) return string.Empty;
+        if (value == 0)
+        {
+            return string.Empty;
+        }
 
-        if (value == -1) return null;
+        if (value == -1)
+        {
+            return null;
+        }
 
         var result = new char[value];
 

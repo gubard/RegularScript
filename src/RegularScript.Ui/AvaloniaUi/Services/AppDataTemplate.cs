@@ -23,11 +23,17 @@ public class AppDataTemplate : IDataTemplate
 
     public Control? Build(object? param)
     {
-        if (param is null) return null;
+        if (param is null)
+        {
+            return null;
+        }
 
         var type = param.GetType();
 
-        if (resolveViewDictionary.TryGetValue(type, out var viewType)) return (Control)resolver.Resolve(viewType);
+        if (resolveViewDictionary.TryGetValue(type, out var viewType))
+        {
+            return (Control)resolver.Resolve(viewType);
+        }
 
         return new TextBlock
         {
@@ -42,11 +48,17 @@ public class AppDataTemplate : IDataTemplate
 
     public IViewFor ResolveView<T>(T? viewModel, string? contract = null)
     {
-        if (resolveViewDictionary.TryGetValue(typeof(T), out var viewType)) return CreateViewFor(viewType, viewModel);
+        if (resolveViewDictionary.TryGetValue(typeof(T), out var viewType))
+        {
+            return CreateViewFor(viewType, viewModel);
+        }
 
         viewType = GetViewTypeOrNull(typeof(T));
 
-        if (viewType is null) throw new ArgumentOutOfRangeException(nameof(viewModel));
+        if (viewType is null)
+        {
+            throw new ArgumentOutOfRangeException(nameof(viewModel));
+        }
 
         return CreateViewFor(viewType, viewModel);
     }
@@ -55,7 +67,10 @@ public class AppDataTemplate : IDataTemplate
     {
         var assembly = viewModelType.Assembly;
 
-        if (viewModelType.Namespace.IsNullOrWhiteSpace()) return null;
+        if (viewModelType.Namespace.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
 
         var ns = viewModelType.Namespace
             .Replace(".ViewModels.", ".Views.")
@@ -71,7 +86,10 @@ public class AppDataTemplate : IDataTemplate
     {
         var view = resolver.Resolve(viewType);
 
-        if (view is IDataContextProvider dataContextProvider) dataContextProvider.DataContext = viewModel;
+        if (view is IDataContextProvider dataContextProvider)
+        {
+            dataContextProvider.DataContext = viewModel;
+        }
 
         return view.ThrowIfIsNot<IViewFor>();
     }

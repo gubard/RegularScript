@@ -43,7 +43,10 @@ public class DependencyInjector : IDependencyInjector
 
     public object Resolve(TypeInformation type)
     {
-        if (!fields.Injectors.TryGetValue(type, out var injectorItem)) throw new TypeNotRegisterException(type.Type);
+        if (!fields.Injectors.TryGetValue(type, out var injectorItem))
+        {
+            throw new TypeNotRegisterException(type.Type);
+        }
 
         BuildExpression(
             type,
@@ -63,9 +66,15 @@ public class DependencyInjector : IDependencyInjector
         Dictionary<TypeInformation, ScopeValue> scopeParameters
     )
     {
-        if (IsLazy(type)) return GetLazyStatus(type, scopeParameters);
+        if (IsLazy(type))
+        {
+            return GetLazyStatus(type, scopeParameters);
+        }
 
-        if (!fields.Injectors.TryGetValue(type, out var injectorItem)) throw new TypeNotRegisterException(type.Type);
+        if (!fields.Injectors.TryGetValue(type, out var injectorItem))
+        {
+            throw new TypeNotRegisterException(type.Type);
+        }
 
         BuildExpression(type, injectorItem, scopeParameters, out var expression);
 
@@ -78,10 +87,16 @@ public class DependencyInjector : IDependencyInjector
         var args = new object[parameterTypes.Length];
 
         for (var index = 0; index < args.Length; index++)
+        {
             if (arguments.TryGetValue(parameterTypes[index], out var value))
+            {
                 args[index] = value;
+            }
             else
+            {
                 args[index] = Resolve(parameterTypes[index]);
+            }
+        }
 
         return del.DynamicInvoke(args);
     }
@@ -97,7 +112,10 @@ public class DependencyInjector : IDependencyInjector
         {
             case InjectorItemType.Singleton:
             {
-                if (fields.CacheSingleton.TryGetValue(type, out result)) return true;
+                if (fields.CacheSingleton.TryGetValue(type, out result))
+                {
+                    return true;
+                }
 
                 if (UpdateParameters(type, injectorItem.Expression, scopeExpressions, out result))
                 {
@@ -159,7 +177,10 @@ public class DependencyInjector : IDependencyInjector
 
     private Expression ValueTypeValidate(TypeInformation type, Expression expression)
     {
-        if (type.IsValueType && type != expression.Type) return expression.ToConvert(type.Type);
+        if (type.IsValueType && type != expression.Type)
+        {
+            return expression.ToConvert(type.Type);
+        }
 
         return expression;
     }
@@ -181,7 +202,10 @@ public class DependencyInjector : IDependencyInjector
 
                 foreach (var argument in invocationExpression.Arguments)
                 {
-                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value)) isFull = false;
+                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value))
+                    {
+                        isFull = false;
+                    }
 
                     arguments.Add(value);
                 }
@@ -201,7 +225,10 @@ public class DependencyInjector : IDependencyInjector
 
                 var parameter = CreateParameter(parameterExpression, scopeParameters);
 
-                if (parameter is ParameterExpression) isFull = false;
+                if (parameter is ParameterExpression)
+                {
+                    isFull = false;
+                }
 
                 result = parameter;
 
@@ -216,7 +243,9 @@ public class DependencyInjector : IDependencyInjector
                     if (
                         !UpdateParameters(parameter.Type, parameter, scopeParameters, out var value)
                     )
+                    {
                         isFull = false;
+                    }
 
                     expressions.Add(value);
                 }
@@ -247,7 +276,9 @@ public class DependencyInjector : IDependencyInjector
                     if (
                         !fields.ReservedCtorParameters.TryGetValue(identifier, out var injectorItem)
                     )
+                    {
                         continue;
+                    }
 
                     reserveds.Add(index, (identifier.Parameter.ParameterType, injectorItem));
                 }
@@ -264,7 +295,9 @@ public class DependencyInjector : IDependencyInjector
                                 out var reserved
                             )
                         )
+                        {
                             isFull = false;
+                        }
 
                         arguments.Add(reserved);
 
@@ -273,7 +306,10 @@ public class DependencyInjector : IDependencyInjector
 
                     var argument = newExpression.Arguments[index];
 
-                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value)) isFull = false;
+                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value))
+                    {
+                        isFull = false;
+                    }
 
                     arguments.Add(value);
                 }
@@ -288,7 +324,10 @@ public class DependencyInjector : IDependencyInjector
 
                 foreach (var argument in methodCallExpression.Arguments)
                 {
-                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value)) isFull = false;
+                    if (!UpdateParameters(argument.Type, argument, scopeParameters, out var value))
+                    {
+                        isFull = false;
+                    }
 
                     arguments.Add(value);
                 }
@@ -307,7 +346,9 @@ public class DependencyInjector : IDependencyInjector
                             out var obj
                         )
                     )
+                    {
                         isFull = false;
+                    }
 
                     result = methodCallExpression.Update(obj, arguments);
                 }
@@ -326,7 +367,10 @@ public class DependencyInjector : IDependencyInjector
 
                 foreach (var blockItem in blockExpression.Expressions)
                 {
-                    if (!UpdateParameters(blockItem.Type, blockItem, scopeParameters, out var obj)) isFull = false;
+                    if (!UpdateParameters(blockItem.Type, blockItem, scopeParameters, out var obj))
+                    {
+                        isFull = false;
+                    }
 
                     expressions.Add(obj);
                 }
@@ -349,7 +393,9 @@ public class DependencyInjector : IDependencyInjector
                             out var conversionUpdated
                         )
                     )
+                    {
                         isFull = false;
+                    }
 
                     conversion = (LambdaExpression)conversionUpdated;
                 }
@@ -362,7 +408,9 @@ public class DependencyInjector : IDependencyInjector
                         out var right
                     )
                 )
+                {
                     isFull = false;
+                }
 
                 result = binaryExpression.Update(binaryExpression.Left, conversion, right);
 
@@ -376,7 +424,10 @@ public class DependencyInjector : IDependencyInjector
             }
         }
 
-        if (!AutoInjectMembers(result, scopeParameters, out result)) isFull = false;
+        if (!AutoInjectMembers(result, scopeParameters, out result))
+        {
+            isFull = false;
+        }
 
         result = ValueTypeValidate(type, result);
 
@@ -400,11 +451,17 @@ public class DependencyInjector : IDependencyInjector
 
             if (!fields.AutoInjectMembers.TryGetValue(identifier, out var injectorItem))
             {
-                if (fields.CheckedInjectAttribute.Contains(root.Type)) continue;
+                if (fields.CheckedInjectAttribute.Contains(root.Type))
+                {
+                    continue;
+                }
 
                 var injectAttribute = member.GetCustomAttribute<InjectAttribute>();
 
-                if (injectAttribute is null) continue;
+                if (injectAttribute is null)
+                {
+                    continue;
+                }
 
                 switch (member)
                 {
@@ -507,7 +564,9 @@ public class DependencyInjector : IDependencyInjector
             {
                 foreach (var argument in invocationExpression.Arguments)
                 foreach (var parameter in GetParameters(argument))
+                {
                     yield return parameter;
+                }
 
                 break;
             }
@@ -519,7 +578,10 @@ public class DependencyInjector : IDependencyInjector
             }
             case LambdaExpression lambdaExpression:
             {
-                foreach (var parameter in lambdaExpression.Parameters) yield return parameter;
+                foreach (var parameter in lambdaExpression.Parameters)
+                {
+                    yield return parameter;
+                }
 
                 break;
             }
@@ -527,7 +589,9 @@ public class DependencyInjector : IDependencyInjector
             {
                 foreach (var argument in newExpression.Arguments)
                 foreach (var parameter in GetParameters(argument))
+                {
                     yield return parameter;
+                }
 
                 break;
             }
@@ -535,11 +599,17 @@ public class DependencyInjector : IDependencyInjector
             {
                 foreach (var argument in methodCallExpression.Arguments)
                 foreach (var parameter in GetParameters(argument))
+                {
                     yield return parameter;
+                }
 
                 if (methodCallExpression.Object is not null)
+                {
                     foreach (var parameter in GetParameters(methodCallExpression.Object))
+                    {
                         yield return parameter;
+                    }
+                }
 
                 break;
             }
@@ -561,7 +631,10 @@ public class DependencyInjector : IDependencyInjector
         Dictionary<TypeInformation, ScopeValue> scopeParameters
     )
     {
-        if (!fields.Injectors.TryGetValue(parameterExpression.Type, out var injectorItem)) return parameterExpression;
+        if (!fields.Injectors.TryGetValue(parameterExpression.Type, out var injectorItem))
+        {
+            return parameterExpression;
+        }
 
         BuildExpression(parameterExpression.Type, injectorItem, scopeParameters, out var result);
 
@@ -570,7 +643,10 @@ public class DependencyInjector : IDependencyInjector
 
     private Func<object> BuildFunc(Expression expression)
     {
-        if (expression.Type.IsValueType) expression = expression.ToConvert(typeof(object));
+        if (expression.Type.IsValueType)
+        {
+            expression = expression.ToConvert(typeof(object));
+        }
 
         var result = expression.ToLambda().Compile().ThrowIfIsNot<Func<object>>();
 
@@ -585,7 +661,9 @@ public class DependencyInjector : IDependencyInjector
         var instanceType = type.GenericTypeArguments.GetSingle();
 
         if (!fields.Injectors.TryGetValue(instanceType, out var injectorItem))
+        {
             throw new TypeNotRegisterException(instanceType.Type);
+        }
 
         BuildExpression(type, injectorItem, scopeParameters, out var expression);
         var options = fields.LazyOptions.Get(instanceType, LazyDependencyInjectorOptions.None);
@@ -598,8 +676,7 @@ public class DependencyInjector : IDependencyInjector
                     .GetConstructor(
                         new[]
                         {
-                            typeof(Func<>).MakeGenericType(instanceType.Type),
-                            typeof(LazyThreadSafetyMode)
+                            typeof(Func<>).MakeGenericType(instanceType.Type), typeof(LazyThreadSafetyMode)
                         }
                     )
                     .ThrowIfNull();
@@ -615,8 +692,7 @@ public class DependencyInjector : IDependencyInjector
                     .GetConstructor(
                         new[]
                         {
-                            typeof(Func<>).MakeGenericType(instanceType.Type),
-                            typeof(LazyThreadSafetyMode)
+                            typeof(Func<>).MakeGenericType(instanceType.Type), typeof(LazyThreadSafetyMode)
                         }
                     )
                     .ThrowIfNull();
@@ -635,8 +711,7 @@ public class DependencyInjector : IDependencyInjector
                     .GetConstructor(
                         new[]
                         {
-                            typeof(Func<>).MakeGenericType(instanceType.Type),
-                            typeof(LazyThreadSafetyMode)
+                            typeof(Func<>).MakeGenericType(instanceType.Type), typeof(LazyThreadSafetyMode)
                         }
                     )
                     .ThrowIfNull();
@@ -653,7 +728,10 @@ public class DependencyInjector : IDependencyInjector
             {
                 var constructor = type.Type
                     .GetConstructor(
-                        new[] { typeof(Func<>).MakeGenericType(instanceType.Type), typeof(bool) }
+                        new[]
+                        {
+                            typeof(Func<>).MakeGenericType(instanceType.Type), typeof(bool)
+                        }
                     )
                     .ThrowIfNull();
 
@@ -669,9 +747,15 @@ public class DependencyInjector : IDependencyInjector
 
     private bool IsLazy(TypeInformation type)
     {
-        if (!type.IsGenericType) return false;
+        if (!type.IsGenericType)
+        {
+            return false;
+        }
 
-        if (type.Type.GetGenericTypeDefinition() == typeof(Lazy<>)) return true;
+        if (type.Type.GetGenericTypeDefinition() == typeof(Lazy<>))
+        {
+            return true;
+        }
 
         return false;
     }
@@ -694,7 +778,9 @@ public class DependencyInjector : IDependencyInjector
             var isAssignableFrom = injector.Value.Expression.Type.IsAssignableFrom(keyType);
 
             if (keyType != injectorType && isAssignableFrom)
+            {
                 throw new NotCovertException(injector.Key.Type, injector.Value.Expression.Type);
+            }
 
             var types = GetParameters(injector.Value.Expression)
                 .Select(x => (TypeInformation)x.Type);
@@ -702,10 +788,12 @@ public class DependencyInjector : IDependencyInjector
             listParameterTypes.AddRange(types);
 
             if (listParameterTypes.Contains(injector.Key.Type))
+            {
                 throw new RecursionTypeExpressionInvokeException(
                     injector.Key.Type,
                     injector.Value.Expression
                 );
+            }
 
             listParameterTypes.Clear();
         }

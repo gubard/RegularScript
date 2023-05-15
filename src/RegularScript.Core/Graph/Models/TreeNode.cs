@@ -32,7 +32,10 @@ public class TreeNode<TKey, TValue> where TKey : notnull
         {
             var currentNode = this;
 
-            foreach (var key in keys) currentNode = currentNode[key];
+            foreach (var key in keys)
+            {
+                currentNode = currentNode[key];
+            }
 
             return currentNode;
         }

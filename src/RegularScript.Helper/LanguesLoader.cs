@@ -42,7 +42,8 @@ public class LanguagesLoader
                     item.ChildNodes[1].InnerText.Substring(0, 3)
                 }\", Name = \"{
                     name
-                }\" }},");
+                }\" }},"
+            );
         }
 
         var text = stringBuilder.ToString();

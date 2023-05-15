@@ -21,7 +21,10 @@ public class TaskCompletionSourceEnumerator : ITaskCompletionSourceEnumerator
     {
         get
         {
-            if (disposed) this.ThrowDisposedException();
+            if (disposed)
+            {
+                this.ThrowDisposedException();
+            }
 
             return current;
         }
@@ -31,7 +34,10 @@ public class TaskCompletionSourceEnumerator : ITaskCompletionSourceEnumerator
 
     public bool MoveNext()
     {
-        if (disposed) this.ThrowDisposedException();
+        if (disposed)
+        {
+            this.ThrowDisposedException();
+        }
 
         taskCompletionSource.SetResult();
         taskCompletionSource = new TaskCompletionSource();
@@ -59,7 +65,10 @@ public class TaskCompletionSourceEnumerator : ITaskCompletionSourceEnumerator
 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposed) return;
+        if (disposed)
+        {
+            return;
+        }
 
         if (disposing)
         {

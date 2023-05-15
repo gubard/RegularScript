@@ -20,11 +20,20 @@ public abstract class Identifier<TKey> : IIdentifier<TKey> where TKey : notnull
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
 
-        if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
-        if (obj is not IIdentifier<TKey> identifier) return false;
+        if (obj is not IIdentifier<TKey> identifier)
+        {
+            return false;
+        }
 
         return identifier.Key.Equals(Key);
     }
@@ -54,11 +63,20 @@ public class Identifier2<TKey1, TKey2>
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
 
-        if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
-        if (obj is not Identifier2<TKey1, TKey2> identifier) return false;
+        if (obj is not Identifier2<TKey1, TKey2> identifier)
+        {
+            return false;
+        }
 
         return identifier.Key1.Equals(Key1) && identifier.Key2.Equals(Key2);
     }

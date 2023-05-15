@@ -24,19 +24,30 @@ public static class ByteExtension
     public static int IndexOf(this byte[] haystack, byte[] needle, int start)
     {
         for (var i = start; i <= haystack.Length - needle.Length; i++)
+        {
             if (haystack.Match(needle, i))
+            {
                 return i;
+            }
+        }
 
         return -1;
     }
 
     public static bool Match(this byte[] haystack, byte[] needle, int start)
     {
-        if (needle.Length + start > haystack.Length) return false;
+        if (needle.Length + start > haystack.Length)
+        {
+            return false;
+        }
 
         for (var i = 0; i < needle.Length; i++)
+        {
             if (needle[i] != haystack[i + start])
+            {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -58,14 +69,23 @@ public static class ByteExtension
         {
             var index = haystack.IndexOf(needle, start);
 
-            if (index == -1) continue;
+            if (index == -1)
+            {
+                continue;
+            }
 
             if (result.Index == -1)
+            {
                 result = new IndexOfNeedlesResult(index, needle);
+            }
             else if (index < result.Index)
+            {
                 result = new IndexOfNeedlesResult(index, needle);
+            }
             else if (index == result.Index && result.Match.Length < needle.Length)
+            {
                 result = new IndexOfNeedlesResult(index, needle);
+            }
         }
 
         return result;
@@ -82,19 +102,30 @@ public static class ByteExtension
     public static int IndexOf(this Memory<byte> haystack, ReadOnlyMemory<byte> needle, int start)
     {
         for (var i = start; i <= haystack.Length - needle.Length; i++)
+        {
             if (haystack.Match(needle, i))
+            {
                 return i;
+            }
+        }
 
         return -1;
     }
 
     public static bool Match(this Memory<byte> haystack, ReadOnlyMemory<byte> needle, int start)
     {
-        if (needle.Length + start > haystack.Length) return false;
+        if (needle.Length + start > haystack.Length)
+        {
+            return false;
+        }
 
         for (var i = 0; i < needle.Length; i++)
+        {
             if (needle.Span[i] != haystack.Span[i + start])
+            {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -107,19 +138,30 @@ public static class ByteExtension
     public static int IndexOf(this Memory<byte> haystack, Memory<byte> needle, int start)
     {
         for (var i = start; i <= haystack.Length - needle.Length; i++)
+        {
             if (Match(haystack, (ReadOnlyMemory<byte>)needle, i))
+            {
                 return i;
+            }
+        }
 
         return -1;
     }
 
     public static bool Match(this Memory<byte> haystack, Memory<byte> needle, int start)
     {
-        if (needle.Length + start > haystack.Length) return false;
+        if (needle.Length + start > haystack.Length)
+        {
+            return false;
+        }
 
         for (var i = 0; i < needle.Length; i++)
+        {
             if (needle.Span[i] != haystack.Span[i + start])
+            {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -132,19 +174,30 @@ public static class ByteExtension
     public static int IndexOf(this Memory<byte> haystack, byte[] needle, int start)
     {
         for (var i = start; i <= haystack.Length - needle.Length; i++)
+        {
             if (Match(haystack, (Memory<byte>)needle, i))
+            {
                 return i;
+            }
+        }
 
         return -1;
     }
 
     public static bool Match(this Memory<byte> haystack, byte[] needle, int start)
     {
-        if (needle.Length + start > haystack.Length) return false;
+        if (needle.Length + start > haystack.Length)
+        {
+            return false;
+        }
 
         for (var i = 0; i < needle.Length; i++)
+        {
             if (needle[i] != haystack.Span[i + start])
+            {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -157,19 +210,30 @@ public static class ByteExtension
     public static int IndexOf(this Span<byte> haystack, byte[] needle, int start)
     {
         for (var i = start; i <= haystack.Length - needle.Length; i++)
+        {
             if (haystack.Match(needle, i))
+            {
                 return i;
+            }
+        }
 
         return -1;
     }
 
     public static bool Match(this Span<byte> haystack, byte[] needle, int start)
     {
-        if (needle.Length + start > haystack.Length) return false;
+        if (needle.Length + start > haystack.Length)
+        {
+            return false;
+        }
 
         for (var i = 0; i < needle.Length; i++)
+        {
             if (needle[i] != haystack[i + start])
+            {
                 return false;
+            }
+        }
 
         return true;
     }

@@ -18,6 +18,8 @@ public static class TreeNodeExtension
 
         foreach (var node in root.Nodes)
         foreach (var end in node.GetEnds())
+        {
             yield return end;
+        }
     }
 }

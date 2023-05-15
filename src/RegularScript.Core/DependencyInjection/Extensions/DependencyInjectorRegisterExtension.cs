@@ -24,7 +24,10 @@ public static class DependencyInjectorRegisterExtension
     )
         where TDependencyInjectorRegister : IDependencyInjectorRegister
     {
-        foreach (var assembly in assemblies) register.RegisterConfigurationFromAssembly(assembly);
+        foreach (var assembly in assemblies)
+        {
+            register.RegisterConfigurationFromAssembly(assembly);
+        }
     }
 
     public static void RegisterConfigurationFromAssembly<TDependencyInjectorRegister>(

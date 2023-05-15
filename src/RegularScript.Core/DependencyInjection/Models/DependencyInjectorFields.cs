@@ -51,9 +51,15 @@ public readonly struct DependencyInjectorFields
         IReadOnlyDictionary<AutoInjectMemberIdentifier, InjectorItem> autoInjects
     )
     {
-        foreach (var value in GetInputs(injectors)) yield return value;
+        foreach (var value in GetInputs(injectors))
+        {
+            yield return value;
+        }
 
-        foreach (var value in GetInputs(autoInjects)) yield return value;
+        foreach (var value in GetInputs(autoInjects))
+        {
+            yield return value;
+        }
     }
 
     private IEnumerable<TypeInformation> GetInputs(
@@ -62,7 +68,9 @@ public readonly struct DependencyInjectorFields
     {
         foreach (var autoInject in autoInjects)
         foreach (var value in GetInputs(autoInject.Value.Expression))
+        {
             yield return value;
+        }
     }
 
     private IEnumerable<TypeInformation> GetInputs(
@@ -71,7 +79,9 @@ public readonly struct DependencyInjectorFields
     {
         foreach (var injector in injectors)
         foreach (var value in GetInputs(injector.Value.Expression))
+        {
             yield return value;
+        }
     }
 
     private IEnumerable<TypeInformation> GetInputs(Expression expression)
@@ -89,16 +99,25 @@ public readonly struct DependencyInjectorFields
                         continue;
                     }
 
-                    foreach (var input in GetInputs(argument)) yield return input;
+                    foreach (var input in GetInputs(argument))
+                    {
+                        yield return input;
+                    }
                 }
 
                 break;
             }
             case LambdaExpression lambdaExpression:
             {
-                foreach (var parameter in lambdaExpression.Parameters) yield return parameter.Type;
+                foreach (var parameter in lambdaExpression.Parameters)
+                {
+                    yield return parameter.Type;
+                }
 
-                foreach (var input in GetInputs(lambdaExpression.Body)) yield return input;
+                foreach (var input in GetInputs(lambdaExpression.Body))
+                {
+                    yield return input;
+                }
 
                 break;
             }
@@ -106,7 +125,9 @@ public readonly struct DependencyInjectorFields
             {
                 foreach (var value in newArrayExpression.Expressions)
                 foreach (var input in GetInputs(value))
+                {
                     yield return input;
+                }
 
                 break;
             }
@@ -126,7 +147,10 @@ public readonly struct DependencyInjectorFields
             }
             case MemberInitExpression memberInitExpression:
             {
-                foreach (var input in GetInputs(memberInitExpression.NewExpression)) yield return input;
+                foreach (var input in GetInputs(memberInitExpression.NewExpression))
+                {
+                    yield return input;
+                }
 
                 break;
             }
@@ -134,28 +158,44 @@ public readonly struct DependencyInjectorFields
             {
                 foreach (var argument in methodCallExpression.Arguments)
                 foreach (var input in GetInputs(argument))
+                {
                     yield return input;
+                }
 
-                if (methodCallExpression.Object is null) break;
+                if (methodCallExpression.Object is null)
+                {
+                    break;
+                }
 
-                foreach (var input in GetInputs(methodCallExpression.Object)) yield return input;
+                foreach (var input in GetInputs(methodCallExpression.Object))
+                {
+                    yield return input;
+                }
 
                 break;
             }
             case UnaryExpression unaryExpression:
             {
-                foreach (var input in GetInputs(unaryExpression.Operand)) yield return input;
+                foreach (var input in GetInputs(unaryExpression.Operand))
+                {
+                    yield return input;
+                }
 
                 break;
             }
             case ListInitExpression listInitExpression:
             {
-                foreach (var input in GetInputs(listInitExpression.NewExpression)) yield return input;
+                foreach (var input in GetInputs(listInitExpression.NewExpression))
+                {
+                    yield return input;
+                }
 
                 foreach (var initializer in listInitExpression.Initializers)
                 foreach (var argument in initializer.Arguments)
                 foreach (var input in GetInputs(argument))
+                {
                     yield return input;
+                }
 
                 break;
             }

@@ -18,29 +18,41 @@ public class ScriptsViewModel : ViewModelBase
         Languages = new AvaloniaList<LanguageNotify>();
         Scripts = new AvaloniaList<ScriptNodeNotify>();
 
-        var selectedLanguageChangedCommand = ReactiveCommand.CreateFromTask<LanguageNotify?>(async selectedLanguage =>
-        {
-            if (selectedLanguage is null) return;
+        var selectedLanguageChangedCommand = ReactiveCommand.CreateFromTask<LanguageNotify?>(
+            async selectedLanguage =>
+            {
+                if (selectedLanguage is null)
+                {
+                    return;
+                }
 
-            var scripts = await ScriptService.ThrowIfNull().GetRootScriptsAsync(selectedLanguage.Id);
-            Scripts.Clear();
-            Scripts.AddRange(scripts.Select(x => Mapper.ThrowIfNull().Map<ScriptNodeNotify>(x)));
-        });
+                var scripts = await ScriptService.ThrowIfNull().GetRootScriptsAsync(selectedLanguage.Id);
+                Scripts.Clear();
+                Scripts.AddRange(scripts.Select(x => Mapper.ThrowIfNull().Map<ScriptNodeNotify>(x)));
+            }
+        );
 
-        InitializedCommand = ReactiveCommand.Create(async () =>
-        {
-            var languages = await LanguageService.ThrowIfNull().GetSupportedAsync();
-            Languages.Clear();
-            Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
-            SelectedLanguage = Languages.First();
-        });
+        InitializedCommand = ReactiveCommand.Create(
+            async () =>
+            {
+                var languages = await LanguageService.ThrowIfNull().GetSupportedAsync();
+                Languages.Clear();
+                Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
+                SelectedLanguage = Languages.First();
+            }
+        );
 
         this.WhenAnyValue(x => x.SelectedLanguage).InvokeCommand(selectedLanguageChangedCommand);
     }
 
-    [Inject] public IMapper? Mapper { get; set; }
-    [Inject] public ILanguageService? LanguageService { get; set; }
-    [Inject] public IScriptService? ScriptService { get; set; }
+    [Inject]
+    public IMapper? Mapper { get; set; }
+
+    [Inject]
+    public ILanguageService? LanguageService { get; set; }
+
+    [Inject]
+    public IScriptService? ScriptService { get; set; }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
     public AvaloniaList<LanguageNotify> Languages { get; }

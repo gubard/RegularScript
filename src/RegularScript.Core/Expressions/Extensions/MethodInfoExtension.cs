@@ -13,7 +13,9 @@ public static class MethodInfoExtension
             methodInfo.GetType().ToString()
             == "System.Reflection.Emit.DynamicMethod+RTDynamicMethod"
         )
+        {
             return true;
+        }
 
         return false;
     }

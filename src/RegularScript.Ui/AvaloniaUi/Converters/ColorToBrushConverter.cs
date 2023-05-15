@@ -59,7 +59,10 @@ public class ColorToBrushConverter : IValueConverter
     /// </returns>
     public static object? Convert(object? value, Type targetType)
     {
-        if (targetType == typeof(IBrush) && value is Color c) return new ImmutableSolidColorBrush(c);
+        if (targetType == typeof(IBrush) && value is Color c)
+        {
+            return new ImmutableSolidColorBrush(c);
+        }
 
         return value;
     }
@@ -76,7 +79,10 @@ public class ColorToBrushConverter : IValueConverter
     /// </returns>
     public static object? ConvertBack(object? value, Type targetType)
     {
-        if (targetType == typeof(Color) && value is ISolidColorBrush brush) return brush.Color;
+        if (targetType == typeof(Color) && value is ISolidColorBrush brush)
+        {
+            return brush.Color;
+        }
 
         return value;
     }

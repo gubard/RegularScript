@@ -46,9 +46,15 @@ public class UdpSend<TMessage> : ISend<TMessage>, IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposed) return;
+        if (disposed)
+        {
+            return;
+        }
 
-        if (disposing) client.Dispose();
+        if (disposing)
+        {
+            client.Dispose();
+        }
 
         disposed = true;
     }

@@ -42,7 +42,9 @@ public static class DataTableExtension
         var maxLengths = new int[columnNames.Length];
 
         for (var index = 0; index < columnNames.Length; index++)
+        {
             maxLengths[index] = columnNames[index].ColumnName.Length;
+        }
 
         for (var rowIndex = 0; rowIndex < valueRows.Length; rowIndex++)
         {
@@ -75,7 +77,9 @@ public static class DataTableExtension
             var formatRow = new List<string>();
 
             for (var columnIndex = 0; columnIndex < columnNames.Length; columnIndex++)
+            {
                 formatRow.Add("{" + columnIndex + "," + (-maxLengths[columnIndex] + padding) + "}");
+            }
 
             var @params = values[rowIndex].Cast<object>();
             formatRows[rowIndex] = string.Format(formatRow.JoinString(""), @params);

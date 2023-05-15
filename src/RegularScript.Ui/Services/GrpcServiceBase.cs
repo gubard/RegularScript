@@ -20,7 +20,10 @@ public abstract class GrpcServiceBase : IAsyncDisposable, IDisposable
         this.options = options;
         httpClientHandler = new HttpClientHandler();
         grpcWebHandler = new GrpcWebHandler(options.Mode, httpClientHandler);
-        grpcChannelOptions = new GrpcChannelOptions { HttpHandler = grpcWebHandler };
+        grpcChannelOptions = new GrpcChannelOptions
+        {
+            HttpHandler = grpcWebHandler
+        };
         grpcChannel = GrpcChannel.ForAddress(options.Host, grpcChannelOptions);
     }
 
