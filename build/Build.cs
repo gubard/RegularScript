@@ -8,9 +8,8 @@ using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
+using RegularScript.Core.StringFormat.Services;
 using Serilog;
-using Serviecs;
-using SmartFormat;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static System.IO.File;
 
@@ -190,7 +189,8 @@ class Build : NukeBuild
                 Port = PostgresPort
             };
 
-            var postgresDockerConfiguration = Smart.Format(postgresDockerTemplateConfiguration, options);
+            var formatter = new Formatter();
+            var postgresDockerConfiguration = formatter.Format(postgresDockerTemplateConfiguration, options);
 
             if (!Directory.Exists(TempFolderPath))
             {
