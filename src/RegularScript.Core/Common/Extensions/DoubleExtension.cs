@@ -17,7 +17,7 @@ public static class DoubleExtension
 
     public static double ThrowIfZero(
         this double value,
-        [CallerArgumentExpression("value")] string paramName = ""
+        [CallerArgumentExpression(nameof(value))] string paramName = ""
     )
     {
         if (value.IsZero())
@@ -30,7 +30,7 @@ public static class DoubleExtension
 
     public static double ThrowIfNegative(
         this double value,
-        [CallerArgumentExpression("value")] string paramName = ""
+        [CallerArgumentExpression(nameof(value))] string paramName = ""
     )
     {
         if (value.IsNegative())
@@ -43,7 +43,7 @@ public static class DoubleExtension
 
     public static double ThrowIfZeroOrNegative(
         this double value,
-        [CallerArgumentExpression("value")] string paramName = ""
+        [CallerArgumentExpression(nameof(value))] string paramName = ""
     )
     {
         return value.ThrowIfZero(paramName).ThrowIfNegative(paramName);

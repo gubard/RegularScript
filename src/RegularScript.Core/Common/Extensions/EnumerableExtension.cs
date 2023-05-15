@@ -61,7 +61,7 @@ public static class EnumerableExtension
 
     public static IEnumerable<TItem> ThrowIfNullOrEmpty<TItem>(
         this IEnumerable<TItem>? enumerable,
-        [CallerArgumentExpression("enumerable")]
+        [CallerArgumentExpression(nameof(enumerable))]
         string paramName = ""
     )
     {
@@ -74,7 +74,7 @@ public static class EnumerableExtension
 
     public static IEnumerable<TItem> ThrowIfEmpty<TItem>(
         this IEnumerable<TItem> enumerable,
-        [CallerArgumentExpression("enumerable")]
+        [CallerArgumentExpression(nameof(enumerable))]
         string paramName = ""
     )
     {
