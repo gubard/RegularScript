@@ -1,4 +1,5 @@
-﻿using RegularScript.Core.Common.Models;
+﻿using System.Collections.Generic;
+using RegularScript.Core.Common.Models;
 using RegularScript.Core.DependencyInjection.Models;
 
 namespace RegularScript.Core.DependencyInjection.Interfaces;

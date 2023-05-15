@@ -1,4 +1,7 @@
-﻿namespace RegularScript.Db.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace RegularScript.Db.Entities;
 
 public class ScriptDb
 {

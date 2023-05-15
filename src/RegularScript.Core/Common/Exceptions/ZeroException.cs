@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Exceptions;
+﻿using System;
+
+namespace RegularScript.Core.Common.Exceptions;
 
 public class ZeroException : Exception
 {

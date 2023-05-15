@@ -1,4 +1,7 @@
-﻿namespace RegularScript.Core.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace RegularScript.Core.Common.Interfaces;
 
 public interface ISend<in TMessage>
 {

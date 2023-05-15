@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using RegularScript.Core.Common.Models;
 
 namespace RegularScript.Core.Common.Extensions;

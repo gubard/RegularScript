@@ -1,4 +1,5 @@
-﻿using RegularScript.Core.Graph.Services;
+﻿using System;
+using RegularScript.Core.Graph.Services;
 using RegularScript.Core.ModularSystem.Interfaces;
 
 namespace RegularScript.Core.ModularSystem.Extensions;

@@ -1,4 +1,6 @@
-﻿using RegularScript.Core.Common.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.Common.Interfaces;
 using RegularScript.Core.Graph.Models;
 

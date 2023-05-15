@@ -1,4 +1,5 @@
-﻿using RegularScript.Core.Graph.Models;
+﻿using System.Collections.Generic;
+using RegularScript.Core.Graph.Models;
 
 namespace RegularScript.Core.Graph.Extensions;
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace RegularScript.Service.Models;
 
 public class Script

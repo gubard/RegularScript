@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Application.Interfaces;
+﻿using System.Threading.Tasks;
+
+namespace RegularScript.Core.Application.Interfaces;
 
 public interface IApplication
 {

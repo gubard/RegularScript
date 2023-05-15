@@ -1,4 +1,7 @@
-﻿namespace RegularScript.Core.Common.Extensions;
+﻿using System;
+using System.Threading.Tasks;
+
+namespace RegularScript.Core.Common.Extensions;
 
 public static class TaskExtension
 {

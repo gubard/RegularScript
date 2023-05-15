@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace RegularScript.Core.Common.Extensions;
 
 public static class HashSetExtension

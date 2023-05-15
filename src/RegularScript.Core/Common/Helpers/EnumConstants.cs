@@ -1,4 +1,8 @@
-﻿namespace RegularScript.Core.Common.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RegularScript.Core.Common.Helpers;
 
 public class EnumConstants<TEnum> where TEnum : struct, Enum
 {

@@ -1,4 +1,6 @@
-﻿using RegularScript.Core.Common.Extensions;
+﻿using System;
+using System.Linq;
+using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.Common.Helpers;
 using RegularScript.Core.Common.Interfaces;
 

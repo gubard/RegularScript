@@ -1,3 +1,4 @@
+using System;
 using RegularScript.Core.Common.Models;
 using RegularScript.Core.DependencyInjection.Interfaces;
 

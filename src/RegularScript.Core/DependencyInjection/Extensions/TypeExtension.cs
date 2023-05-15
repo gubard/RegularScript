@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using RegularScript.Core.DependencyInjection.Exceptions;
 
 namespace RegularScript.Core.DependencyInjection.Extensions;

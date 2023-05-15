@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.DependencyInjection.Exceptions;
+﻿using System;
+
+namespace RegularScript.Core.DependencyInjection.Exceptions;
 
 public class ToManyConstructorsException : Exception
 {

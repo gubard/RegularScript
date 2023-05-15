@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Models;
+﻿using System;
+
+namespace RegularScript.Core.Common.Models;
 
 public readonly struct IndexOfNeedlesResult
 {

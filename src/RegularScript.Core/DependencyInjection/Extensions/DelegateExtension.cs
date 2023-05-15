@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace RegularScript.Core.DependencyInjection.Extensions;
 
 public static class DelegateExtension

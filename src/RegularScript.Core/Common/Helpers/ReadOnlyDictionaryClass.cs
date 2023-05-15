@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Helpers;
+﻿using System.Collections.Generic;
+
+namespace RegularScript.Core.Common.Helpers;
 
 public static class ReadOnlyDictionaryClass<TKey, TValue> where TKey : notnull
 {

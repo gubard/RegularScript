@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Extensions;
+﻿using System;
+
+namespace RegularScript.Core.Common.Extensions;
 
 public static class MemoryExtension
 {

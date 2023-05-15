@@ -1,4 +1,5 @@
-﻿using RegularScript.Core.Common.Interfaces;
+﻿using System;
+using RegularScript.Core.Common.Interfaces;
 
 namespace RegularScript.Core.Common.Services;
 

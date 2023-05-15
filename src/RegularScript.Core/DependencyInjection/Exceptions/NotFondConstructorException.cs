@@ -1,3 +1,5 @@
+using System;
+
 namespace RegularScript.Core.DependencyInjection.Exceptions;
 
 public class NotFondConstructorException : Exception

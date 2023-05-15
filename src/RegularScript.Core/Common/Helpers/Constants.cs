@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Helpers;
+﻿using System;
+
+namespace RegularScript.Core.Common.Helpers;
 
 public static class CommonConstants
 {

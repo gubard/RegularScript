@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using RegularScript.Db.Helpers;
 
 namespace RegularScript.Db.Contexts;

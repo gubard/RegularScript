@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Core.Common.Services;
+﻿using System;
+
+namespace RegularScript.Core.Common.Services;
 
 public class LazyLoad<TObject> where TObject : class
 {

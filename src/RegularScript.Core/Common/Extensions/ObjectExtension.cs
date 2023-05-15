@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using RegularScript.Core.Common.Exceptions;
 
 namespace RegularScript.Core.Common.Extensions;

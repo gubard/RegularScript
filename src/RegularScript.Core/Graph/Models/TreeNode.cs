@@ -1,4 +1,7 @@
-﻿namespace RegularScript.Core.Graph.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace RegularScript.Core.Graph.Models;
 
 public class TreeNode<TKey, TValue> where TKey : notnull
 {

@@ -1,4 +1,6 @@
-﻿namespace RegularScript.Db.Entities;
+﻿using System;
+
+namespace RegularScript.Db.Entities;
 
 public class ScriptLocalizationDb
 {

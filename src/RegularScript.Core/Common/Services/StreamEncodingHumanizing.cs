@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.Common.Interfaces;
 
