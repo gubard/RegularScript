@@ -5,6 +5,7 @@ using System.Threading;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
 using Extensions;
+using Npgsql;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -295,7 +296,8 @@ class Build : NukeBuild
                         .Build()
                         .Start();
 
-                    Thread.Sleep(TimeSpan.FromSeconds(5));\
+                    $"User ID={PostgresUser};Password={PostgresPassword};Host={PostgresHost};Port={PostgresPort};Database={PostgresDataBaseName};Pooling=true;Connection Lifetime=0;"
+                        .WaitConnection(TimeSpan.FromSeconds(30));
                 }
             );
 
