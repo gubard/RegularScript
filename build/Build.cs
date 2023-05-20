@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
 using Extensions;
@@ -178,6 +179,26 @@ class Build : NukeBuild
                 )
             );
 
+    Target Runs =>
+        _ => _
+            .Executes(() =>
+                {
+                    foreach (var project in Solution.Projects)
+                    {
+                        if (!project.Name.EndsWith("Helper"))
+                        {
+                            continue;
+                        }
+
+                        DotNetRun(settings => settings.SetProjectFile(project.Path)
+                            .SetConfiguration(Configuration)
+                            .EnableNoBuild()
+                            .EnableNoRestore()
+                        );
+                    }
+                }
+            );
+
     #endregion
 
     #region Docker
@@ -273,6 +294,8 @@ class Build : NukeBuild
                         .FromFile(postgresDockerConfigurationFilePath)
                         .Build()
                         .Start();
+
+                    Thread.Sleep(TimeSpan.FromSeconds(5));\
                 }
             );
 
@@ -293,9 +316,14 @@ class Build : NukeBuild
             .DependsOn(ResultDotnet)
             .Inherit(DockerBuild);
 
+    Target ResultDotnetRuns =>
+        _ => _
+            .Inherit(Runs)
+            .DependsOn(ResultDocker);
+
     Target Result =>
         _ => _
-            .DependsOn(ResultDocker);
+            .DependsOn(ResultDotnetRuns);
 
     #endregion
 }
