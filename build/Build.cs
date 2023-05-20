@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
 using Extensions;
-using Npgsql;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
