@@ -58,11 +58,7 @@ class Build : NukeBuild
 
                         var options = new
                         {
-                            PostgresUser,
-                            PostgresPassword,
-                            PostgresHost,
-                            PostgresPort,
-                            PostgresDataBaseName,
+                            PostgresConnectionString = CreatePostgresConnectionString(),
                             CertificatePath,
                             CertificatePassword,
                             Url,
@@ -296,8 +292,7 @@ class Build : NukeBuild
                         .Build()
                         .Start();
 
-                    $"User ID={PostgresUser};Password={PostgresPassword};Host={PostgresHost};Port={PostgresPort};Database={PostgresDataBaseName};Pooling=true;Connection Lifetime=0;"
-                        .WaitConnection(TimeSpan.FromSeconds(30));
+                    CreatePostgresConnectionString().WaitConnection(TimeSpan.FromSeconds(30));
                 }
             );
 
@@ -328,4 +323,10 @@ class Build : NukeBuild
             .DependsOn(ResultDotnetRuns);
 
     #endregion
+
+    string CreatePostgresConnectionString()
+    {
+        return
+            $"User ID={PostgresUser};Password={PostgresPassword};Host={PostgresHost};Port={PostgresPort};Database={PostgresDataBaseName};Pooling=true;Connection Lifetime=0;";
+    }
 }

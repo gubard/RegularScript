@@ -5,6 +5,6 @@
     }
   },
   "PostgreSql": {
-    "ConnectionString": "User ID={PostgresUser};Password={PostgresPassword};Host={PostgresHost};Port={PostgresPort};Database={PostgresDataBaseName};Pooling=true;Connection Lifetime=0;"
+    "ConnectionString": "{PostgresConnectionString}"
   }
 }
