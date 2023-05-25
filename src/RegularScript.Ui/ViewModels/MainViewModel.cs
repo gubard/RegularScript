@@ -1,10 +1,7 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
-using RegularScript.Core.DependencyInjection.Extensions;
-using RegularScript.Core.DependencyInjection.Interfaces;
-using RegularScript.Ui.Interfaces;
 
 namespace RegularScript.Ui.ViewModels;
 
@@ -22,6 +19,14 @@ public class MainViewModel : RegularScriptViewModel
 
     private void Initialized()
     {
-        Navigator.NavigateTo<ScriptsViewModel>();
+        try
+        {
+            Navigator.NavigateTo<ScriptsViewModel>();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

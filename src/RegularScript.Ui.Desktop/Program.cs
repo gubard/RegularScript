@@ -7,7 +7,7 @@ using RegularScript.Core.Graph.Services;
 using RegularScript.Core.ModularSystem.Extensions;
 using RegularScript.Core.ModularSystem.Interfaces;
 using RegularScript.Core.ModularSystem.Services;
-using RegularScript.Ui.Modules;
+using RegularScript.Ui.Desktop.Modules;
 
 namespace RegularScript.Ui.Desktop;
 
@@ -26,8 +26,8 @@ internal class Program
     {
         var builder = new TreeBuilder<Guid, IModule>().SetRoot(
             new TreeNodeBuilder<Guid, IModule>()
-               .SetKey(UiModule.IdValue)
-               .SetValue(new UiModule())
+               .SetKey(DesktopModule.IdValue)
+               .SetValue(new DesktopModule())
         );
 
         var moduleTree = new ModuleTree(builder.Build());

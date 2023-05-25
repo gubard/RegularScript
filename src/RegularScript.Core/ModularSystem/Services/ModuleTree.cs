@@ -26,7 +26,7 @@ public class ModuleTree : IModule, IResolver, IInvoker
     public ModuleTree(Tree<Guid, IModule> tree)
     {
         this.tree = tree;
-        cache = new ();
+        cache = new();
         Id = Guid.NewGuid();
         var inputs = new List<TypeInformation>();
         var outputs = new List<TypeInformation>();
@@ -166,10 +166,18 @@ public class ModuleTree : IModule, IResolver, IInvoker
 
         var lambda = InitScopeValues(expression, scopeParameters).ToLambda();
         func = lambda.Compile().ThrowIfIsNot<Func<object>>();
-        var result = func.Invoke();
-        cache.Add(type, func);
 
-        return result;
+        try
+        {
+            var result = func.Invoke();
+            cache.Add(type, func);
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new Exception(lambda.ToString(), e);
+        }
     }
 
     public object Resolve(TypeInformation type)
@@ -194,10 +202,13 @@ public class ModuleTree : IModule, IResolver, IInvoker
             return expression;
         }
 
-        foreach (var value in values)
+        for (var index = 0; index < values.Count; index++)
         {
-            var exp = UpdateExpression(value.Value.Expression, values);
-            values[value.Key] = value.Value with
+            var keys = values.Keys.ToArray();
+            var key = keys[index];
+            var exp = UpdateExpression(values[key].Expression, values);
+
+            values[key] = values[key] with
             {
                 Expression = exp
             };

@@ -9,7 +9,7 @@ using RegularScript.Core.Graph.Services;
 using RegularScript.Core.ModularSystem.Extensions;
 using RegularScript.Core.ModularSystem.Interfaces;
 using RegularScript.Core.ModularSystem.Services;
-using RegularScript.Ui.Modules;
+using RegularScript.Ui.Browser.Modules;
 
 [assembly: SupportedOSPlatform("browser")]
 
@@ -30,8 +30,8 @@ internal class Program
     {
         var builder = new TreeBuilder<Guid, IModule>().SetRoot(
             new TreeNodeBuilder<Guid, IModule>()
-                .SetKey(UiModule.IdValue)
-                .SetValue(new UiModule())
+                .SetKey(BrowserModule.IdValue)
+                .SetValue(new BrowserModule())
         );
 
         module = new ModuleTree(builder.Build());

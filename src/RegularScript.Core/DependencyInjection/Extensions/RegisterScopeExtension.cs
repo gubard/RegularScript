@@ -9,6 +9,17 @@ namespace RegularScript.Core.DependencyInjection.Extensions;
 
 public static class RegisterScopeExtension
 {
+    public static void RegisterScopeDel<T>(
+        this IRegisterScope register,
+        Delegate del
+    )
+    {
+        register.RegisterScope(
+            typeof(T),
+            del.ToCall(del.Method.GetParameters().Select(x => x.ParameterType.ToVariableAutoName()))
+        );
+    }
+    
     public static void RegisterScope(this IRegisterScope register, Type id)
     {
         register.RegisterScope(id, id);

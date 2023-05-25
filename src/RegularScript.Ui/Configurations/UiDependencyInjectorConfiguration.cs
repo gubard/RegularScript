@@ -65,11 +65,6 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
             }
         );
 
-        register.RegisterScope<IConfiguration>(
-            () =>
-                new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-        );
-
         register.RegisterScope<GrpcServiceOptions>(
             (IConfiguration configuration) =>
                 configuration.GetSection(GrpcServiceOptions.ConfigurationPath).Get<GrpcServiceOptions>()
