@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.23.0"/>
-        <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcVersion)"/>
-        <PackageReference Include="Grpc.AspNetCore.Web" Version="$(GrpcVersion)"/>
+        <PackageReference Include="Google.Protobuf" Version="3.23.1" />
+        <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcVersion)" />
+        <PackageReference Include="Grpc.AspNetCore.Web" Version="$(GrpcVersion)" />
         <PackageReference Include="Grpc.Tools" Version="$(GrpcVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj"/>
+        <ProjectReference Include="..\RegularScript.Db.PostgreSql\RegularScript.Db.PostgreSql.csproj" />
     </ItemGroup>
 
     <ItemGroup>
