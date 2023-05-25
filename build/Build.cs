@@ -15,7 +15,7 @@ using static System.IO.File;
 
 class Build : NukeBuild
 {
-    const string DefaultPostgresDockerConfigurationFileName = "PostresSql.yml";
+    const string DefaultPostgresDockerConfigurationFileName = "PostgresSql.yml";
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -80,7 +80,7 @@ class Build : NukeBuild
         TempFolderPath ??= Solution.Directory / ".." / "temp";
 
         PostgresDockerTemplateConfigurationFilePath ??=
-            Solution.Directory / ".." / "build" / "DockerFileTemplates" / DefaultPostgresDockerConfigurationFileName;
+            Solution.Directory / ".." / "build" / "DockerComposeTemplates" / DefaultPostgresDockerConfigurationFileName;
 
         TemplateAppSettingsFolderPath ??=
             Solution.Directory / ".." / "build" / "AppSettingsTemplates";
@@ -285,6 +285,7 @@ class Build : NukeBuild
 
                     new Builder()
                         .UseContainer()
+                        .UseWorkDir(Solution.Directory)
                         .UseCompose()
                         .FromFile(postgresDockerConfigurationFilePath)
                         .Build()

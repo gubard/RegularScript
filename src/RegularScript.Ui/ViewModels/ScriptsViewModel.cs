@@ -1,54 +1,27 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AutoMapper;
 using Avalonia.Collections;
 using ReactiveUI;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.DependencyInjection.Attributes;
+using RegularScript.Ui.Extension;
 using RegularScript.Ui.Interfaces;
-using RegularScript.Ui.Models;
 
 namespace RegularScript.Ui.ViewModels;
 
-public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel
+public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISelectableLanguage
 {
     private LanguageNotify? selectedLanguage;
 
     public ScriptsViewModel()
     {
-        Languages = new ();
-        Scripts = new ();
-
-        var selectedLanguageChangedCommand = ReactiveCommand.CreateFromTask<LanguageNotify?>(
-            async selectedLanguage =>
-            {
-                if (selectedLanguage is null)
-                {
-                    return;
-                }
-
-                var scripts = await ScriptService.ThrowIfNull().GetRootScriptsAsync(selectedLanguage.Id);
-                Scripts.Clear();
-                Scripts.AddRange(scripts.Select(x => Mapper.ThrowIfNull().Map<ScriptNodeNotify>(x)));
-            }
-        );
-
-        InitializedCommand = CreateCommand(
-            async () =>
-            {
-                var languages = await LanguageService.ThrowIfNull().GetSupportedAsync();
-                Languages.Clear();
-                Languages.AddRange(languages.Select(x => Mapper.ThrowIfNull().Map<LanguageNotify>(x)));
-                SelectedLanguage = Languages.First();
-            });
-
-        AddScriptCommand = ReactiveCommand.Create(
-            async () =>
-            {
-                var parameters = Mapper.Map<AddScriptParameters>(this);
-                await ScriptService.AddScriptAsync(parameters);
-            });
-
+        Languages = new();
+        Scripts = new();
+        var selectedLanguageChangedCommand = CreateCommandFromTask<LanguageNotify?>(OnSelectedLanguageChanged);
+        InitializedCommand = CreateCommandFromTask(InitializedAsync);
+        AddScriptCommand = CreateCommandFromTask(AddScript);
         this.WhenAnyValue(x => x.SelectedLanguage).InvokeCommand(selectedLanguageChangedCommand);
     }
 
@@ -60,7 +33,7 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel
 
     [Inject]
     public required IScriptService ScriptService { get; init; }
-    
+
     public IScreen? HostScreen => null;
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
@@ -73,5 +46,27 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel
     {
         get => selectedLanguage;
         set => this.RaiseAndSetIfChanged(ref selectedLanguage, value);
+    }
+
+    private async Task OnSelectedLanguageChanged(LanguageNotify? newLanguage)
+    {
+        if (newLanguage is null)
+        {
+            return;
+        }
+
+        var scripts = await ScriptService.ThrowIfNull().GetRootScriptsAsync(newLanguage.Id);
+        Scripts.Clear();
+        Scripts.AddRange(scripts.Select(x => Mapper.Map<ScriptNodeNotify>(x)));
+    }
+
+    private Task InitializedAsync()
+    {
+        return this.UpdateLanguagesAsync(LanguageService, Mapper);
+    }
+
+    private void AddScript()
+    {
+        Navigator.NavigateTo<AddScriptViewModel>(viewModel => viewModel.SelectedLanguage = SelectedLanguage);
     }
 }

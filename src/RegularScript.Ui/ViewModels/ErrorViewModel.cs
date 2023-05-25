@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using ReactiveUI;
+﻿using ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
 
 namespace RegularScript.Ui.ViewModels;

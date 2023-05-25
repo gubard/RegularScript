@@ -4,7 +4,7 @@ namespace RegularScript.Ui.Models;
 
 public class AddScriptParameters
 {
-    public required Guid LanguageId { get; init; }
-    public required string Name { get; init; }
-    public string? Description { get; init; }
+    public Guid LanguageId { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
 }

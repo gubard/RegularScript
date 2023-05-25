@@ -20,7 +20,7 @@
 
     <Grid RowDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal">
-            <Button>
+            <Button Command="{Binding AddScriptCommand}">
                 <TextBlock Text="Add" />
             </Button>
             

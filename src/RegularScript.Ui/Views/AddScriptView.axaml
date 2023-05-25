@@ -1,16 +1,24 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="RegularScript.Ui.Views.AddScriptView"
-             x:DataType="viewModels:AddScriptViewModel">
+﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:AddScriptViewModel"
+                                xmlns="https://github.com/avaloniaui"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
+                                xmlns:reactiveUi="http://reactiveui.net"
+                                mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                                x:Class="RegularScript.Ui.Views.AddScriptView"
+                                x:DataType="viewModels:AddScriptViewModel">
     <Design.DataContext>
         <viewModels:AddScriptViewModel />
     </Design.DataContext>
 
-    <Grid>
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Initialized">
+            <InvokeCommandAction Command="{Binding InitializedCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto">
         <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
             <ComboBox.DataTemplates>
                 <DataTemplate DataType="viewModels:LanguageNotify">
@@ -21,8 +29,17 @@
                 </DataTemplate>
             </ComboBox.DataTemplates>
         </ComboBox>
+
+        <TextBox Grid.Row="1" Text="{Binding Name}" Watermark="Name" />
+        <TextBox Grid.Row="2" Text="{Binding Description}" Watermark="Description" />
         
-        <TextBox Text="{Binding Name}" />
-        <TextBox Text="{Binding Description}" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <Button Command="{Binding Navigator.NavigateBack}">
+                <TextBlock Text="Back"/>
+            </Button>
+            <Button Command="{Binding AddCommand}">
+                <TextBlock Text="Add"/>
+            </Button>
+        </StackPanel>
     </Grid>
-</UserControl>
+</reactiveUi:ReactiveUserControl>
