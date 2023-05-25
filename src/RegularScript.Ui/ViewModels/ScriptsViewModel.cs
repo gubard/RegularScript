@@ -21,7 +21,7 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
         Scripts = new();
         var selectedLanguageChangedCommand = CreateCommandFromTask<LanguageNotify?>(OnSelectedLanguageChanged);
         InitializedCommand = CreateCommandFromTask(InitializedAsync);
-        AddScriptCommand = CreateCommandFromTask(AddScript);
+        AddScriptCommand = CreateCommand(AddScript);
         this.WhenAnyValue(x => x.SelectedLanguage).InvokeCommand(selectedLanguageChangedCommand);
     }
 

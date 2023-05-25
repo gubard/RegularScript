@@ -4,26 +4,24 @@ using ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
 using RegularScript.Core.DependencyInjection.Extensions;
 using RegularScript.Core.DependencyInjection.Interfaces;
+using RegularScript.Ui.Interfaces;
 
 namespace RegularScript.Ui.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public class MainViewModel : RegularScriptViewModel
 {
     public MainViewModel()
     {
-        InitializedCommand =
-            ReactiveCommand.Create(() =>
-            {
-                var scriptsViewModel = Resolver.Resolve<ScriptsViewModel>();
-                RoutedViewHost.Router.Navigate.Execute(scriptsViewModel);
-            });
+        InitializedCommand = CreateCommand(Initialized);
     }
 
-    [Inject]
-    public required IResolver Resolver { get; init; }
-    
     [Inject]
     public required RoutedViewHost RoutedViewHost { get; init; }
 
     public ICommand InitializedCommand { get; }
+
+    private void Initialized()
+    {
+        Navigator.NavigateTo<ScriptsViewModel>();
+    }
 }

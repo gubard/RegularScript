@@ -28,11 +28,13 @@ public class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = resolver.Resolve<Window>();
+            var window = resolver.Resolve<Window>();
+            desktop.MainWindow = window;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = resolver.Resolve<Control>();
+            var control = resolver.Resolve<Control>();;
+            singleViewPlatform.MainView = control;
         }
 
         base.OnFrameworkInitializationCompleted();

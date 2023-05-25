@@ -12,7 +12,7 @@ public class RegularScriptViewModel : ViewModelBase
     [Inject]
     public required INavigator Navigator { get; init; }
     
-    protected ICommand CreateCommandFromTask(Action action)
+    protected ICommand CreateCommand(Action action)
     {
         var command = ReactiveCommand.Create(action);
         SetupCommand(command);
