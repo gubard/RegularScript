@@ -15,7 +15,7 @@ using static System.IO.File;
 
 class Build : NukeBuild
 {
-    const string DefaultPostgresDockerConfigurationFileName = "PostgresSql.yml";
+    const string DefaultPostgresDockerConfigurationFileName = "PostgreSql.yml";
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
