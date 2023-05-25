@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Avalonia.ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
+using RegularScript.Ui.Views;
 
 namespace RegularScript.Ui.ViewModels;
 
@@ -15,18 +16,13 @@ public class MainViewModel : RegularScriptViewModel
     [Inject]
     public required RoutedViewHost RoutedViewHost { get; init; }
 
+    [Inject]
+    public required MainHeaderView MainHeaderView { get; init; }
+
     public ICommand InitializedCommand { get; }
 
     private void Initialized()
     {
-        try
-        {
-            Navigator.NavigateTo<ScriptsViewModel>();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        Navigator.NavigateTo<ScriptsViewModel>();
     }
 }

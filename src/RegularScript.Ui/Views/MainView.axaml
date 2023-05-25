@@ -16,5 +16,8 @@
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <ContentControl Content="{Binding RoutedViewHost}" />
+    <Grid RowDefinitions="Auto,*">
+        <ContentControl Content="{Binding MainHeaderView}" />
+        <ContentControl Grid.Row="1" Content="{Binding RoutedViewHost}" />
+    </Grid>
 </UserControl>

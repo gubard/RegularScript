@@ -5,6 +5,7 @@
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
                                 xmlns:reactiveUi="http://reactiveui.net"
+                                xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                                 x:DataType="viewModels:ScriptsViewModel"
                                 x:Class="RegularScript.Ui.Views.ScriptsView">
@@ -20,9 +21,7 @@
 
     <Grid RowDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddScriptCommand}">
-                <TextBlock Text="Add" />
-            </Button>
+            <Button Command="{Binding AddScriptCommand}" i:Attached.Icon="fa-solid fa-plus" />
             
             <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
                 <ComboBox.DataTemplates>

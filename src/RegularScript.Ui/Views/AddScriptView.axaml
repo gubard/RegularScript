@@ -5,6 +5,7 @@
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
                                 xmlns:reactiveUi="http://reactiveui.net"
+                                xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                                 x:Class="RegularScript.Ui.Views.AddScriptView"
                                 x:DataType="viewModels:AddScriptViewModel">
@@ -39,7 +40,7 @@
             </Button>
 
             <Button Command="{Binding AddCommand}">
-                <TextBlock Text="Add" />
+                <TextBlock Text="Add"/>
             </Button>
         </StackPanel>
     </Grid>

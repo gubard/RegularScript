@@ -34,7 +34,9 @@ internal class Program
                 .SetValue(new BrowserModule())
         );
 
-        module = new ModuleTree(builder.Build());
+        var moduleTree = new ModuleTree(builder.Build());
+        moduleTree.SetupModule();
+        module = moduleTree;
     }
 
     public static AppBuilder BuildAvaloniaApp()
