@@ -5,6 +5,7 @@ using AutoMapper;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.ReactiveUI;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using RegularScript.Core.DependencyInjection.Extensions;
 using RegularScript.Core.DependencyInjection.Interfaces;
 using RegularScript.Core.DependencyInjection.Models;
 using RegularScript.Core.Expressions.Extensions;
+using RegularScript.Core.ModularSystem.Interfaces;
 using RegularScript.Ui.AvaloniaUi.Helpers;
 using RegularScript.Ui.AvaloniaUi.Services;
 using RegularScript.Ui.Interfaces;
@@ -23,6 +25,7 @@ using RegularScript.Ui.Profiles;
 using RegularScript.Ui.Services;
 using RegularScript.Ui.ViewModels;
 using RegularScript.Ui.Views;
+using Splat;
 
 namespace RegularScript.Ui.Configurations;
 
@@ -36,21 +39,30 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
         register.RegisterScope(() => new MapperConfiguration(cfg => cfg.AddProfile<UiProfile>()));
         register.RegisterScope<IMapper>((MapperConfiguration cfg) => new Mapper(cfg));
         register.RegisterScope(() => UriBase.AppStyleUri);
+        register.RegisterScope<ViewModelBase>();
+        register.RegisterScope<AppDataTemplateBuilder>();
+        register.RegisterScope(() => Locator.Current.GetService<IScreen>(null).ThrowIfNull("IScreen"));
+        register.RegisterScope<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());
+        register.RegisterScope(() => new FluentTheme(null));
+        register.RegisterScope(() => new Window());
+        register.RegisterScope<Control, MainView>();
+        register.RegisterScope<IModuleSetup, UiModuleSetup>();
+        register.RegisterScope<IViewLocator, ModuleViewLocator>();
+        register.RegisterSingleton(new RoutingState());
+        RegisterViewModels(register);
+        register.RegisterScope(() => Enumerable.Empty<IStyle>());
+
+        register.RegisterScope<RoutedViewHost>((RoutingState routingState)=>new RoutedViewHost()
+        {
+            Router = routingState
+        });
+
         register.RegisterScope<IEnumerable<IDataTemplate>>(
             (IDataTemplate viewLocator) => new[]
             {
                 viewLocator
             }
         );
-        register.RegisterScope<ViewModelBase>();
-        register.RegisterScope<AppDataTemplateBuilder>();
-        register.RegisterScope<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());
-        register.RegisterScope(() => new FluentTheme(null));
-        register.RegisterScope(() => new Window());
-        register.RegisterScope<Control, MainView>();
-        register.RegisterScope(() => new RoutingState(null));
-        RegisterViewModels(register);
-        register.RegisterScope(() => Enumerable.Empty<IStyle>());
 
         register.RegisterScope<IConfiguration>(
             () =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.Common.Models;
 using RegularScript.Core.DependencyInjection.Exceptions;
@@ -25,7 +26,7 @@ public class ModuleTree : IModule, IResolver, IInvoker
     public ModuleTree(Tree<Guid, IModule> tree)
     {
         this.tree = tree;
-        cache = new Dictionary<TypeInformation, Func<object>>();
+        cache = new ();
         Id = Guid.NewGuid();
         var inputs = new List<TypeInformation>();
         var outputs = new List<TypeInformation>();
@@ -72,6 +73,26 @@ public class ModuleTree : IModule, IResolver, IInvoker
         }
 
         return del.DynamicInvoke(args);
+    }
+
+    public object? Invoke(object? obj, MethodInfo method, DictionarySpan<TypeInformation, object> arguments)
+    {
+        var parameterTypes = method.GetParameters();
+        var args = new object[parameterTypes.Length];
+
+        for (var index = 0; index < args.Length; index++)
+        {
+            if (arguments.TryGetValue(parameterTypes[index].ParameterType, out var value))
+            {
+                args[index] = value;
+            }
+            else
+            {
+                args[index] = Resolve(parameterTypes[index].ParameterType);
+            }
+        }
+
+        return method.Invoke(obj, args);
     }
 
     public Guid Id { get; }
@@ -154,6 +175,13 @@ public class ModuleTree : IModule, IResolver, IInvoker
     public object Resolve(TypeInformation type)
     {
         return GetObject(type);
+    }
+
+    public void SetupModule()
+    {
+        var moduleSetup = this.Resolve<IModuleSetup>();
+        var setupMethod = moduleSetup.GetType().GetMethod("Setup");
+        this.Invoke(moduleSetup, setupMethod);
     }
 
     private Expression InitScopeValues(

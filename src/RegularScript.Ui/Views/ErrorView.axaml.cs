@@ -4,9 +4,9 @@ using RegularScript.Ui.ViewModels;
 
 namespace RegularScript.Ui.Views;
 
-public partial class ScriptsView : ReactiveUserControl<ScriptsViewModel>
+public partial class ErrorView : ReactiveUserControl<ErrorViewModel>
 {
-    public ScriptsView()
+    public ErrorView()
     {
         InitializeComponent();
     }

@@ -18,7 +18,7 @@ public class ScriptService : GrpcServiceBase, IScriptService
     public ScriptService(GrpcServiceOptions options, IMapper mapper) : base(options)
     {
         this.mapper = mapper;
-        scriptServiceApiClient = new ScriptServiceApi.ScriptServiceApiClient(grpcChannel);
+        scriptServiceApiClient = new (grpcChannel);
     }
 
     public async Task<IEnumerable<Script>> GetRootScriptsAsync(Guid languageId)
@@ -31,5 +31,13 @@ public class ScriptService : GrpcServiceBase, IScriptService
         var reply = await scriptServiceApiClient.GetRootScriptsAsync(request);
 
         return reply.Scripts.Select(x => mapper.Map<Script>(x)).ToArray();
+    }
+
+    public async Task<Guid> AddScriptAsync(AddScriptParameters parameters)
+    {
+        var request = mapper.Map<AddScriptRequest>(parameters);
+        var reply = await scriptServiceApiClient.AddScriptAsync(request);
+
+        return new (reply.ScriptId.ToByteArray());
     }
 }

@@ -1,17 +1,29 @@
-﻿using ReactiveUI;
+﻿using System.Windows.Input;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
-using RegularScript.Ui.Views;
+using RegularScript.Core.DependencyInjection.Extensions;
+using RegularScript.Core.DependencyInjection.Interfaces;
 
 namespace RegularScript.Ui.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    [Inject]
-    public RoutingState? Router { get; set; }
+    public MainViewModel()
+    {
+        InitializedCommand =
+            ReactiveCommand.Create(() =>
+            {
+                var scriptsViewModel = Resolver.Resolve<ScriptsViewModel>();
+                RoutedViewHost.Router.Navigate.Execute(scriptsViewModel);
+            });
+    }
 
     [Inject]
-    public MainHeaderView? HeaderView { get; set; }
-
+    public required IResolver Resolver { get; init; }
+    
     [Inject]
-    public ScriptsView? ScriptsView { get; set; }
+    public required RoutedViewHost RoutedViewHost { get; init; }
+
+    public ICommand InitializedCommand { get; }
 }

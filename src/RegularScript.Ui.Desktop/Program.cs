@@ -19,18 +19,20 @@ internal class Program
     public static void Main(string[] args)
     {
         BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+           .StartWithClassicDesktopLifetime(args);
     }
 
     private static void InitModules()
     {
         var builder = new TreeBuilder<Guid, IModule>().SetRoot(
             new TreeNodeBuilder<Guid, IModule>()
-                .SetKey(UiModule.IdValue)
-                .SetValue(new UiModule())
+               .SetKey(UiModule.IdValue)
+               .SetValue(new UiModule())
         );
 
-        module = new ModuleTree(builder.Build());
+        var moduleTree = new ModuleTree(builder.Build());
+        module = moduleTree;
+        moduleTree.SetupModule();
     }
 
     public static AppBuilder BuildAvaloniaApp()
@@ -38,8 +40,8 @@ internal class Program
         InitModules();
 
         return AppBuilder.Configure(() => module.ThrowIfNull().GetObject<Application>())
-            .UsePlatformDetect()
-            .LogToTrace()
-            .UseReactiveUI();
+           .UsePlatformDetect()
+           .LogToTrace()
+           .UseReactiveUI();
     }
 }

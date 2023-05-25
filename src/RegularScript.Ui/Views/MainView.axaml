@@ -9,9 +9,16 @@
     <Design.DataContext>
         <viewModels:MainViewModel />
     </Design.DataContext>
+    
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Initialized">
+            <InvokeCommandAction Command="{Binding InitializedCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
 
-    <Grid RowDefinitions="Auto,*">
+    <ContentControl Content="{Binding RoutedViewHost}" />
+    <!--<Grid RowDefinitions="Auto,*">
         <ContentControl Content="{Binding HeaderView}" />
         <ContentControl Grid.Row="1" Content="{Binding ScriptsView}" />
-    </Grid>
+    </Grid>-->
 </UserControl>

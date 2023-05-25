@@ -101,6 +101,26 @@ public class DependencyInjector : IDependencyInjector
         return del.DynamicInvoke(args);
     }
 
+    public object? Invoke(object? obj, MethodInfo method, DictionarySpan<TypeInformation, object> arguments)
+    {
+        var parameterTypes = method.GetParameters();
+        var args = new object[parameterTypes.Length];
+
+        for (var index = 0; index < args.Length; index++)
+        {
+            if (arguments.TryGetValue(parameterTypes[index].ParameterType, out var value))
+            {
+                args[index] = value;
+            }
+            else
+            {
+                args[index] = Resolve(parameterTypes[index].ParameterType);
+            }
+        }
+
+        return method.Invoke(obj, args);
+    }
+
     private bool BuildExpression(
         TypeInformation type,
         InjectorItem injectorItem,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using RegularScript.Core.Common.Models;
 using RegularScript.Core.DependencyInjection.Interfaces;
 using RegularScript.Core.DependencyInjection.Models;
@@ -27,6 +28,11 @@ public class MutDependencyInjector : IMutDependencyInjector
     public object? Invoke(Delegate del, DictionarySpan<TypeInformation, object> arguments)
     {
         return CreateDependencyInjector().Invoke(del, arguments);
+    }
+
+    public object? Invoke(object? obj, MethodInfo method, DictionarySpan<TypeInformation, object> arguments)
+    {
+        return CreateDependencyInjector().Invoke(obj, method, arguments);
     }
 
     public DependencyStatus GetStatus(

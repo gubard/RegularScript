@@ -1,11 +1,13 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="viewModels:ScriptsViewModel"
-             x:Class="RegularScript.Ui.Views.ScriptsView">
+﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ScriptsViewModel"
+                                xmlns="https://github.com/avaloniaui"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
+                                xmlns:reactiveUi="http://reactiveui.net"
+                                mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                                x:DataType="viewModels:ScriptsViewModel"
+                                x:Class="RegularScript.Ui.Views.ScriptsView">
     <Design.DataContext>
         <viewModels:ScriptsViewModel />
     </Design.DataContext>
@@ -17,19 +19,25 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*">
-        <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
-            <ComboBox.DataTemplates>
-                <DataTemplate DataType="viewModels:LanguageNotify">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" />
-                        <TextBlock Text="{Binding CodeIso3}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.DataTemplates>
-        </ComboBox>
+        <StackPanel Orientation="Horizontal">
+            <Button>
+                <TextBlock Text="Add" />
+            </Button>
+            
+            <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
+                <ComboBox.DataTemplates>
+                    <DataTemplate DataType="viewModels:LanguageNotify">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding CodeIso3}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.DataTemplates>
+            </ComboBox>
+        </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
             <TreeView Items="{Binding Scripts}" />
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
         </Grid>
     </Grid>
-</UserControl>
+</reactiveUi:ReactiveUserControl>
