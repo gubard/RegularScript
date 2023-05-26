@@ -42,12 +42,12 @@ public readonly struct ReadOnlyDictionary<TKey, TValue> where TKey : notnull
         Dictionary<TKey, TValue> dictionary
     )
     {
-        return new ReadOnlyDictionary<TKey, TValue>(dictionary);
+        return new (dictionary);
     }
 
     public Enumerator GetEnumerator()
     {
-        return new Enumerator(Memory.Span);
+        return new (Memory.Span);
     }
 
     public bool ContainsKey(TKey key)

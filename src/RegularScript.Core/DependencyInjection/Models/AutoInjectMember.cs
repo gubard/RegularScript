@@ -64,6 +64,6 @@ public readonly record struct AutoInjectMember
 
     public static implicit operator AutoInjectMember(MemberInfo member)
     {
-        return new AutoInjectMember(member);
+        return new (member);
     }
 }

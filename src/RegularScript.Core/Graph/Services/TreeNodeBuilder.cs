@@ -12,7 +12,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
 
     public TreeNodeBuilder()
     {
-        nodes = new Dictionary<TKey, TreeNodeBuilder<TKey, TValue?>?>();
+        nodes = new ();
     }
 
     public TreeNodeBuilder<TKey, TValue?>? this[TKey key]
@@ -159,7 +159,7 @@ public class TreeNodeBuilder<TKey, TValue> : IBuilder<TreeNode<TKey, TValue>> wh
         var value = Value.ThrowIfNull();
         var newNodes = nodes.Values.Select(x => x.ThrowIfNull().Build());
 
-        return new TreeNode<TKey, TValue>(key, value, newNodes!);
+        return new (key, value, newNodes!);
     }
 
     public TreeNodeBuilder<TKey, TValue> Add(TreeNodeBuilder<TKey, TValue?> node)

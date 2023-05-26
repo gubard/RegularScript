@@ -14,6 +14,6 @@ public readonly record struct TypeIdentifier
 
     public static implicit operator TypeIdentifier(Type type)
     {
-        return new TypeIdentifier(type);
+        return new (type);
     }
 }

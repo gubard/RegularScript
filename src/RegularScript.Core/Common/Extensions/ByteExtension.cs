@@ -76,7 +76,7 @@ public static class ByteExtension
 
             if (result.Index == -1)
             {
-                result = new IndexOfNeedlesResult(index, needle);
+                result = new (index, needle);
             }
             else if (index < result.Index)
             {

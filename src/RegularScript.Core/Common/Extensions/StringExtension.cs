@@ -17,7 +17,7 @@ public static class StringExtension
 
     public static Uri ToUri(this string str)
     {
-        return new Uri(str);
+        return new (str);
     }
 
     public static string ThrowIfNullOrWhiteSpace(
@@ -43,12 +43,12 @@ public static class StringExtension
 
     public static FileInfo ToFile(this string path)
     {
-        return new FileInfo(path);
+        return new (path);
     }
 
     public static DirectoryInfo ToDirectory(this string path)
     {
-        return new DirectoryInfo(path);
+        return new (path);
     }
 
     public static string ToConsoleLine(this string line)

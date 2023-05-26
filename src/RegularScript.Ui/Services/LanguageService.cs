@@ -16,7 +16,7 @@ public class LanguageService : GrpcServiceBase, ILanguageService
     public LanguageService(GrpcServiceOptions options, IMapper mapper) : base(options)
     {
         this.mapper = mapper;
-        languageServiceApiClient = new LanguageServiceApi.LanguageServiceApiClient(grpcChannel);
+        languageServiceApiClient = new (grpcChannel);
     }
 
     public async Task<IEnumerable<Language>> GetAllAsync()

@@ -10,7 +10,7 @@ public class TypeInformation : IEquatable<TypeInformation>
 {
     public TypeInformation(Type type)
     {
-        Identifier = new TypeIdentifier(type);
+        Identifier = new (type);
         Type = type;
         IsGenericType = type.IsGenericType;
         GenericTypeArguments = type.GenericTypeArguments.Select(x => (TypeInformation)x).ToArray();
@@ -56,7 +56,7 @@ public class TypeInformation : IEquatable<TypeInformation>
 
     public static implicit operator TypeInformation(Type type)
     {
-        return new TypeInformation(type);
+        return new (type);
     }
 
     public static bool operator ==(TypeInformation x, TypeInformation y)

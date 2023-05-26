@@ -22,7 +22,7 @@ builder.Services.AddOptions<ScriptRepositoryOptions>(ScriptRepositoryOptions.Con
 builder.Logging.AddConsole();
 
 builder.Services.AddScoped<MapperConfiguration>(
-    _ => new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>())
+    _ => new (cfg => cfg.AddProfile<ServiceProfile>())
 );
 
 builder.Services.AddDbContext<RegularScriptDbContext>(
@@ -50,7 +50,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseGrpcWeb(
-    new GrpcWebOptions
+    new()
     {
         DefaultEnabled = true
     }

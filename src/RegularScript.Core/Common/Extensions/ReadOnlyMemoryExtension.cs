@@ -22,7 +22,7 @@ public static class ReadOnlyMemoryExtension
             return memory.Span[0];
         }
 
-        throw new Exception(memory.Length.ToString());
+        throw new (memory.Length.ToString());
     }
 
     public static bool TryGetSingleValue<T>(

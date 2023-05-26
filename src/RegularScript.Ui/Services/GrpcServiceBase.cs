@@ -18,9 +18,9 @@ public abstract class GrpcServiceBase : IAsyncDisposable, IDisposable
     protected GrpcServiceBase(GrpcServiceOptions options)
     {
         this.options = options;
-        httpClientHandler = new HttpClientHandler();
-        grpcWebHandler = new GrpcWebHandler(options.Mode, httpClientHandler);
-        grpcChannelOptions = new GrpcChannelOptions
+        httpClientHandler = new ();
+        grpcWebHandler = new (options.Mode, httpClientHandler);
+        grpcChannelOptions = new()
         {
             HttpHandler = grpcWebHandler
         };

@@ -18,7 +18,7 @@ public class AppDataTemplate : IDataTemplate
     public AppDataTemplate(IReadOnlyDictionary<Type, Type> resolveViewDictionary, IResolver resolver)
     {
         this.resolver = resolver;
-        this.resolveViewDictionary = new Dictionary<Type, Type>(resolveViewDictionary);
+        this.resolveViewDictionary = new (resolveViewDictionary);
     }
 
     public Control? Build(object? param)

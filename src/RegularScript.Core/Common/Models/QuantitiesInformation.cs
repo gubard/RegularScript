@@ -187,17 +187,17 @@ public readonly struct QuantitiesInformation : IEquatable<ulong>, INumber<Quanti
 
     public static QuantitiesInformation operator +(QuantitiesInformation x, QuantitiesInformation y)
     {
-        return new QuantitiesInformation(x.size + y.size);
+        return new (x.size + y.size);
     }
 
     public static implicit operator QuantitiesInformation(ulong value)
     {
-        return new QuantitiesInformation(value);
+        return new (value);
     }
 
     public static implicit operator QuantitiesInformation(long value)
     {
-        return new QuantitiesInformation((ulong)value);
+        return new ((ulong)value);
     }
 
     private void SetB(ulong restSize, StringBuilder stringBuilder)

@@ -30,7 +30,7 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
         {
             if (Root is null)
             {
-                Root = new TreeNodeBuilder<TKey, TValue?>
+                Root = new()
                 {
                     Key = key
                 };
@@ -50,7 +50,7 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
                 return Root;
             }
 
-            Root = new TreeNodeBuilder<TKey, TValue>
+            Root = new()
             {
                 Key = key
             };
@@ -77,7 +77,7 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
         {
             if (Root is null)
             {
-                Root = new TreeNodeBuilder<TKey, TValue?>
+                Root = new()
                 {
                     Key = key,
                     Value = defaultValue
@@ -98,7 +98,7 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
                 return Root;
             }
 
-            Root = new TreeNodeBuilder<TKey, TValue>
+            Root = new()
             {
                 Key = key,
                 Value = defaultValue
@@ -202,6 +202,6 @@ public class TreeBuilder<TKey, TValue> : IBuilder<Tree<TKey, TValue>> where TKey
     {
         var newRoot = root.ThrowIfNull().Build();
 
-        return new Tree<TKey, TValue>(newRoot!);
+        return new (newRoot!);
     }
 }

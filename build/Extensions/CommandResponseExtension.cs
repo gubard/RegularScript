@@ -10,7 +10,7 @@ public static class CommandResponseExtension
     {
         if (!string.IsNullOrWhiteSpace(commandResponse.Error))
         {
-            throw new Exception(commandResponse.Error);
+            throw new (commandResponse.Error);
         }
 
         foreach (var log in commandResponse.Log)

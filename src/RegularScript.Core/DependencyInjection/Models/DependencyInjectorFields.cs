@@ -30,12 +30,12 @@ public readonly struct DependencyInjectorFields
         IReadOnlyDictionary<TypeInformation, LazyDependencyInjectorOptions> lazyOptions
     )
     {
-        CheckedInjectAttribute = new HashSet<Type>();
-        CacheSingleton = new Dictionary<TypeInformation, Expression>();
-        ReservedCtorParameters = new Dictionary<ReservedCtorParameterIdentifier, InjectorItem>(reservedCtorParameters);
-        Injectors = new Dictionary<TypeInformation, InjectorItem>(injectors);
-        AutoInjectMembers = new Dictionary<AutoInjectMemberIdentifier, InjectorItem>(autoInjects);
-        LazyOptions = new Dictionary<TypeInformation, LazyDependencyInjectorOptions>(lazyOptions);
+        CheckedInjectAttribute = new ();
+        CacheSingleton = new ();
+        ReservedCtorParameters = new (reservedCtorParameters);
+        Injectors = new (injectors);
+        AutoInjectMembers = new (autoInjects);
+        LazyOptions = new (lazyOptions);
         var array = Injectors.Select(x => x.Key).OrderBy(x => x.ToString()).ToArray();
 
         Outputs = array;
