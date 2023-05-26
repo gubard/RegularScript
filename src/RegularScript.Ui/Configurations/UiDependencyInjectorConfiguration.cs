@@ -45,13 +45,13 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
         register.RegisterScope(() => Locator.Current.GetService<IScreen>(null).ThrowIfNull("IScreen"));
         register.RegisterScope<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());
         register.RegisterScope(() => new FluentTheme(null));
-        register.RegisterScope(() => new Window());
         register.RegisterScope<Control, MainView>();
         register.RegisterScope<IModuleSetup, UiModuleSetup>();
         register.RegisterScope<IViewLocator, ModuleViewLocator>();
         register.RegisterSingleton(new RoutingState());
         RegisterViewModels(register);
         register.RegisterScope(() => Enumerable.Empty<IStyle>());
+        register.RegisterScopeDel<Window>(() => new MainWindow());
 
         register.RegisterScope<RoutedViewHost>((RoutingState routingState)=>new RoutedViewHost()
         {
@@ -80,7 +80,7 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
         );
 
         register.RegisterScopeAutoInject(
-            (Window window) => window.Content,
+            (MainWindow window) => window.Content,
             (Control control) => control
         );
     }
