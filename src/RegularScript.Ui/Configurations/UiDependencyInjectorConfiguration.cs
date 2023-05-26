@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using ReactiveUI;
 using RegularScript.Core.Common.Extensions;
+using RegularScript.Core.Common.Interfaces;
+using RegularScript.Core.Common.Services;
 using RegularScript.Core.DependencyInjection.Extensions;
 using RegularScript.Core.DependencyInjection.Interfaces;
 using RegularScript.Core.DependencyInjection.Models;
@@ -34,6 +36,8 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
     public void Configure(IDependencyInjectorRegister register)
     {
         register.RegisterScope<INavigator, Navigator>();
+        register.RegisterScope<IHumanizing<Exception, object>, ExceptionHumanizing>();
+        register.RegisterScope<IHumanizing<Exception, string>, ToStringHumanizing<Exception>>();
         register.RegisterScope<Application, App>();
         register.RegisterScope<IScriptService, ScriptService>();
         register.RegisterScope<ILanguageService, LanguageService>();

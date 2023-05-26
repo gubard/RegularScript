@@ -13,7 +13,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <TextBox IsReadOnly="True" Text="{Binding Text}" />
+        <ContentControl Content="{Binding Content}" />
 
         <Button Grid.Row="1" Command="{Binding RoutingState.NavigateBack}">
             <TextBlock Text="Back" />

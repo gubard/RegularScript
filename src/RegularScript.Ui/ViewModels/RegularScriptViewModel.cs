@@ -11,7 +11,7 @@ public class RegularScriptViewModel : ViewModelBase
 {
     [Inject]
     public required INavigator Navigator { get; init; }
-    
+
     protected ICommand CreateCommand(Action action)
     {
         var command = ReactiveCommand.Create(action);
@@ -39,7 +39,7 @@ public class RegularScriptViewModel : ViewModelBase
     private void SetupCommand<TParam, TResult>(ReactiveCommand<TParam, TResult> command)
     {
         command.ThrownExceptions.Subscribe(
-            exception => Navigator.NavigateTo<ErrorViewModel>(viewModel => viewModel.Text = exception.ToString())
+            exception => Navigator.NavigateTo<ErrorViewModel>(viewModel => viewModel.Exception = exception)
         );
     }
 }
