@@ -44,6 +44,6 @@ public class RandomStringInInterval : IRandom<string, Interval<int>>
             result[index] = @char;
         }
 
-        return new string(result);
+        return new (result);
     }
 }

@@ -16,6 +16,6 @@ public class Ref<T> where T : struct
 
     public static implicit operator Ref<T>(T @ref)
     {
-        return new Ref<T>(@ref);
+        return new (@ref);
     }
 }

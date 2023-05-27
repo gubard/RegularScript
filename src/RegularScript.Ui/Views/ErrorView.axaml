@@ -1,4 +1,4 @@
-﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ErrorViewModel" 
+﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ErrorViewModel"
                                 xmlns="https://github.com/avaloniaui"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,12 +13,10 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,Auto">
-        <TextBox IsReadOnly="True" Text="{Binding Text}" />
+        <ContentControl Content="{Binding Content}" />
 
-        <Button Grid.Row="1">
-            <Button Command="{Binding RoutingState.NavigateBack}">
-                <TextBlock Text="Back" />
-            </Button>
+        <Button Grid.Row="1" Command="{Binding RoutingState.NavigateBack}">
+            <TextBlock Text="Back" />
         </Button>
     </Grid>
 </reactiveUi:ReactiveUserControl>

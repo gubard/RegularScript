@@ -13,7 +13,7 @@ public class TaskCompletionSourceEnumerator : ITaskCompletionSourceEnumerator
 
     public TaskCompletionSourceEnumerator()
     {
-        taskCompletionSource = new TaskCompletionSource();
+        taskCompletionSource = new ();
         current = taskCompletionSource.Task;
     }
 
@@ -40,7 +40,7 @@ public class TaskCompletionSourceEnumerator : ITaskCompletionSourceEnumerator
         }
 
         taskCompletionSource.SetResult();
-        taskCompletionSource = new TaskCompletionSource();
+        taskCompletionSource = new ();
         current = taskCompletionSource.Task;
 
         return true;

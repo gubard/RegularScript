@@ -14,7 +14,7 @@ public class MutDependencyInjector : IMutDependencyInjector
 
     public MutDependencyInjector()
     {
-        register = new DependencyInjectorRegister();
+        register = new ();
     }
 
     public ReadOnlyMemory<TypeInformation> Inputs => CreateDependencyInjector().Inputs;

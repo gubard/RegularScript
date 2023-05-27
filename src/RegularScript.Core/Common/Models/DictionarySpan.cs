@@ -38,12 +38,12 @@ public readonly ref struct DictionarySpan<TKey, TValue> where TKey : notnull
         Dictionary<TKey, TValue> dictionary
     )
     {
-        return new DictionarySpan<TKey, TValue>(dictionary);
+        return new (dictionary);
     }
 
     public Enumerator GetEnumerator()
     {
-        return new Enumerator(Span);
+        return new (Span);
     }
 
     public bool ContainsKey(TKey key)

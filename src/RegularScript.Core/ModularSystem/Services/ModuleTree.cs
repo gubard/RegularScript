@@ -106,12 +106,12 @@ public class ModuleTree : IModule, IResolver, IInvoker
     {
         if (typeof(IResolver) == type)
         {
-            return new DependencyStatus(type, thisExpression);
+            return new (type, thisExpression);
         }
 
         if (typeof(IInvoker) == type)
         {
-            return new DependencyStatus(type, thisExpression);
+            return new (type, thisExpression);
         }
 
         if (!IsTypeContains(type))
@@ -176,7 +176,7 @@ public class ModuleTree : IModule, IResolver, IInvoker
         }
         catch (Exception e)
         {
-            throw new Exception(lambda.ToString(), e);
+            throw new (lambda.ToString(), e);
         }
     }
 

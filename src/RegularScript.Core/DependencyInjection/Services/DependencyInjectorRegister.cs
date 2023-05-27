@@ -21,10 +21,10 @@ public class DependencyInjectorRegister : IBuilder<DependencyInjector>, IDepende
 
     public DependencyInjectorRegister()
     {
-        lazyOptions = new Dictionary<TypeInformation, LazyDependencyInjectorOptions>();
-        reservedCtorParameters = new Dictionary<ReservedCtorParameterIdentifier, InjectorItem>();
-        injectors = new Dictionary<TypeInformation, InjectorItem>();
-        autoInjectMembers = new Dictionary<AutoInjectMemberIdentifier, InjectorItem>();
+        lazyOptions = new ();
+        reservedCtorParameters = new ();
+        injectors = new ();
+        autoInjectMembers = new ();
     }
 
     public DependencyInjector Build()
@@ -92,7 +92,7 @@ public class DependencyInjectorRegister : IBuilder<DependencyInjector>, IDepende
 
     public void RegisterScope(Type type, Expression expression)
     {
-        injectors[type] = new InjectorItem(InjectorItemType.Scope, expression);
+        injectors[type] = new (InjectorItemType.Scope, expression);
     }
 
     public void SetLazyOptions(TypeInformation type, LazyDependencyInjectorOptions options)
@@ -108,11 +108,11 @@ public class DependencyInjectorRegister : IBuilder<DependencyInjector>, IDepende
 
     private void RegisterTransientCore(Type type, Expression expression)
     {
-        injectors[type] = new InjectorItem(InjectorItemType.Transient, expression);
+        injectors[type] = new (InjectorItemType.Transient, expression);
     }
 
     public void RegisterSingletonCore(Type type, Expression expression)
     {
-        injectors[type] = new InjectorItem(InjectorItemType.Singleton, expression);
+        injectors[type] = new (InjectorItemType.Singleton, expression);
     }
 }

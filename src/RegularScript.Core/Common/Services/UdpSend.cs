@@ -16,7 +16,7 @@ public class UdpSend<TMessage> : ISend<TMessage>, IDisposable
     public UdpSend(IPEndPoint ipEndPoint, Func<TMessage, byte[]> converter)
     {
         IpEndPoint = ipEndPoint.ThrowIfNull(nameof(ipEndPoint));
-        client = new UdpClient();
+        client = new ();
         Converter = converter.ThrowIfNull(nameof(converter));
         disposed = false;
     }

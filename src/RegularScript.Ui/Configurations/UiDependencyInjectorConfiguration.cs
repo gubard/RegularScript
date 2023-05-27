@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using ReactiveUI;
 using RegularScript.Core.Common.Extensions;
+using RegularScript.Core.Common.Interfaces;
+using RegularScript.Core.Common.Services;
 using RegularScript.Core.DependencyInjection.Extensions;
 using RegularScript.Core.DependencyInjection.Interfaces;
 using RegularScript.Core.DependencyInjection.Models;
@@ -35,6 +37,8 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
     {
         register.RegisterScope<INavigator, Navigator>();
         register.RegisterScope<IViewState, ViewState>();
+        register.RegisterScope<IHumanizing<Exception, object>, ExceptionHumanizing>();
+        register.RegisterScope<IHumanizing<Exception, string>, ToStringHumanizing<Exception>>();
         register.RegisterScope<Application, App>();
         register.RegisterScope<IScriptService, ScriptService>();
         register.RegisterScope<ILanguageService, LanguageService>();
@@ -46,13 +50,13 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
         register.RegisterScope(() => Locator.Current.GetService<IScreen>(null).ThrowIfNull("IScreen"));
         register.RegisterScope<IEnumerable<IResourceProvider>>(() => Array.Empty<IResourceProvider>());
         register.RegisterScope(() => new FluentTheme(null));
-        register.RegisterScope(() => new Window());
         register.RegisterScope<Control, MainView>();
         register.RegisterScope<IModuleSetup, UiModuleSetup>();
         register.RegisterScope<IViewLocator, ModuleViewLocator>();
         register.RegisterSingleton(new RoutingState());
         RegisterViewModels(register);
         register.RegisterScope(() => Enumerable.Empty<IStyle>());
+        register.RegisterScopeDel<Window>(() => new MainWindow());
 
         register.RegisterScope<RoutedViewHost>((RoutingState routingState)=>new RoutedViewHost()
         {
@@ -81,7 +85,7 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
         );
 
         register.RegisterScopeAutoInject(
-            (Window window) => window.Content,
+            (MainWindow window) => window.Content,
             (Control control) => control
         );
     }

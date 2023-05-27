@@ -47,6 +47,6 @@ public class RandomString : IRandom<string>
             result[index] = @char;
         }
 
-        return new string(result);
+        return new (result);
     }
 }

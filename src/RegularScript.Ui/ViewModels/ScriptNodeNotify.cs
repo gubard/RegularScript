@@ -12,7 +12,7 @@ public class ScriptNodeNotify : ViewModelBase
 
     public ScriptNodeNotify()
     {
-        Scripts = new AvaloniaList<ScriptNodeNotify>();
+        Scripts = new ();
     }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }

@@ -30,7 +30,7 @@ public class DependencyInjector : IDependencyInjector
     {
         Check(injectors);
 
-        fields = new DependencyInjectorFields(
+        fields = new (
             injectors,
             autoInjects,
             reservedCtorParameters,
@@ -51,7 +51,7 @@ public class DependencyInjector : IDependencyInjector
         BuildExpression(
             type,
             injectorItem,
-            new Dictionary<TypeInformation, ScopeValue>(),
+            new (),
             out var expression
         );
 
@@ -78,7 +78,7 @@ public class DependencyInjector : IDependencyInjector
 
         BuildExpression(type, injectorItem, scopeParameters, out var expression);
 
-        return new DependencyStatus(type, expression);
+        return new (type, expression);
     }
 
     public object? Invoke(Delegate del, DictionarySpan<TypeInformation, object> arguments)
@@ -182,8 +182,8 @@ public class DependencyInjector : IDependencyInjector
                 );
 
                 var variable = result.Type.ToVariableAutoName();
-                scopeExpressions.TryAdd(type, new ScopeValue(variable, result));
-                scopeExpressions.TryAdd(variable.Type, new ScopeValue(variable, result));
+                scopeExpressions.TryAdd(type, new (variable, result));
+                scopeExpressions.TryAdd(variable.Type, new (variable, result));
                 result = variable;
 
                 return isFull;
@@ -488,7 +488,7 @@ public class DependencyInjector : IDependencyInjector
                     case PropertyInfo property:
                     {
                         var parameter = property.PropertyType.ToParameterAutoName();
-                        injectorItem = new InjectorItem(InjectorItemType.Scope, parameter.ToLambda(parameter));
+                        injectorItem = new (InjectorItemType.Scope, parameter.ToLambda(parameter));
 
                         fields.AutoInjectMembers.Add(identifier, injectorItem);
 
@@ -497,7 +497,7 @@ public class DependencyInjector : IDependencyInjector
                     case FieldInfo field:
                     {
                         var parameter = field.FieldType.ToParameterAutoName();
-                        injectorItem = new InjectorItem(InjectorItemType.Scope, parameter.ToLambda(parameter));
+                        injectorItem = new (InjectorItemType.Scope, parameter.ToLambda(parameter));
 
                         fields.AutoInjectMembers.Add(identifier, injectorItem);
 
@@ -701,7 +701,7 @@ public class DependencyInjector : IDependencyInjector
                     )
                     .ThrowIfNull();
 
-                return new DependencyStatus(
+                return new (
                     type,
                     constructor.ToNew(expression.ToLambda(), LazyThreadSafetyMode.None.ToConstant())
                 );
@@ -717,7 +717,7 @@ public class DependencyInjector : IDependencyInjector
                     )
                     .ThrowIfNull();
 
-                return new DependencyStatus(
+                return new (
                     type,
                     constructor.ToNew(
                         expression.ToLambda(),
@@ -736,7 +736,7 @@ public class DependencyInjector : IDependencyInjector
                     )
                     .ThrowIfNull();
 
-                return new DependencyStatus(
+                return new (
                     type,
                     constructor.ToNew(
                         expression.ToLambda(),
@@ -755,7 +755,7 @@ public class DependencyInjector : IDependencyInjector
                     )
                     .ThrowIfNull();
 
-                return new DependencyStatus(
+                return new (
                     type,
                     constructor.ToNew(expression.ToLambda(), true.ToConstant())
                 );

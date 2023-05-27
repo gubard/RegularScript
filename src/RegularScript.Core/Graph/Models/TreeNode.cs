@@ -9,7 +9,7 @@ public class TreeNode<TKey, TValue> where TKey : notnull
 
     public TreeNode(TKey key, TValue value, IEnumerable<TreeNode<TKey, TValue>> nodes)
     {
-        this.nodes = new Dictionary<TKey, TreeNode<TKey, TValue>>();
+        this.nodes = new ();
         Key = key;
         Value = value;
 
