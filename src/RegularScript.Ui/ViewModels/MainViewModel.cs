@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Avalonia.ReactiveUI;
 using RegularScript.Core.DependencyInjection.Attributes;
 using RegularScript.Ui.Views;
