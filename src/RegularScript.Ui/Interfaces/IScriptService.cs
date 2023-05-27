@@ -8,5 +8,5 @@ namespace RegularScript.Ui.Interfaces;
 public interface IScriptService
 {
     Task<IEnumerable<Script>> GetRootScriptsAsync(Guid languageId);
-    Task<Guid> AddScriptAsync(AddScriptParameters parameters);
+    Task<Guid> AddRootScriptAsync(AddRootScriptParameters parameters);
 }

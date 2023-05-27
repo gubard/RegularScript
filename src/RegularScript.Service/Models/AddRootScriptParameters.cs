@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace RegularScript.Ui.Models;
+namespace RegularScript.Service.Models;
 
-public class AddScriptParameters
+public class AddRootScriptParameters
 {
     public Guid LanguageId { get; set; }
     public string Name { get; set; }

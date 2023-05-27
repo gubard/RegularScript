@@ -686,7 +686,7 @@ public class DependencyInjector : IDependencyInjector
         }
 
         BuildExpression(type, injectorItem, scopeParameters, out var expression);
-        var options = fields.LazyOptions.Get(instanceType, LazyDependencyInjectorOptions.None);
+        var options = fields.LazyOptions.GetValue(instanceType, LazyDependencyInjectorOptions.None);
 
         switch (options)
         {

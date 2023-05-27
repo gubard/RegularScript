@@ -22,20 +22,27 @@
     <Grid RowDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding AddScriptCommand}" i:Attached.Icon="fa-solid fa-plus" />
-            
+
             <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
                 <ComboBox.DataTemplates>
-                    <DataTemplate DataType="viewModels:LanguageNotify">
+                    <TreeDataTemplate x:DataType="viewModels:LanguageNotify">
                         <StackPanel>
                             <TextBlock Text="{Binding Name}" />
                             <TextBlock Text="{Binding CodeIso3}" />
                         </StackPanel>
-                    </DataTemplate>
+                    </TreeDataTemplate>
                 </ComboBox.DataTemplates>
             </ComboBox>
         </StackPanel>
+
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
-            <TreeView Items="{Binding Scripts}" />
+            <TreeView Items="{Binding Scripts}" >
+                <TreeView.DataTemplates>
+                    <TreeDataTemplate x:DataType="viewModels:ScriptNodeNotify" ItemsSource="{Binding Scripts}">
+                        <TextBlock Text="{Binding Name}" />
+                    </TreeDataTemplate>
+                </TreeView.DataTemplates>
+            </TreeView>
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
         </Grid>
     </Grid>

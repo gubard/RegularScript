@@ -34,6 +34,9 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
     [Inject]
     public required IScriptService ScriptService { get; init; }
 
+    [Inject]
+    public required IViewState ViewState { get; init; }
+
     public IScreen? HostScreen => null;
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
@@ -62,6 +65,8 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
 
     private Task InitializedAsync()
     {
+        ViewState.CurrentView = GetType();
+
         return this.UpdateLanguagesAsync(LanguageService, Mapper);
     }
 

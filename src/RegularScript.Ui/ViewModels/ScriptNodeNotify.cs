@@ -1,4 +1,5 @@
-﻿using Avalonia.Collections;
+﻿using System;
+using Avalonia.Collections;
 using ReactiveUI;
 
 namespace RegularScript.Ui.ViewModels;
@@ -6,6 +7,8 @@ namespace RegularScript.Ui.ViewModels;
 public class ScriptNodeNotify : ViewModelBase
 {
     private string? name;
+    private Guid id;
+    private string description;
 
     public ScriptNodeNotify()
     {
@@ -13,6 +16,18 @@ public class ScriptNodeNotify : ViewModelBase
     }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
+
+    public Guid Id
+    {
+        get => id;
+        set => this.RaiseAndSetIfChanged(ref id, value);
+    }
+
+    public string Description
+    {
+        get => description;
+        set => this.RaiseAndSetIfChanged(ref description, value);
+    }
 
     public string? Name
     {

@@ -18,6 +18,13 @@ public class Navigator : INavigator
     
     public ReactiveCommand<Unit, IRoutableViewModel?> NavigateBack => RoutingState.NavigateBack;
 
+    public IObservable<IRoutableViewModel> NavigateTo(Type type)
+    {
+        var viewModel = (IRoutableViewModel)Resolver.Resolve(type);
+
+        return RoutingState.Navigate.Execute(viewModel);
+    }
+
     public IObservable<IRoutableViewModel> NavigateTo<TViewModel>(Action<TViewModel>? setup = null) where TViewModel : IRoutableViewModel
     {
         var viewModel = Resolver.Resolve<TViewModel>();

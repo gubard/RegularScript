@@ -29,6 +29,9 @@ public class AddScriptViewModel : RegularScriptViewModel, IRoutableViewModel, IS
     public required IMapper Mapper { get; init; }
 
     [Inject]
+    public required IViewState ViewState { get; init; }
+
+    [Inject]
     public required IScriptService ScriptService { get; init; }
 
     [Inject]
@@ -63,10 +66,10 @@ public class AddScriptViewModel : RegularScriptViewModel, IRoutableViewModel, IS
         return this.UpdateLanguagesAsync(LanguageService, Mapper);
     }
 
-    private Task AddAsync()
+    private async Task AddAsync()
     {
-        var parameters = Mapper.Map<AddScriptParameters>(this);
-
-        return ScriptService.AddScriptAsync(parameters);
+        var parameters = Mapper.Map<AddRootScriptParameters>(this);
+        await ScriptService.AddRootScriptAsync(parameters);
+        Navigator.NavigateTo(ViewState.CurrentView);
     }
 }

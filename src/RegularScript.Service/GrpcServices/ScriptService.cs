@@ -2,9 +2,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Google.Protobuf;
 using Grpc.Core;
 using GrpcClient.Script;
 using RegularScript.Service.Interfaces;
+using RegularScript.Service.Models;
 
 namespace RegularScript.Service.GrpcServices;
 
@@ -30,5 +32,16 @@ public class ScriptService : ScriptServiceApi.ScriptServiceApiBase
         reply.Scripts.AddRange(scripts.Select(x => mapper.Map<ScriptApi>(x)));
 
         return reply;
+    }
+
+    public override async Task<AddScriptReply> AddScript(AddScriptRequest request, ServerCallContext context)
+    {
+        var parameters = mapper.Map<AddRootScriptParameters>(request);
+        var id = await scriptRepository.AddRootScriptAsync(parameters);
+
+        return new AddScriptReply
+        {
+            ScriptId = ByteString.CopyFrom(id.ToByteArray())
+        };
     }
 }

@@ -4,7 +4,7 @@ namespace RegularScript.Core.Common.Extensions;
 
 public static class ReadOnlyDictionaryExtension
 {
-    public static TValue Get<TKey, TValue>(
+    public static TValue GetValue<TKey, TValue>(
         this IReadOnlyDictionary<TKey, TValue> dictionary,
         TKey key,
         TValue def

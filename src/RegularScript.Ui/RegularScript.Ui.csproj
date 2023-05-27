@@ -25,6 +25,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
         <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="6.5.0-preview5" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />

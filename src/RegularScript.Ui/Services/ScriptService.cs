@@ -33,7 +33,7 @@ public class ScriptService : GrpcServiceBase, IScriptService
         return reply.Scripts.Select(x => mapper.Map<Script>(x)).ToArray();
     }
 
-    public async Task<Guid> AddScriptAsync(AddScriptParameters parameters)
+    public async Task<Guid> AddRootScriptAsync(AddRootScriptParameters parameters)
     {
         var request = mapper.Map<AddScriptRequest>(parameters);
         var reply = await scriptServiceApiClient.AddScriptAsync(request);

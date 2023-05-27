@@ -34,6 +34,7 @@ public readonly struct UiDependencyInjectorConfiguration : IDependencyInjectorCo
     public void Configure(IDependencyInjectorRegister register)
     {
         register.RegisterScope<INavigator, Navigator>();
+        register.RegisterScope<IViewState, ViewState>();
         register.RegisterScope<Application, App>();
         register.RegisterScope<IScriptService, ScriptService>();
         register.RegisterScope<ILanguageService, LanguageService>();

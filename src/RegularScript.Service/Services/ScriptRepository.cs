@@ -34,7 +34,8 @@ public class ScriptRepository : IScriptRepository
                 on script.Id equals defaultScriptLocalization.ScriptId into defaultScriptLocalizations
             from defaultScriptLocalization in defaultScriptLocalizations.DefaultIfEmpty()
             join language in dbContext.Set<LanguageDb>().Where(x => x.CodeIso3 == options.Value.DefaultLanguageCodeIso3)
-                on defaultScriptLocalization.LanguageId equals language.Id
+                on defaultScriptLocalization.LanguageId equals language.Id into languages
+            from language in languages.DefaultIfEmpty()
             select new
             {
                 script.Id,
@@ -60,5 +61,23 @@ public class ScriptRepository : IScriptRepository
         }
 
         return result;
+    }
+
+    public async Task<Guid> AddRootScriptAsync(AddRootScriptParameters parameters)
+    {
+        var newScript = await dbContext.Set<ScriptDb>().AddAsync(new ScriptDb());
+
+        var scriptLocalizationDb = new ScriptLocalizationDb()
+        {
+            ScriptId = newScript.Entity.Id,
+            Description = parameters.Description,
+            Name = parameters.Name,
+            LanguageId = parameters.LanguageId,
+        };
+
+        await dbContext.Set<ScriptLocalizationDb>().AddAsync(scriptLocalizationDb);
+        await dbContext.SaveChangesAsync();
+
+        return newScript.Entity.Id;
     }
 }
