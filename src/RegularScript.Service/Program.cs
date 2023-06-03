@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using RegularScript.Db.Contexts;
 using RegularScript.Service.GrpcServices;
 using RegularScript.Service.Interfaces;
+using RegularScript.Service.Middlewares;
 using RegularScript.Service.Models;
 using RegularScript.Service.Profiles;
 using RegularScript.Service.Services;
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IMapper>(sp => new Mapper(sp.GetService<MapperConfiguration>()));
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddScoped<IScriptRepository, ScriptRepository>();
+builder.Services.AddScoped<IIdempotentService, IdempotentService>();
 builder.Services.AddGrpc();
 builder.Services.AddOptions<ScriptRepositoryOptions>(ScriptRepositoryOptions.ConfigurationPath);
 builder.Logging.AddConsole();
@@ -49,14 +51,16 @@ builder.Services.AddCors(
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
+
 app.UseGrpcWeb(
     new()
     {
         DefaultEnabled = true
     }
 );
-app.UseCors("AllowAll");
 
+app.UseCors("AllowAll");
+app.UseMiddleware<IdempotentMiddleware>();
 app.MapGrpcService<LanguageService>().EnableGrpcWeb();
 app.MapGrpcService<ScriptService>().EnableGrpcWeb();
 

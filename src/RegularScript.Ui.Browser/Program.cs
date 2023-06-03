@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Browser;
 using Avalonia.ReactiveUI;
@@ -19,11 +20,11 @@ internal class Program
 {
     private static IModule? module;
 
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
-        BuildAvaloniaApp()
+       await BuildAvaloniaApp()
             .UseReactiveUI()
-            .SetupBrowserApp("out");
+            .StartBrowserAppAsync("out");
     }
 
     private static void InitModules()

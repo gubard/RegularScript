@@ -1,8 +1,6 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
 using RegularScript.Core.Common.Extensions;
 using RegularScript.Core.Graph.Extensions;
 using RegularScript.Core.Graph.Services;
@@ -42,10 +40,8 @@ internal class Program
         InitModules();
 
         return AppBuilder.Configure(() => module.ThrowIfNull().GetObject<Application>())
-           .UsePlatformDetect()
-           .LogToTrace()
-           .UseReactiveUI()
-           .WithIcons(container => container
-               .Register<FontAwesomeIconProvider>());
+            .UsePlatformDetect()
+            .LogToTrace()
+            .UseReactiveUI();
     }
 }

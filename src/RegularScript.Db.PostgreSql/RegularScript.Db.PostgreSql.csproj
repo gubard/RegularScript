@@ -6,11 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RegularScript.Db\RegularScript.Db.csproj"/>
+        <ProjectReference Include="..\RegularScript.Db\RegularScript.Db.csproj" />
     </ItemGroup>
 
 </Project>

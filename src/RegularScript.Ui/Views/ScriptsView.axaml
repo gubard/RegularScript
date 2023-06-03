@@ -5,7 +5,7 @@
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
                                 xmlns:reactiveUi="http://reactiveui.net"
-                                xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+                                xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                                 x:DataType="viewModels:ScriptsViewModel"
                                 x:Class="RegularScript.Ui.Views.ScriptsView">
@@ -21,9 +21,11 @@
 
     <Grid RowDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddScriptCommand}" i:Attached.Icon="fa-solid fa-plus" />
+            <Button Command="{Binding AddScriptCommand}">
+                <material:MaterialIcon Kind="Add" />
+            </Button>
 
-            <ComboBox Items="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
+            <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
                 <ComboBox.DataTemplates>
                     <TreeDataTemplate x:DataType="viewModels:LanguageNotify">
                         <StackPanel>
@@ -36,7 +38,7 @@
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
-            <TreeView Items="{Binding Scripts}" >
+            <TreeView ItemsSource="{Binding Scripts}">
                 <TreeView.DataTemplates>
                     <TreeDataTemplate x:DataType="viewModels:ScriptNodeNotify" ItemsSource="{Binding Scripts}">
                         <TextBlock Text="{Binding Name}" />

@@ -67,7 +67,11 @@ public static class ObjectExtension
         return obj ?? throw new ArgumentNullException(paramName);
     }
 
-    public static TObj ThrowIfNotEquals<TObj>(this TObj obj, TObj expected, string name)
+    public static TObj ThrowIfNotEquals<TObj>(
+        this TObj obj,
+        TObj expected,
+        [CallerArgumentExpression(nameof(obj))] string name = ""
+    )
         where TObj : notnull
     {
         if (obj.Equals(expected))

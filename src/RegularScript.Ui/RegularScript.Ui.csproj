@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,13 +12,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Xaml.Interactions" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Google.Protobuf" Version="3.23.1" />
+        <PackageReference Include="Google.Protobuf" Version="3.23.2" />
         <PackageReference Include="Grpc.Net.Client" Version="$(GrpcVersion)" />
         <PackageReference Include="Grpc.Net.Client.Web" Version="$(GrpcVersion)" />
         <PackageReference Include="Grpc.Net.ClientFactory" Version="$(GrpcVersion)" />
@@ -25,9 +24,9 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="6.5.0-preview5" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
 
