@@ -34,10 +34,21 @@ public class ScriptService : ScriptServiceApi.ScriptServiceApiBase
         return reply;
     }
 
-    public override async Task<AddScriptReply> AddScript(AddScriptRequest request, ServerCallContext context)
+    public override async Task<AddRootScriptReply> AddRootScript(AddRootScriptRequest request, ServerCallContext context)
     {
         var parameters = mapper.Map<AddRootScriptParameters>(request);
         var id = await scriptRepository.AddRootScriptAsync(parameters);
+
+        return new AddRootScriptReply
+        {
+            ScriptId = ByteString.CopyFrom(id.ToByteArray())
+        };
+    }
+
+    public override async Task<AddScriptReply> AddScript(AddScriptRequest request, ServerCallContext context)
+    {
+        var parameters = mapper.Map<AddScriptParameters>(request);
+        var id = await scriptRepository.AddScriptAsync(parameters);
 
         return new AddScriptReply
         {

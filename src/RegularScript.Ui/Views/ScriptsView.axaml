@@ -1,4 +1,4 @@
-﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ScriptsViewModel"
+<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ScriptsViewModel"
                                 xmlns="https://github.com/avaloniaui"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,8 @@
                                 xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
                                 xmlns:reactiveUi="http://reactiveui.net"
                                 xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                                xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                                xmlns:views="clr-namespace:RegularScript.Ui.Views"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                                 x:DataType="viewModels:ScriptsViewModel"
                                 x:Class="RegularScript.Ui.Views.ScriptsView">
@@ -21,11 +23,12 @@
 
     <Grid RowDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddScriptCommand}">
+            <Button Command="{Binding AddRootScriptCommand}">
                 <material:MaterialIcon Kind="Add" />
             </Button>
 
-            <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
+            <ComboBox ItemsSource="{Binding Languages}"
+                      SelectedItem="{Binding SelectedLanguage}">
                 <ComboBox.DataTemplates>
                     <TreeDataTemplate x:DataType="viewModels:LanguageNotify">
                         <StackPanel>
@@ -37,15 +40,45 @@
             </ComboBox>
         </StackPanel>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
-            <TreeView ItemsSource="{Binding Scripts}">
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto,*">
+            <TreeView Name="ScriptsTreeView"
+                      ItemsSource="{Binding Scripts}"
+                      SelectedItem="{Binding SelectedScript}">
                 <TreeView.DataTemplates>
-                    <TreeDataTemplate x:DataType="viewModels:ScriptNodeNotify" ItemsSource="{Binding Scripts}">
-                        <TextBlock Text="{Binding Name}" />
+                    <TreeDataTemplate x:DataType="viewModels:ScriptNodeNotify"
+                                      ItemsSource="{Binding Scripts}">
+                      <StackPanel Orientation="Horizontal">
+                          <TextBlock Text="{Binding Name}" />
+                          <Button Command="{Binding $parent[views:ScriptsView].MainViewModel.AddScriptCommand}" CommandParameter="{Binding}">
+                              <material:MaterialIcon Kind="Plus"/>
+                          </Button>
+                      </StackPanel>
                     </TreeDataTemplate>
                 </TreeView.DataTemplates>
             </TreeView>
-            <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+
+            <GridSplitter Grid.Column="1"
+                          ResizeDirection="Columns" />
+
+            <ItemsControl Grid.Column="1"
+                          Classes="path"
+                          ItemsSource="{Binding SelectedScript.Parents}">
+                <ItemsControl.DataTemplates>
+                    <DataTemplate x:DataType="system:String">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" />
+                            <material:MaterialIcon Kind="ChevronRight" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.DataTemplates>
+            </ItemsControl>
+
+            <Grid Grid.Column="2"
+                  RowDefinitions="Auto,*">
+                <TextBox Grid.Row="1"
+                         Text="{Binding SelectedScript.Description}" IsReadOnly="True" />
+            </Grid>
         </Grid>
     </Grid>
 </reactiveUi:ReactiveUserControl>

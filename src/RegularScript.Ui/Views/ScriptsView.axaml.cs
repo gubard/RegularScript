@@ -1,4 +1,5 @@
-﻿using Avalonia.ReactiveUI;
+using Avalonia.ReactiveUI;
+
 using RegularScript.Ui.ViewModels;
 
 namespace RegularScript.Ui.Views;
@@ -9,4 +10,6 @@ public partial class ScriptsView : ReactiveUserControl<ScriptsViewModel>
     {
         InitializeComponent();
     }
+
+    public ScriptsViewModel MainViewModel => ViewModel;
 }

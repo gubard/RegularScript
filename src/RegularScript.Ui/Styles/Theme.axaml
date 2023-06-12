@@ -6,5 +6,13 @@
         </Border>
     </Design.PreviewWith>
 
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="NullableControl.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
     <StyleInclude Source="GridSplitter.axaml" />
 </Styles>

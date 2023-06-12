@@ -9,4 +9,5 @@ public interface IScriptRepository
 {
     Task<IEnumerable<Script>> GetRootScriptsAsync(Guid languageId);
     Task<Guid> AddRootScriptAsync(AddRootScriptParameters parameters);
+    Task<Guid> AddScriptAsync(AddScriptParameters parameters);
 }

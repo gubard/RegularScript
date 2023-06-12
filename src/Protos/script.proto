@@ -6,16 +6,28 @@ package script;
 
 service ScriptServiceApi {
   rpc GetRootScripts (GetRootScriptsRequest) returns (GetRootScriptsReply);
+  rpc AddRootScript (AddRootScriptRequest) returns (AddRootScriptReply);
   rpc AddScript (AddScriptRequest) returns (AddScriptReply);
 }
 
+message AddScriptReply {
+  bytes ScriptId = 1;
+}
+
 message AddScriptRequest {
+  bytes ParentScriptId = 1;
+  bytes LanguageId = 2;
+  string Name = 3;
+  string Description = 4;
+}
+
+message AddRootScriptRequest {
   bytes LanguageId = 1;
   string Name = 2;
   string Description = 3;
 }
 
-message AddScriptReply {
+message AddRootScriptReply {
   bytes ScriptId = 1;
 }
 

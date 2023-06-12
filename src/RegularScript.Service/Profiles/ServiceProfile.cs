@@ -16,7 +16,10 @@ public class ServiceProfile : Profile
             .ForMember(x => x.Id, opt => opt.MapFrom(src => ByteString.CopyFrom(src.Id.ToByteArray())));
         CreateMap<LanguageDb, LanguageApi>()
             .ForMember(x => x.Id, opt => opt.MapFrom(src => ByteString.CopyFrom(src.Id.ToByteArray())));
-        CreateMap<AddScriptRequest, AddRootScriptParameters>()
+        CreateMap<AddRootScriptRequest, AddRootScriptParameters>()
             .ForMember(x => x.LanguageId, opt => opt.MapFrom(src => new Guid(src.LanguageId.ToByteArray())));
+        CreateMap<AddScriptRequest, AddScriptParameters>()
+            .ForMember(x => x.LanguageId, opt => opt.MapFrom(src => new Guid(src.LanguageId.ToByteArray())))
+            .ForMember(x => x.ParentId, opt => opt.MapFrom(src => new Guid(src.ParentScriptId.ToByteArray())));
     }
 }

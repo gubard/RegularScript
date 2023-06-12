@@ -80,4 +80,25 @@ public class ScriptRepository : IScriptRepository
 
         return newScript.Entity.Id;
     }
+
+    public async Task<Guid> AddScriptAsync(AddScriptParameters parameters)
+    {
+        var newScript = await dbContext.Set<ScriptDb>().AddAsync(new ScriptDb
+        {
+            ParentId = parameters.ParentId
+        });
+
+        var scriptLocalizationDb = new ScriptLocalizationDb()
+        {
+            ScriptId = newScript.Entity.Id,
+            Description = parameters.Description,
+            Name = parameters.Name,
+            LanguageId = parameters.LanguageId,
+        };
+
+        await dbContext.Set<ScriptLocalizationDb>().AddAsync(scriptLocalizationDb);
+        await dbContext.SaveChangesAsync();
+
+        return newScript.Entity.Id;
+    }
 }

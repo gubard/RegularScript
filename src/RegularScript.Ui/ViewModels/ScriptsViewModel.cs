@@ -14,6 +14,7 @@ namespace RegularScript.Ui.ViewModels;
 public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISelectableLanguage
 {
     private LanguageNotify? selectedLanguage;
+    private ScriptNodeNotify? selectedScript;
 
     public ScriptsViewModel()
     {
@@ -21,7 +22,8 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
         Scripts = new();
         var selectedLanguageChangedCommand = CreateCommandFromTask<LanguageNotify?>(OnSelectedLanguageChanged);
         InitializedCommand = CreateCommandFromTask(InitializedAsync);
-        AddScriptCommand = CreateCommand(AddScript);
+        AddRootScriptCommand = CreateCommand(AddRootScript);
+        AddScriptCommand = CreateCommand<ScriptNodeNotify>(AddScript);
         this.WhenAnyValue(x => x.SelectedLanguage).InvokeCommand(selectedLanguageChangedCommand);
     }
 
@@ -42,8 +44,15 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
     public AvaloniaList<LanguageNotify> Languages { get; }
     public ICommand InitializedCommand { get; }
+    public ICommand AddRootScriptCommand { get; }
     public ICommand AddScriptCommand { get; }
     public string? UrlPathSegment => "script";
+
+    public ScriptNodeNotify? SelectedScript
+    {
+        get => selectedScript;
+        set =>  this.RaiseAndSetIfChanged(ref selectedScript, value);
+    }
 
     public LanguageNotify? SelectedLanguage
     {
@@ -70,8 +79,18 @@ public class ScriptsViewModel : RegularScriptViewModel, IRoutableViewModel, ISel
         return this.UpdateLanguagesAsync(LanguageService, Mapper);
     }
 
-    private void AddScript()
+    private void AddRootScript()
     {
         Navigator.NavigateTo<AddScriptViewModel>(viewModel => viewModel.SelectedLanguage = SelectedLanguage);
+    }
+    
+    private void AddScript(ScriptNodeNotify parent)
+    {
+        Navigator.NavigateTo<AddScriptViewModel>(viewModel =>
+            {
+                viewModel.SelectedLanguage = SelectedLanguage;
+                viewModel.Parent = parent;
+            }
+        );
     }
 }

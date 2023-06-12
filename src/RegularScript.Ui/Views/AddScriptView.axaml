@@ -5,6 +5,7 @@
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:viewModels="clr-namespace:RegularScript.Ui.ViewModels"
                                 xmlns:reactiveUi="http://reactiveui.net"
+                                xmlns:controls="clr-namespace:RegularScript.Ui.Controls"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                                 x:Class="RegularScript.Ui.Views.AddScriptView"
                                 x:DataType="viewModels:AddScriptViewModel">
@@ -18,7 +19,7 @@
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto">
         <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
             <ComboBox.DataTemplates>
                 <DataTemplate DataType="viewModels:LanguageNotify">
@@ -30,16 +31,24 @@
             </ComboBox.DataTemplates>
         </ComboBox>
 
-        <TextBox Grid.Row="1" Text="{Binding Name}" Watermark="Name" />
-        <TextBox Grid.Row="2" Text="{Binding Description}" Watermark="Description" />
+        <controls:NullableControl Grid.Row="1"
+                                  Target="{Binding Parent}">
+            <controls:NullableControl.NullContent>
+                <TextBlock Text="Root Script" />
+            </controls:NullableControl.NullContent>
+            <TextBlock Text="{Binding Parent.Name}" />
+        </controls:NullableControl>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal">
+        <TextBox Grid.Row="2" Text="{Binding Name}" Watermark="Name" />
+        <TextBox Grid.Row="3" Text="{Binding Description}" Watermark="Description" />
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal">
             <Button Command="{Binding Navigator.NavigateBack}">
                 <TextBlock Text="Back" />
             </Button>
 
             <Button Command="{Binding AddCommand}">
-                <TextBlock Text="Add"/>
+                <TextBlock Text="Add" />
             </Button>
         </StackPanel>
     </Grid>

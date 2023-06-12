@@ -35,6 +35,14 @@ public class ScriptService : GrpcServiceBase, IScriptService
 
     public async Task<Guid> AddRootScriptAsync(AddRootScriptParameters parameters)
     {
+        var request = mapper.Map<AddRootScriptRequest>(parameters);
+        var reply = await scriptServiceApiClient.AddRootScriptAsync(request);
+
+        return new (reply.ScriptId.ToByteArray());
+    }
+
+    public async Task<Guid> AddScriptAsync(AddScriptParameters parameters)
+    {
         var request = mapper.Map<AddScriptRequest>(parameters);
         var reply = await scriptServiceApiClient.AddScriptAsync(request);
 

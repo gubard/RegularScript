@@ -13,9 +13,11 @@ public class ScriptNodeNotify : ViewModelBase
     public ScriptNodeNotify()
     {
         Scripts = new ();
+        Parents = new();
     }
 
     public AvaloniaList<ScriptNodeNotify> Scripts { get; }
+    public AvaloniaList<string> Parents { get; }
 
     public Guid Id
     {

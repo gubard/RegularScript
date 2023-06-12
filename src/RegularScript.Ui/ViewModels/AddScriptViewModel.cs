@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AutoMapper;
 using Avalonia.Collections;
@@ -15,6 +16,7 @@ public class AddScriptViewModel : RegularScriptViewModel, IRoutableViewModel, IS
     private LanguageNotify? selectedLanguage;
     private string name;
     private string description;
+    private ScriptNodeNotify? parent;
 
     public AddScriptViewModel()
     {
@@ -39,9 +41,15 @@ public class AddScriptViewModel : RegularScriptViewModel, IRoutableViewModel, IS
 
     public ICommand InitializedCommand { get; }
     public ICommand AddCommand { get; }
-    public string? UrlPathSegment => "add-script";
+    public string UrlPathSegment => "add-script";
     public IScreen HostScreen => null;
     public AvaloniaList<LanguageNotify> Languages { get; }
+
+    public ScriptNodeNotify? Parent
+    {
+        get => parent;
+        set => this.RaiseAndSetIfChanged(ref parent, value);
+    }
 
     public LanguageNotify? SelectedLanguage
     {
@@ -68,8 +76,17 @@ public class AddScriptViewModel : RegularScriptViewModel, IRoutableViewModel, IS
 
     private async Task AddAsync()
     {
-        var parameters = Mapper.Map<AddRootScriptParameters>(this);
-        await ScriptService.AddRootScriptAsync(parameters);
+        if (Parent is null)
+        {
+            var parameters = Mapper.Map<AddRootScriptParameters>(this);
+            await ScriptService.AddRootScriptAsync(parameters);
+        }
+        else
+        {
+            var parameters = Mapper.Map<AddScriptParameters>(this);
+            await ScriptService.AddScriptAsync(parameters);
+        }
+
         Navigator.NavigateTo(ViewState.CurrentView);
     }
 }

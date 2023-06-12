@@ -19,6 +19,14 @@ public class RegularScriptViewModel : ViewModelBase
 
         return command;
     }
+    
+    protected ICommand CreateCommand<TArgs>(Action<TArgs> action)
+    {
+        var command = ReactiveCommand.Create(action);
+        SetupCommand(command);
+
+        return command;
+    }
 
     protected ICommand CreateCommandFromTask(Func<Task> execute)
     {
